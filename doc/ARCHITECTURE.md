@@ -23,20 +23,20 @@
 
 ```mermaid
 flowchart LR
-  subgraph Clients[클라이언트]
-    W[Web<br/>(Thymeleaf)]
-    M[Mobile<br/>(Flutter)]
+  subgraph Clients["클라이언트"]
+    W["Web\n(Thymeleaf)"]
+    M["Mobile\n(Flutter)"]
   end
 
-  subgraph BE[백엔드<br/>(Spring Boot 4 / Java 21)]
-    C[Controllers<br/>(REST API, Thymeleaf MVC)]
-    S[Services]
-    R[Repositories]
+  subgraph BE["백엔드\n(Spring Boot 4 / Java 21)"]
+    C["Controllers\n(REST API, Thymeleaf MVC)"]
+    S["Services"]
+    R["Repositories"]
 
-    Sec[Security<br/>(AuthN/AuthZ)]
-    Val[Validation]
-    Ex[Global Exception Handler]
-    AOP[AOP<br/>(Logging/Metrics/Tracing)]
+    Sec["Security\n(AuthN / AuthZ)"]
+    Val["Validation"]
+    Ex["Global Exception Handler"]
+    AOP["AOP\n(Logging / Metrics / Tracing)"]
 
     C --> S --> R
     C --> Val
@@ -45,10 +45,10 @@ flowchart LR
     S --> AOP
   end
 
-  subgraph Infra[외부/인프라]
+  subgraph Infra["외부 / 인프라"]
     DB[(MySQL)]
-    Cache[(Redis<br/>Session/Cache)]
-    Map[Map Provider<br/>(Kakao/Naver/Google)]
+    Cache[(Redis\nSession / Cache)]
+    Map["Map Provider\n(Kakao / Naver / Google)"]
     FS[(File Storage)]
   end
 
@@ -59,6 +59,7 @@ flowchart LR
   S --> Cache
   S --> Map
   S --> FS
+
 ```
 
 ## 주요 설계 원칙 (RULE 준수)
@@ -71,4 +72,3 @@ flowchart LR
 ---
 
 > 최종 업데이트: 2026-02-04
-
