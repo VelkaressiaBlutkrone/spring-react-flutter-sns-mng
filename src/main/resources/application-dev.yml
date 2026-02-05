@@ -46,6 +46,12 @@ logging:
       max-history: 30
       file-name-pattern: ./logs/app-%d{yyyy-MM-dd}.%i.log
 
+# RULE 6.1.4, 6.5: JWT 토큰 유효기간 (Step 5)
+app:
+  jwt:
+    access-ttl-minutes: ${JWT_ACCESS_TTL_MINUTES:15}
+    refresh-ttl-days: ${JWT_REFRESH_TTL_DAYS:7}
+
 management:
   endpoints:
     web:

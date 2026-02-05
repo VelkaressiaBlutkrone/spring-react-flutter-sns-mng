@@ -1,0 +1,44 @@
+# Redis 캐시 정책
+
+> PRD 4.1.3(Redis 활용), AUTH_DESIGN 6(Redis 활용), Step 5 산출물.
+
+## 1. 개요
+
+| 용도 | 키 패턴 | TTL | 설명 |
+|------|---------|-----|------|
+| Refresh Token | `refresh:{jti}` | 7~30일 | RULE 6.5. jti → userId, role 등 |
+| Access Token 블랙리스트 | `blacklist:{jti}` | Access Token 만료시간 | RULE 6.1.7. 로그아웃 시 jti 등록 |
+| 위치 기반 캐시 | `location:*` | 아래 정책 | 반경 조회 등 캐싱 (Step 10 이후) |
+
+---
+
+## 2. 위치 기반 캐시 (선택, Step 10 이후 적용)
+
+### 2.1 키 네이밍
+
+| 키 패턴 | 설명 | 예시 |
+|---------|------|------|
+| `location:pins:{lat}:{lng}:{radius}` | 반경 내 Pin 목록 | `location:pins:37.5:127.0:1000` |
+| `location:posts:{lat}:{lng}:{radius}` | 반경 내 게시글 목록 | `location:posts:37.5:127.0:500` |
+
+- lat, lng: 소수점 4자리 반올림 (해상도 ~11m)
+- radius: 미터 단위 (500, 1000, 2000 등)
+
+### 2.2 TTL 정책
+
+| 캐시 유형 | TTL | 비고 |
+|-----------|-----|------|
+| 반경 내 Pin | 5분 (300초) | 지도 이동 시 빈도 높음 |
+| 반경 내 게시글 | 3분 (180초) | 새 글 작성 시 무효화 고려 |
+
+### 2.3 캐시 무효화
+
+- Pin/게시글 생성·수정·삭제 시 해당 좌표 주변 키 삭제 (pattern delete)
+- 또는 단순 TTL 의존 (재조회 시 갱신)
+
+---
+
+## 3. 참조
+
+- **인증 설계**: `doc/AUTH_DESIGN.md` 6. Redis 활용
+- **RULE**: `doc/RULE.md` 6.1.7, 6.5

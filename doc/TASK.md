@@ -1,8 +1,8 @@
 # 지도 기반 SNS 웹/모바일 통합 플랫폼 — TASK (단계별 작업)
 
 - **기준 문서**: `doc/PRD.md`, `doc/RULE.md`
-- **총 기간**: 100일 내외
-- **총 Step**: 20단계
+- **총 기간**: 102일 내외
+- **총 Step**: 21단계 (Step 5.1 포함)
 
 ---
 
@@ -41,33 +41,33 @@
 
 > 신규 Step 작성·추가 시 **RULE 4.3.2(Task 문서 작성 구조)** 를 반드시 준수한다.
 
-| 필드 | 설명 |
-| ------ | ------ |
-| **Step Name** | 단계 이름 |
-| **Step Goal** | 단계 완료 시 달성할 목표(한 문장) |
-| **Input** | 이 단계에 필요한 입력(문서·코드·환경 등) |
-| **Scope** | 포함/제외 범위로 단계 경계 명확화 |
-| **Instructions** | 수행할 작업 목록 |
-| **Output Format** | 산출물 형태·위치·형식 |
-| **Constraints** | 반드시 지켜야 할 제약(RULE·기술 등) |
-| **Done When** | 아래 조건 충족 시 단계 완료로 간주 |
-| **Duration** | 예상 소요 일수 |
-| **RULE Reference** | 참조할 RULE.md 섹션 |
+| 필드               | 설명                                     |
+| ------------------ | ---------------------------------------- |
+| **Step Name**      | 단계 이름                                |
+| **Step Goal**      | 단계 완료 시 달성할 목표(한 문장)        |
+| **Input**          | 이 단계에 필요한 입력(문서·코드·환경 등) |
+| **Scope**          | 포함/제외 범위로 단계 경계 명확화        |
+| **Instructions**   | 수행할 작업 목록                         |
+| **Output Format**  | 산출물 형태·위치·형식                    |
+| **Constraints**    | 반드시 지켜야 할 제약(RULE·기술 등)      |
+| **Done When**      | 아래 조건 충족 시 단계 완료로 간주       |
+| **Duration**       | 예상 소요 일수                           |
+| **RULE Reference** | 참조할 RULE.md 섹션                      |
 
 ---
 
 ## 일정 요약
 
-| Phase | Step 범위 | 기간(일) | 비고 |
-| ------- | ------------ | ---------- | ------ |
-| 설계·기반 | Step 1 ~ 5 | 25 | 아키텍처, ERD, 공통 인프라, 인증 설계 |
-| 회원·보안 | Step 6 ~ 7 | 11 | 회원 도메인, Spring Security, 역할 |
-| 게시판 | Step 8 ~ 9 | 11 | Post, ImagePost, 파일 업로드 |
-| 지도·Pin | Step 10 ~ 13 | 22 | Pin/Location, 지도 추상화, 웹 UI, 연동 |
-| 마이·About | Step 14 | 4 | 마이페이지, About |
-| 관리자 | Step 15 ~ 17 | 14 | 회원/게시물 관리, 통계 |
-| 마무리 | Step 18 ~ 20 | 13 | 보안 점검, 테스트·문서, 배포 |
-| **합계** | **20** | **100** | |
+| Phase      | Step 범위    | 기간(일) | 비고                                          |
+| ---------- | ------------ | -------- | --------------------------------------------- |
+| 설계·기반  | Step 1 ~ 5.1 | 27       | 아키텍처, ERD, 공통 인프라, 인증 설계, DB·Redis Fallback |
+| 회원·보안  | Step 6 ~ 7   | 11       | 회원 도메인, Spring Security, 역할     |
+| 게시판     | Step 8 ~ 9   | 11       | Post, ImagePost, 파일 업로드           |
+| 지도·Pin   | Step 10 ~ 13 | 22       | Pin/Location, 지도 추상화, 웹 UI, 연동 |
+| 마이·About | Step 14      | 4        | 마이페이지, About                      |
+| 관리자     | Step 15 ~ 17 | 14       | 회원/게시물 관리, 통계                 |
+| 마무리     | Step 18 ~ 20 | 13       | 보안 점검, 테스트·문서, 배포           |
+| **합계**   | **20+1**     | **102**  | Step 5.1 포함                              |
 
 ---
 
@@ -304,6 +304,50 @@
 
 ---
 
+## Step 5.1 — DB·Redis 연결 Fallback 및 로깅
+
+**Step Name:** DB·Redis 연결 Fallback 및 로깅
+
+**Step Goal:** 서버 기동 시 DB(개발 H2/운영 MySQL) 및 Redis 연결 성공·실패를 로깅하고, 연결 실패 시에도 메인 서버는 기동하며 해당 기능을 비활성화한다.
+
+**Input:**
+
+- Step 1(환경별 설정), Step 5(Redis 연동·TokenStore)
+
+**Scope:**
+
+- 포함: DB·Redis 연결 검증 로깅(성공/실패), 연결 실패 시 서버 기동 유지, DB·Redis 미연결 시 해당 기능 비활성화
+- 제외: 연결 복구 자동 재시도, Health Check 엔드포인트 상세 구현(Actuator 기본 유지)
+
+**Instructions:**
+
+- **DB 연결 로깅**: ApplicationRunner에서 DataSource ping 수행, 성공 시 INFO 로그, 실패 시 ERROR 로그 (RULE 1.4.3 파라미터화 로깅, 비밀정보 제외)
+- **Redis 연결 로깅**: Redis ping 수행, 성공 시 INFO 로그, 실패 시 ERROR 로그, **실패해도 throw 하지 않고 서버 기동 계속**
+- **연결 실패 시 서버 기동 유지**: DB·Redis 연결 실패가 애플리케이션 기동을 중단시키지 않도록 설정 (HikariCP `initialization-fail-timeout=-1` 등)
+- **기능 비활성화**: DB 미연결 시 Repository 호출 시점에 예외 → GlobalExceptionHandler에서 503 처리; Redis 미연결 시 TokenStore NoOp fallback (로그인·토큰 갱신·블랙리스트 비활성)
+- **로깅 (RULE 1.4.3)**: 연결 성공/실패 시 파라미터화 로깅, 비밀번호·토큰·연결 문자열 전체 출력 금지
+
+**Output Format:**
+
+- 설정: `application-*.yml` (DataSource/Redis fail-timeout 등)
+- 코드: `config/` 내 DB·Redis 연결 검증·상태 관리, TokenStore fallback
+
+**Constraints:**
+
+- RULE 5.2.1(Fallback 전략), 5.3(기능 비활성화), 1.4.3(로깅), 1.1(비밀정보 로그 금지)
+- DB·Redis 실패 시 예외 무시 금지 (RULE 2.2.2) — 로깅 후 기능 비활성 처리
+
+**Done When:**
+
+- DB·Redis 연결 성공 시 INFO, 실패 시 ERROR 로그가 출력된다.
+- DB·Redis 미연결 상태에서도 서버가 기동되고, 해당 기능(DB 기반 API, 인증·토큰) 호출 시 503 또는 적절한 에러가 반환된다.
+
+**Duration:** 2일
+
+**RULE Reference:** 5.2.1(장애 대응·Fallback), 5.3(긴급 비활성화), 1.4.3(로깅), 1.1(비밀정보)
+
+---
+
 ## Step 6 — 회원 도메인·가입·로그인 API
 
 **Step Name:** 회원 도메인·가입·로그인 API
@@ -312,7 +356,7 @@
 
 **Input:**
 
-- Step 3(엔티티·Repository), Step 4(API 명세·JWT 인증 설계), Step 5(Redis·Refresh Token)
+- Step 3(엔티티·Repository), Step 4(API 명세·JWT 인증 설계), Step 5(Redis·Refresh Token), Step 5.1(DB·Redis Fallback)
 
 **Scope:**
 
@@ -360,7 +404,7 @@
 
 **Scope:**
 
-- 포함: Spring Security 설정, 역할(USER/ADMIN) 부여·검증, /admin/** 등 관리자 경로 403 처리, CORS allow-list
+- 포함: Spring Security 설정, 역할(USER/ADMIN) 부여·검증, /admin/\*\* 등 관리자 경로 403 처리, CORS allow-list
 - 제외: JWT·OAuth2, 세부 관리자 기능 구현
 
 **Instructions:**
@@ -368,8 +412,8 @@
 - SecurityConfig: 인증·인가 규칙 정의, deny-by-default
 - 로그인 사용자에게 ROLE_USER, 관리자 계정에 ROLE_ADMIN 부여
 - **내부/관리자 API 분리 (RULE 2.1.3)**: `/api/admin/**` URL·보안 정책 분리, Admin API는 IP allow-list 또는 별도 인증 체계 고려
-- /api/admin/** 은 ROLE_ADMIN만 접근 허용, 미인가 시 403
-- CORS: 허용 오리진을 allow-list로 제한(* 금지)
+- /api/admin/\*\* 은 ROLE_ADMIN만 접근 허용, 미인가 시 403
+- CORS: 허용 오리진을 allow-list로 제한(\* 금지)
 - **로깅 (RULE 1.4.2, 1.4.3)**: 인가 실패(403) 시도 로깅, 파라미터화 로깅 사용
 
 **Output Format:**
@@ -384,7 +428,7 @@
 
 **Done When:**
 
-- 비로그인 시 보호 리소스 401, 일반 사용자가 /admin/** 접근 시 403이 반환되고, CORS가 allow-list로 동작한다.
+- 비로그인 시 보호 리소스 401, 일반 사용자가 /admin/\*\* 접근 시 403이 반환되고, CORS가 allow-list로 동작한다.
 
 **Duration:** 5일
 
@@ -704,7 +748,7 @@
 
 **Instructions:**
 
-- /admin/** 하위 회원 관리 API·화면
+- /admin/\*\* 하위 회원 관리 API·화면
 - 목록: 페이징·검색(이메일·이름 등)
 - 추가: 관리자에 의한 회원 등록
 - 수정: 프로필·역할 등
@@ -833,7 +877,7 @@
 
 **Instructions:**
 
-- CORS: 허용 오리진을 allow-list로 제한, * 사용 금지
+- CORS: 허용 오리진을 allow-list로 제한, \* 사용 금지
 - 로그인·회원가입·토큰 갱신 등에 Rate Limiting 적용
 - 로그·에러 응답에 비밀정보·스택 트레이스·내부 경로 미포함 확인
 - 기본 계정·비밀번호·불필요 엔드포인트 노출 제거 확인
@@ -957,41 +1001,41 @@
 
 ## RULE 참조 요약
 
-| 영역 | 참조 |
-| ------ | ------ |
-| 보안 | RULE 1 (비밀정보, 인증·인가, **1.2.4 인증·인가 테스트**, 입력검증, 로그 1.4.1~1.4.3, 암호화, 설정, 공급망) |
-| 기능 | RULE 2 (API 설계, **2.1.3 내부/Admin API 분리**, 예외, **2.2.6 Checked Exception 금지**, **2.3.2 트랜잭션·이벤트**, 상태) |
-| 기술 | RULE 3 (계층, ORM/QueryDSL, 통신) |
-| 품질 | RULE 4 (코드, **테스트 4.2·4.2.2·4.2.1.1 결정성**, 문서) |
-| 운영 | RULE 5 (설정 분리, 장애 대비, **5.3 긴급 비활성화**) |
-| 인증/토큰 | RULE 6 (JWT, RSA, CIA, OAuth/OIDC) |
+| 영역      | 참조                                                                                                                      |
+| --------- | ------------------------------------------------------------------------------------------------------------------------- |
+| 보안      | RULE 1 (비밀정보, 인증·인가, **1.2.4 인증·인가 테스트**, 입력검증, 로그 1.4.1~1.4.3, 암호화, 설정, 공급망)                |
+| 기능      | RULE 2 (API 설계, **2.1.3 내부/Admin API 분리**, 예외, **2.2.6 Checked Exception 금지**, **2.3.2 트랜잭션·이벤트**, 상태) |
+| 기술      | RULE 3 (계층, ORM/QueryDSL, 통신)                                                                                         |
+| 품질      | RULE 4 (코드, **테스트 4.2·4.2.2·4.2.1.1 결정성**, 문서)                                                                  |
+| 운영      | RULE 5 (설정 분리, 장애 대비, **5.3 긴급 비활성화**)                                                                      |
+| 인증/토큰 | RULE 6 (JWT, RSA, CIA, OAuth/OIDC)                                                                                        |
 
 ---
 
 ## 진행 추적 (체크리스트)
 
-| Step | 내용 | 완료 |
-| ------ | ------ | ------ |
-| 1 | 프로젝트 셋업·아키텍처·ERD | ☑ |
-| 2 | 공통 인프라 (예외·Validation·보안·AOP) | ☑ |
-| 3 | 패키지·엔티티·Repository | ☑ |
-| 4 | REST API 명세·인증 설계 | ☐ |
-| 5 | Redis·JWT·캐시 | ☐ |
-| 6 | 회원 가입·로그인 | ☐ |
-| 7 | Spring Security·역할 | ☐ |
-| 8 | Post CRUD | ☐ |
-| 9 | ImagePost·파일 업로드 | ☐ |
-| 10 | Pin·Location·API | ☐ |
-| 11 | 지도 추상화·반경 조회 | ☐ |
-| 12 | 지도 웹 UI·Pin 표시 | ☐ |
-| 13 | 지도-게시글 연동·경로/거리 | ☐ |
-| 14 | 마이페이지·About | ☐ |
-| 15 | 관리자 회원 관리 | ☐ |
-| 16 | 관리자 게시물·공지 | ☐ |
-| 17 | 관리자 통계 | ☐ |
-| 18 | 보안·CORS·Rate Limiting | ☐ |
-| 19 | 테스트·문서·RULE 체크 | ☐ |
-| 20 | 배포 설정·최종 점검 | ☐ |
+| Step | 내용                                   | 완료 |
+| ---- | -------------------------------------- | ---- |
+| 1    | 프로젝트 셋업·아키텍처·ERD             | ☑    |
+| 2    | 공통 인프라 (예외·Validation·보안·AOP) | ☑    |
+| 3    | 패키지·엔티티·Repository               | ☑    |
+| 4    | REST API 명세·인증 설계                | ☑    |
+| 5    | Redis·JWT·캐시                         | ☐    |
+| 6    | 회원 가입·로그인                       | ☐    |
+| 7    | Spring Security·역할                   | ☐    |
+| 8    | Post CRUD                              | ☐    |
+| 9    | ImagePost·파일 업로드                  | ☐    |
+| 10   | Pin·Location·API                       | ☐    |
+| 11   | 지도 추상화·반경 조회                  | ☐    |
+| 12   | 지도 웹 UI·Pin 표시                    | ☐    |
+| 13   | 지도-게시글 연동·경로/거리             | ☐    |
+| 14   | 마이페이지·About                       | ☐    |
+| 15   | 관리자 회원 관리                       | ☐    |
+| 16   | 관리자 게시물·공지                     | ☐    |
+| 17   | 관리자 통계                            | ☐    |
+| 18   | 보안·CORS·Rate Limiting                | ☐    |
+| 19   | 테스트·문서·RULE 체크                  | ☐    |
+| 20   | 배포 설정·최종 점검                    | ☐    |
 
 ---
 
