@@ -16,6 +16,8 @@ spring:
 app:
   cookie:
     secure: false
+  cors:
+    allowed-origins: http://localhost:8080,http://localhost:8081
   jwt:
     access-ttl-minutes: 15
     refresh-ttl-days: 7

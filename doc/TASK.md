@@ -1023,7 +1023,7 @@
 | 5    | Redis·JWT·캐시                         | ☑    |
 | 5.1  | DB·Redis 연결 Fallback 및 로깅        | ☑    |
 | 6    | 회원 가입·로그인                       | ☑    |
-| 7    | Spring Security·역할                   | ☐    |
+| 7    | Spring Security·역할                   | ☑    |
 | 8    | Post CRUD                              | ☐    |
 | 9    | ImagePost·파일 업로드                  | ☐    |
 | 10   | Pin·Location·API                       | ☐    |
