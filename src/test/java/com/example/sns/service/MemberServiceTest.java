@@ -14,7 +14,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.example.sns.domain.User;
-import com.example.sns.domain.UserRole;
 import com.example.sns.dto.request.MemberJoinRequest;
 import com.example.sns.exception.BusinessException;
 import com.example.sns.exception.ErrorCode;
@@ -45,8 +44,7 @@ class MemberServiceTest {
         MemberJoinRequest request = new MemberJoinRequest(
                 "test@example.com",
                 "password123",
-                "테스트닉네임"
-        );
+                "테스트닉네임");
         given(userRepository.existsByEmail(request.email())).willReturn(false);
         given(passwordEncoder.encode(request.password())).willReturn("hashedPassword");
         given(userRepository.save(any(User.class))).willAnswer(inv -> {
@@ -85,8 +83,7 @@ class MemberServiceTest {
         MemberJoinRequest request = new MemberJoinRequest(
                 "duplicate@example.com",
                 "password123",
-                "닉네임"
-        );
+                "닉네임");
         given(userRepository.existsByEmail(request.email())).willReturn(true);
 
         // when & then

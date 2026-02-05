@@ -2,8 +2,12 @@ package com.example.sns.service;
 
 import java.util.Optional;
 
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.example.sns.config.JwtProperties;
 import com.example.sns.domain.User;
 import com.example.sns.dto.request.LoginRequest;
 import com.example.sns.dto.response.LoginResponse;
@@ -11,7 +15,6 @@ import com.example.sns.dto.response.MemberResponse;
 import com.example.sns.exception.BusinessException;
 import com.example.sns.exception.ErrorCode;
 import com.example.sns.repository.UserRepository;
-import com.example.sns.config.JwtProperties;
 import com.example.sns.service.auth.JwtService;
 import com.example.sns.service.auth.TokenStore;
 
@@ -19,9 +22,6 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 /**
  * 인증 서비스 — 로그인·토큰 갱신·로그아웃.
@@ -68,8 +68,7 @@ public class AuthService {
         return new LoginResult(
                 LoginResponse.of(accessResult.token(), accessResult.expiresInSeconds()),
                 refreshJti,
-                refreshTtlSeconds
-        );
+                refreshTtlSeconds);
     }
 
     /**
@@ -110,7 +109,7 @@ public class AuthService {
     /**
      * 로그아웃: Access Token jti 블랙리스트 등록, Refresh Token 삭제.
      *
-     * @param accessToken Bearer 토큰 (jti 추출용)
+     * @param accessToken  Bearer 토큰 (jti 추출용)
      * @param refreshToken Refresh Token jti (Redis 삭제용)
      */
     public void logout(String accessToken, String refreshToken) {
@@ -136,13 +135,20 @@ public class AuthService {
      * 현재 인증된 사용자 조회.
      */
     public Optional<MemberResponse> getCurrentUser() {
+        return getCurrentUserEntity().map(MemberResponse::from);
+    }
+
+    /**
+     * 현재 인증된 User 엔티티 조회. (게시글 작성·수정·삭제 등에서 사용)
+     */
+    public Optional<User> getCurrentUserEntity() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (auth == null || !auth.isAuthenticated() || "anonymousUser".equals(auth.getPrincipal())) {
             return Optional.empty();
         }
         Object principal = auth.getPrincipal();
         if (principal instanceof User user) {
-            return Optional.of(MemberResponse.from(user));
+            return userRepository.findById(user.getId());
         }
         return Optional.empty();
     }

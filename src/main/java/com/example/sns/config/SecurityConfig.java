@@ -62,6 +62,10 @@ public class SecurityConfig {
                         .requestMatchers("/api/auth/me").authenticated()
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
                         .requestMatchers("/api/sample/**").permitAll()
+                        .requestMatchers(org.springframework.http.HttpMethod.GET, "/api/posts", "/api/posts/*").permitAll()
+                        .requestMatchers(org.springframework.http.HttpMethod.POST, "/api/posts").authenticated()
+                        .requestMatchers(org.springframework.http.HttpMethod.PUT, "/api/posts/*").authenticated()
+                        .requestMatchers(org.springframework.http.HttpMethod.DELETE, "/api/posts/*").authenticated()
                         .requestMatchers("/", "/error", "/css/**", "/js/**", "/images/**", "/favicon.ico").permitAll()
                         .anyRequest().denyAll())
                 .exceptionHandling(ex -> ex

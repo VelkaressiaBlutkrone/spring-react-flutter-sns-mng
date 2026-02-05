@@ -5,6 +5,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.util.List;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,8 +16,6 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
-
-import java.util.List;
 
 /**
  * 관리자 API 인가 테스트.
@@ -47,7 +47,7 @@ class AdminSecurityTest {
                 List.of(new SimpleGrantedAuthority("ROLE_USER")));
 
         mockMvc.perform(get("/api/admin/members")
-                        .with(user(user)))
+                .with(user(user)))
                 .andExpect(status().isForbidden())
                 .andExpect(jsonPath("$.code").value("E003"));
     }

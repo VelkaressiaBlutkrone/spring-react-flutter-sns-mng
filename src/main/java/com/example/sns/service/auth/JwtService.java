@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 
 import com.example.sns.config.JwtProperties;
 import com.example.sns.domain.User;
-import com.example.sns.domain.UserRole;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
@@ -89,7 +88,8 @@ public class JwtService {
      */
     public long getRemainingSeconds(Claims claims) {
         Date exp = claims.getExpiration();
-        if (exp == null) return 0;
+        if (exp == null)
+            return 0;
         long remaining = (exp.getTime() - System.currentTimeMillis()) / 1000;
         return Math.max(0, remaining);
     }

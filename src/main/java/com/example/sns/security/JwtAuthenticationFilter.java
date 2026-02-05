@@ -1,7 +1,6 @@
 package com.example.sns.security;
 
 import java.io.IOException;
-
 import java.util.Collections;
 
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -12,7 +11,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import com.example.sns.domain.User;
 import com.example.sns.repository.UserRepository;
 import com.example.sns.service.auth.JwtService;
 import com.example.sns.service.auth.TokenStore;
@@ -46,7 +44,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
-                                   FilterChain filterChain) throws ServletException, IOException {
+            FilterChain filterChain) throws ServletException, IOException {
         try {
             String token = extractBearerToken(request);
             if (StringUtils.hasText(token)) {
@@ -60,7 +58,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                         userRepository.findById(userId).ifPresent(user -> {
                             var auth = new UsernamePasswordAuthenticationToken(
                                     user, null,
-                                    Collections.singletonList(new SimpleGrantedAuthority(user.getRole().toAuthority())));
+                                    Collections
+                                            .singletonList(new SimpleGrantedAuthority(user.getRole().toAuthority())));
                             auth.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                             SecurityContextHolder.getContext().setAuthentication(auth);
                         });

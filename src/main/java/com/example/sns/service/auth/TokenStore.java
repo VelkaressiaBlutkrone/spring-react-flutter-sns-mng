@@ -13,8 +13,8 @@ public interface TokenStore {
     /**
      * Refresh Token을 Redis에 저장한다.
      *
-     * @param jti JWT ID (고유 식별자)
-     * @param payload 저장할 값 (userId, role 등)
+     * @param jti        JWT ID (고유 식별자)
+     * @param payload    저장할 값 (userId, role 등)
      * @param ttlSeconds TTL (초). 7~30일 권장 (RULE 6.5)
      */
     void saveRefreshToken(String jti, String payload, long ttlSeconds);
@@ -37,7 +37,7 @@ public interface TokenStore {
     /**
      * Access Token jti를 블랙리스트에 등록한다.
      *
-     * @param jti JWT ID
+     * @param jti        JWT ID
      * @param ttlSeconds Access Token 남은 유효시간 (초)
      */
     void addToBlacklist(String jti, long ttlSeconds);

@@ -56,7 +56,8 @@ public final class CookieUtil {
      */
     public static String getRefreshTokenFromRequest(HttpServletRequest request) {
         Cookie[] cookies = request.getCookies();
-        if (cookies == null) return null;
+        if (cookies == null)
+            return null;
         for (Cookie cookie : cookies) {
             if (REFRESH_TOKEN_COOKIE_NAME.equals(cookie.getName())) {
                 return cookie.getValue();
