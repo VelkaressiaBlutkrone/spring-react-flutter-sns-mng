@@ -4,7 +4,7 @@
 
 **에러 메시지:**
 
-```
+```text
 Access to XMLHttpRequest at 'http://localhost:8080/api/xxx' from origin 'http://localhost:5173'
 has been blocked by CORS policy
 ```
@@ -49,7 +49,7 @@ http.cors(cors -> cors.configurationSource(corsConfigurationSource()))
 
 환경 변수 또는 `.env`:
 
-```
+```text
 VITE_API_BASE_URL=http://localhost:8080
 ```
 

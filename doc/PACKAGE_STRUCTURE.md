@@ -4,7 +4,7 @@
 
 ## 계층 구조
 
-```
+```text
 com.example.sns/
 ├── config/           # 설정 (Security, JPA, QueryDSL 등)
 ├── controller/       # REST API 핸들러
@@ -20,7 +20,7 @@ com.example.sns/
 
 ## 의존성 방향
 
-```
+```text
 Controller → Service → Repository
      ↓           ↓          ↓
     DTO       Domain     Domain

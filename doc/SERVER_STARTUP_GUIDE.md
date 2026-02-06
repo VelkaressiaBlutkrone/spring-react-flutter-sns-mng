@@ -279,14 +279,14 @@ public class ConnectionHealthConfig {
 
 #### 연결 성공 시
 
-```
+```text
 DB 연결 성공
 Redis 연결 성공: pong=PONG
 ```
 
 #### 연결 실패 시
 
-```
+```text
 DB 연결 실패: Connection refused. DB 기반 API 호출 시 503 반환.
 Redis 연결 실패: Connection refused. TokenStore NoOp fallback 적용.
 ```

@@ -221,7 +221,7 @@ Controller → Service → Domain(Entity) / Repository
 ## 8. 참조 문서
 
 - **보안·기술 규칙**: `doc/RULE.md`
-- **인증 상세**: `doc/SECURITY_AUTH.md` (존재 시)
+- **인증 상세**: `doc/AUTH_DESIGN.md`
 
 ---
 

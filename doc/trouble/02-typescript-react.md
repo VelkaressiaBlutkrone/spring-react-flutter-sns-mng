@@ -4,7 +4,7 @@
 
 **에러 메시지:**
 
-```
+```text
 This JSX tag requires the module path 'react/jsx-runtime' to exist, but none could be found.
 Make sure you have types for the appropriate package installed.
 ```
@@ -68,7 +68,7 @@ VS Code/Cursor: `Ctrl+Shift+P` → "TypeScript: Restart TS Server"
 
 **에러 메시지:**
 
-```
+```text
 Uncaught SyntaxError: The requested module '/src/types/xxx.types.ts' does not provide an export named 'XxxResponse'
 ```
 
@@ -105,7 +105,7 @@ npm run dev
 
 **에러 메시지:**
 
-```
+```text
 This syntax is not allowed when 'erasableSyntaxOnly' is enabled.
 ```
 
@@ -132,7 +132,7 @@ This syntax is not allowed when 'erasableSyntaxOnly' is enabled.
 
 **에러 메시지:**
 
-```
+```text
 'XxxRequest' is a type and must be imported using a type-only import when 'verbatimModuleSyntax' is enabled.
 ```
 

@@ -36,7 +36,7 @@
 
 ### 1.2 디렉터리 구조
 
-```
+```text
 infra/
 ├── docker-compose.yml          # 메인 compose (MySQL, Redis, Backend, Frontend, Mobile)
 ├── .env                        # 환경 변수 (cp .env.example .env)

@@ -4,7 +4,7 @@
 
 **에러 메시지:**
 
-```
+```text
 Could not find org.springframework.boot:spring-boot-starter-aop:.
 ```
 
@@ -64,7 +64,7 @@ Spring Boot는 Gson Bean을 자동 생성하므로 `@RequiredArgsConstructor`로
 
 **에러 메시지:**
 
-```
+```text
 incompatible types: Iterator<String> cannot be converted to String[]
 ```
 
@@ -94,7 +94,7 @@ if (paramNames != null && paramNames.hasNext()) {
 
 **에러 메시지:**
 
-```
+```text
 NoSuchBeanDefinitionException
 UnsatisfiedDependencyException
 ```

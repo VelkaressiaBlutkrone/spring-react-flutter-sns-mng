@@ -44,7 +44,7 @@
 
 ### 3.1 로그인 흐름
 
-```
+```text
 [Client]                    [Backend]                    [Redis]
 
    | POST /api/auth/login        |                              |
@@ -64,7 +64,7 @@
 
 ### 3.2 인증된 요청 흐름
 
-```
+```text
 [Client]                    [Backend]                    [Redis]
 
    | GET /api/me/pins             |                              |
@@ -81,7 +81,7 @@
 
 ### 3.3 토큰 갱신(Refresh) 흐름
 
-```
+```text
 [Client]                    [Backend]                    [Redis]
 
    | POST /api/auth/refresh      |                              |
@@ -99,7 +99,7 @@
 
 ### 3.4 로그아웃 흐름
 
-```
+```text
 [Client]                    [Backend]                    [Redis]
 
    | POST /api/auth/logout       |                              |

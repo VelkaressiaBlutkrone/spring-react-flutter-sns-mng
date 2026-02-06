@@ -6,7 +6,7 @@
 
 **에러 메시지:**
 
-```
+```text
 Execution failed for task ':compileJava'
 ```
 
@@ -62,7 +62,7 @@ java -version
 
 **에러 메시지:**
 
-```
+```text
 Failed to resolve import
 ```
 
@@ -97,7 +97,7 @@ npm run build
 
 **에러 메시지:**
 
-```
+```text
 Could not resolve "react-router-dom"
 Could not resolve "clsx"
 ```
@@ -146,7 +146,7 @@ import '@/index.css';
 
 **에러 메시지:**
 
-```
+```text
 Project directory '.../frontend' is not part of the build defined by settings.gradle
 ```
 

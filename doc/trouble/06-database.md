@@ -38,7 +38,7 @@ spring:
 
 **에러 메시지:**
 
-```
+```text
 Communications link failure
 ```
 
@@ -89,7 +89,7 @@ CREATE DATABASE IF NOT EXISTS app_db;
 
 **에러 메시지:**
 
-```
+```text
 Port 8080 is already in use
 ```
 
