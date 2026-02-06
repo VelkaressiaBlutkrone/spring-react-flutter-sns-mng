@@ -4,12 +4,12 @@ spring_thymleaf_map_sns_mng 프로젝트의 Docker 기반 인프라 구성입니
 
 ## 구성
 
-| 서비스 | 설명 | 프로파일 |
-|--------|------|----------|
-| app-db | MySQL 8.0 | (기본) |
-| app-redis | Redis 7 | (기본) |
+| 서비스      | 설명                  | 프로파일             |
+| ----------- | --------------------- | -------------------- |
+| app-db      | MySQL 8.0             | (기본)               |
+| app-redis   | Redis 7               | (기본)               |
 | app-backend | Spring Boot (Java 21) | backend, mobile, app |
-| app-mobile | Flutter Web | mobile, app |
+| app-mobile  | Flutter Web           | mobile, app          |
 
 ## 빠른 시작
 
@@ -30,12 +30,12 @@ docker compose --profile mobile up -d
 
 ## 접속 정보
 
-| 서비스 | URL | 비고 |
-|--------|-----|------|
-| Backend | http://localhost:8080 | API, Swagger |
-| Mobile | http://localhost:5174 | Flutter Web |
-| MySQL | localhost:3306 | app_user / .env의 MYSQL_PASSWORD |
-| Redis | localhost:6379 | |
+| 서비스  | URL                     | 비고                             |
+| ------- | ----------------------- | -------------------------------- |
+| Backend | <http://localhost:8080> | API, Swagger                     |
+| Mobile  | <http://localhost:5174> | Flutter Web                      |
+| MySQL   | localhost:3306          | app_user / .env의 MYSQL_PASSWORD |
+| Redis   | localhost:6379          |                                  |
 
 ## 상세 문서
 

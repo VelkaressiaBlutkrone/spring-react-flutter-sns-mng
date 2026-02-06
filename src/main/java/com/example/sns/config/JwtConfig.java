@@ -7,6 +7,6 @@ import org.springframework.context.annotation.Configuration;
  * JWT 설정 활성화.
  */
 @Configuration
-@EnableConfigurationProperties({JwtProperties.class, CorsProperties.class})
+@EnableConfigurationProperties({JwtProperties.class, CorsProperties.class, UploadProperties.class})
 public class JwtConfig {
 }

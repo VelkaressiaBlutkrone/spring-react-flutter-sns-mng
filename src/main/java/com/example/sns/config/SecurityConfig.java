@@ -66,6 +66,10 @@ public class SecurityConfig {
                         .requestMatchers(org.springframework.http.HttpMethod.POST, "/api/posts").authenticated()
                         .requestMatchers(org.springframework.http.HttpMethod.PUT, "/api/posts/*").authenticated()
                         .requestMatchers(org.springframework.http.HttpMethod.DELETE, "/api/posts/*").authenticated()
+                        .requestMatchers(org.springframework.http.HttpMethod.GET, "/api/image-posts", "/api/image-posts/*").permitAll()
+                        .requestMatchers(org.springframework.http.HttpMethod.POST, "/api/image-posts").authenticated()
+                        .requestMatchers(org.springframework.http.HttpMethod.PUT, "/api/image-posts/*").authenticated()
+                        .requestMatchers(org.springframework.http.HttpMethod.DELETE, "/api/image-posts/*").authenticated()
                         .requestMatchers("/", "/error", "/css/**", "/js/**", "/images/**", "/favicon.ico").permitAll()
                         .anyRequest().denyAll())
                 .exceptionHandling(ex -> ex

@@ -37,6 +37,8 @@ server:
 
 # RULE 1.4.3: dev 환경 DEBUG, 파일 보관 30일
 logging:
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss.SSS} │ %highlight(%-5level) │ %cyan(%-20logger{20}) │ %msg%n"
   level:
     root: ${LOG_LEVEL_ROOT:INFO}
     com.example: ${LOG_LEVEL_APP:DEBUG}
@@ -58,6 +60,14 @@ app:
     issuer: ${JWT_ISSUER}
     audience: ${JWT_AUDIENCE}
     secret-key: ${JWT_SECRET_KEY}
+  upload:
+    base-path: ${UPLOAD_BASE_PATH:./uploads}
+    allowed-mime-types:
+      - image/jpeg
+      - image/png
+      - image/gif
+      - image/webp
+    max-file-size-bytes: ${UPLOAD_MAX_FILE_SIZE:5242880}
 
 management:
   endpoints:

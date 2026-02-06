@@ -35,8 +35,10 @@ spring:
 server:
   port: ${SERVER_PORT:8080}
 
-# RULE 1.4.3: 운영 환경 INFO 이상, 파일 롤링·보관 90일
+# RULE 1.4.3: 운영 환경 INFO 이상, 파일 롤링·보관 90일. 색상 최소화(ELK/Datadog 수집 고려)
 logging:
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} [%level] [%logger{36}] : %msg%n"
   level:
     root: ${LOG_LEVEL_ROOT:INFO}
     com.example: ${LOG_LEVEL_APP:INFO}
@@ -64,6 +66,14 @@ app:
     issuer: ${JWT_ISSUER}
     audience: ${JWT_AUDIENCE}
     secret-key: ${JWT_SECRET_KEY}
+  upload:
+    base-path: ${UPLOAD_BASE_PATH:/var/uploads}
+    allowed-mime-types:
+      - image/jpeg
+      - image/png
+      - image/gif
+      - image/webp
+    max-file-size-bytes: ${UPLOAD_MAX_FILE_SIZE:5242880}
 
 management:
   endpoints:
