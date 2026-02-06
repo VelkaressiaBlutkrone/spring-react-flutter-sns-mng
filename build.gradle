@@ -187,3 +187,8 @@ tasks.withType(JavaCompile).configureEach {
 clean {
     delete querydslDir
 }
+
+// Docker 빌드 시 고정 JAR 파일명 (infra/docker/backend/Dockerfile 참고)
+bootJar {
+    archiveFileName = 'app.jar'
+}

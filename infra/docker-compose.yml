@@ -1,0 +1,93 @@
+# spring_thymleaf_map_sns_mng - Docker Compose
+# doc/INFRA.md, doc/DEVELOPMENT_ENVIRONMENT.md 참고
+
+services:
+  # ========== 인프라 ==========
+  app-db:
+    image: mysql:8.0
+    container_name: app-db
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-rootpassword}
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-app_db}
+      MYSQL_USER: ${MYSQL_USER:-app_user}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-app_password}
+    ports:
+      - "${MYSQL_PORT:-3306}:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./mysql/init:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${MYSQL_ROOT_PASSWORD:-rootpassword}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+  app-redis:
+    image: redis:7-alpine
+    container_name: app-redis
+    restart: unless-stopped
+    ports:
+      - "${REDIS_PORT:-6379}:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ========== 백엔드 ==========
+  app-backend:
+    build:
+      context: ..
+      dockerfile: infra/docker/backend/Dockerfile
+    image: app-backend:latest
+    container_name: app-backend
+    restart: unless-stopped
+    profiles:
+      - backend
+      - mobile
+      - app
+    depends_on:
+      app-db:
+        condition: service_healthy
+      app-redis:
+        condition: service_healthy
+    environment:
+      SPRING_PROFILES_ACTIVE: prod
+      DB_URL: jdbc:mysql://app-db:3306/${MYSQL_DATABASE:-app_db}?useSSL=false&serverTimezone=Asia/Seoul&characterEncoding=UTF-8&allowPublicKeyRetrieval=true
+      DB_USERNAME: ${MYSQL_USER:-app_user}
+      DB_PASSWORD: ${MYSQL_PASSWORD:-app_password}
+      REDIS_HOST: app-redis
+      REDIS_PORT: "6379"
+      REDIS_PASSWORD: ${REDIS_PASSWORD:-}
+      JWT_ISSUER: ${JWT_ISSUER:-https://api.example.com}
+      JWT_AUDIENCE: ${JWT_AUDIENCE:-spring-thymleaf-map-sns-mng}
+      JWT_SECRET_KEY: ${JWT_SECRET_KEY:-docker-dev-secret-key-min-256-bits-for-hs256-change-in-prod}
+      CORS_ALLOWED_ORIGINS: ${CORS_ALLOWED_ORIGINS:-http://localhost:5173,http://localhost:5174,http://localhost:8080}
+      # Docker 개발용: 스키마 자동 생성. 운영 시 validate로 변경
+      JPA_DDL_AUTO: ${JPA_DDL_AUTO:-update}
+    ports:
+      - "${BACKEND_PORT:-8080}:8080"
+
+  # ========== 모바일 (Flutter Web) ==========
+  app-mobile:
+    build:
+      context: ..
+      dockerfile: infra/docker/mobile/Dockerfile
+    image: app-mobile:latest
+    container_name: app-mobile
+    restart: unless-stopped
+    profiles:
+      - mobile
+      - app
+    depends_on:
+      - app-backend
+    ports:
+      - "${MOBILE_PORT:-5174}:80"
+
+volumes:
+  mysql_data:
+  redis_data:
