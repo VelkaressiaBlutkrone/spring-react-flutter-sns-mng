@@ -19,34 +19,34 @@
 
 ### Backend
 
-| 구분 | 기술 |
-|------|------|
-| 프레임워크 | Spring Boot 4.0.2 |
-| 언어 | Java 21 |
-| 웹 | Spring MVC, Thymeleaf |
-| 보안 | Spring Security, JWT (jjwt 0.12.x) |
-| 데이터 | Spring Data JPA, QueryDSL 5.1.0 |
-| 데이터베이스 | MySQL 8.0 (운영), H2 (개발) |
-| 캐시/세션 | Redis 7, Redisson 3.40.2 |
-| API 문서 | Swagger/OpenAPI 3 (springdoc 3.0.1) |
-| 빌드 | Gradle |
-| 테스트 | JUnit 5, Testcontainers, JaCoCo |
+| 구분         | 기술                                |
+| ------------ | ----------------------------------- |
+| 프레임워크   | Spring Boot 4.0.2                   |
+| 언어         | Java 21                             |
+| 웹           | Spring MVC, Thymeleaf               |
+| 보안         | Spring Security, JWT (jjwt 0.12.x)  |
+| 데이터       | Spring Data JPA, QueryDSL 5.1.0     |
+| 데이터베이스 | MySQL 8.0 (운영), H2 (개발)         |
+| 캐시/세션    | Redis 7, Redisson 3.40.2            |
+| API 문서     | Swagger/OpenAPI 3 (springdoc 3.0.1) |
+| 빌드         | Gradle                              |
+| 테스트       | JUnit 5, Testcontainers, JaCoCo     |
 
 ### Frontend
 
-| 구분 | 기술 |
-|------|------|
-| 웹 | Thymeleaf, Bootstrap/Tailwind |
-| 모바일 | Flutter 3.10.8+ |
+| 구분     | 기술                                 |
+| -------- | ------------------------------------ |
+| 웹       | Thymeleaf, Bootstrap/Tailwind        |
+| 모바일   | Flutter 3.10.8+                      |
 | 지도 API | Kakao/Naver/Google Map (추상화 설계) |
 
 ### Infrastructure
 
-| 구분 | 기술 |
-|------|------|
-| 컨테이너 | Docker, Docker Compose |
-| 데이터베이스 | MySQL 8.0 |
-| 캐시 | Redis 7 |
+| 구분         | 기술                   |
+| ------------ | ---------------------- |
+| 컨테이너     | Docker, Docker Compose |
+| 데이터베이스 | MySQL 8.0              |
+| 캐시         | Redis 7                |
 
 ## 📁 프로젝트 구조
 
@@ -152,13 +152,13 @@ flutter run  # 연결된 디바이스에서 실행
 
 ### 4. 접속 정보
 
-| 서비스 | URL | 비고 |
-|--------|-----|------|
-| Backend API | http://localhost:8080 | REST API 서버 |
-| Swagger UI | http://localhost:8080/swagger-ui.html | API 문서 |
-| Mobile Web | http://localhost:5174 | Flutter Web |
-| MySQL | localhost:3306 | app_user / .env의 MYSQL_PASSWORD |
-| Redis | localhost:6379 | - |
+| 서비스      | URL                                   | 비고                             |
+| ----------- | ------------------------------------- | -------------------------------- |
+| Backend API | http://localhost:8080                 | REST API 서버                    |
+| Swagger UI  | http://localhost:8080/swagger-ui.html | API 문서                         |
+| Mobile Web  | http://localhost:5174                 | Flutter Web                      |
+| MySQL       | localhost:3306                        | app_user / .env의 MYSQL_PASSWORD |
+| Redis       | localhost:6379                        | -                                |
 
 ## 📚 주요 문서
 
@@ -223,16 +223,19 @@ Controller → Service → Repository
 ## 🔑 주요 API 엔드포인트
 
 ### 인증
+
 - `POST /api/auth/login` - 로그인
 - `POST /api/auth/refresh` - 토큰 갱신
 - `POST /api/auth/logout` - 로그아웃
 - `GET /api/auth/me` - 현재 사용자 정보
 
 ### 회원
+
 - `POST /api/members` - 회원가입
 - `GET /api/members/{id}` - 회원 조회
 
 ### 게시글
+
 - `GET /api/posts` - 게시글 목록
 - `POST /api/posts` - 게시글 작성
 - `GET /api/posts/{id}` - 게시글 상세
@@ -240,11 +243,18 @@ Controller → Service → Repository
 - `DELETE /api/posts/{id}` - 게시글 삭제
 
 ### Pin
+
 - `GET /api/pins` - Pin 목록
 - `POST /api/pins` - Pin 생성
 - `GET /api/pins/nearby` - 반경 내 Pin 조회
 
 ### 관리자
+/api/pins` - Pin 목록
+- `POST /api/pins` - Pin 생성
+- `GET /api/pins/nearby` - 반경 내 Pin 조회
+
+### 관리자
+
 - `GET /api/admin/members` - 회원 관리
 - `GET /api/admin/posts` - 게시물 관리
 - `GET /api/admin/stats/*` - 통계 조회
