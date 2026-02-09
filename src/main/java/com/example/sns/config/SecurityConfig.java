@@ -80,6 +80,7 @@ public class SecurityConfig {
                         .requestMatchers("/pins/*/posts", "/posts/*", "/image-posts/*").permitAll()
                         .requestMatchers("/posts/create", "/image-posts/create").authenticated()
                         .requestMatchers("/me", "/me/**").authenticated()
+                        .requestMatchers("/admin", "/admin/**").hasRole("ADMIN")
                         .requestMatchers(org.springframework.http.HttpMethod.POST, "/posts", "/image-posts").authenticated()
                         .anyRequest().denyAll())
                 .exceptionHandling(ex -> ex

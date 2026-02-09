@@ -59,4 +59,17 @@ public class User extends BaseEntity {
         this.nickname = nickname;
         onUpdate();
     }
+
+    /**
+     * 관리자용 프로필·역할 수정.
+     */
+    public void updateByAdmin(String nickname, UserRole role) {
+        if (nickname != null && !nickname.isBlank()) {
+            this.nickname = nickname;
+        }
+        if (role != null) {
+            this.role = role;
+        }
+        onUpdate();
+    }
 }
