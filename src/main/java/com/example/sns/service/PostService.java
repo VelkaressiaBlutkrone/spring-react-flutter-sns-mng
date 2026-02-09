@@ -91,6 +91,15 @@ public class PostService {
     }
 
     /**
+     * 작성자별 게시글 목록. Step 14: 마이페이지 내 게시글.
+     */
+    @Transactional(readOnly = true)
+    public Page<PostResponse> getListByAuthor(User author, Pageable pageable) {
+        return postRepository.findByAuthor(author, pageable)
+                .map(PostResponse::from);
+    }
+
+    /**
      * Pin에 연결된 게시글 목록. Step 12: 지도 Pin 클릭 시. 비로그인 가능.
      */
     @Transactional(readOnly = true)

@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.example.sns.domain.User;
 import com.example.sns.domain.UserRole;
 import com.example.sns.dto.request.MemberJoinRequest;
+import com.example.sns.dto.request.MemberUpdateRequest;
 import com.example.sns.dto.response.MemberResponse;
 import com.example.sns.exception.BusinessException;
 import com.example.sns.exception.ErrorCode;
@@ -54,6 +55,23 @@ public class MemberService {
         User saved = userRepository.save(user);
         log.info("회원가입 성공: userId={}, email={}", saved.getId(), saved.getEmail());
         return MemberResponse.from(saved);
+    }
+
+    /**
+     * 개인정보 수정. 본인만.
+     *
+     * @param currentUser 현재 로그인 사용자
+     * @param request     수정 요청 (닉네임 등)
+     * @return 수정된 회원 응답
+     * @throws BusinessException 존재하지 않으면 NOT_FOUND
+     */
+    @Transactional
+    public MemberResponse updateMe(User currentUser, MemberUpdateRequest request) {
+        User user = userRepository.findById(currentUser.getId())
+                .orElseThrow(() -> new BusinessException(ErrorCode.NOT_FOUND, "회원을 찾을 수 없습니다."));
+        user.updateNickname(request.nickname());
+        log.info("개인정보 수정: userId={}, nickname={}", user.getId(), request.nickname());
+        return MemberResponse.from(user);
     }
 
     /**
