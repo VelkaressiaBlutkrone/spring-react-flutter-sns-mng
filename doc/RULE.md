@@ -29,22 +29,22 @@
 
 ## 분리된 규칙 문서 목록 (doc/rules/)
 
-| 문서 | 설명 |
-|------|------|
-| [01-security.md](rules/01-security.md) | 보안: 비밀정보·인증인가·입력검증·로그·암호화·Rate Limiting·AI 보안 등 [MUST] |
-| [02-function.md](rules/02-function.md) | 기능: API 설계·예외 처리·트랜잭션·상태 관리·SOLID [MUST] |
-| [03-technical.md](rules/03-technical.md) | 기술: 아키텍처·프레임워크·ORM/QueryDSL·통신·AOP·외부 라이브러리 [SHOULD] |
-| [04-quality.md](rules/04-quality.md) | 품질: 코드·테스트·문서·주석 [MUST/SHOULD] |
-| [05-operation.md](rules/05-operation.md) | 운영: 설정 분리·장애 대비·긴급 비활성화 [SHOULD] |
-| [06-auth-token.md](rules/06-auth-token.md) | 인증/토큰: JWT·RSA·인가·OAuth/OIDC·토큰 무효화 [MUST] |
-| [07-platform.md](rules/07-platform.md) | 플랫폼: Spring Boot·React·Flutter 구현 가이드 |
-| [08-javascript.md](rules/08-javascript.md) | 프론트엔드 JavaScript: 변수·함수·비동기·에러 처리·네이밍 (7.2 React 하위) |
-| [09-observability.md](rules/09-observability.md) | Observability: 구조화 로깅·traceId/spanId·OpenTelemetry [MUST/SHOULD] |
-| [10-container-k8s.md](rules/10-container-k8s.md) | Container & Kubernetes 보안 (해당 환경 사용 시만 적용) |
-| [11-data-sovereignty.md](rules/11-data-sovereignty.md) | 데이터 주권·개인정보: 최소화·파기·탈퇴·감사·마스킹 [MUST] |
-| [appendix-a-asvs.md](rules/appendix-a-asvs.md) | 부록 A: ASVS 5.0 챕터별 대응 (문제→대책) |
-| [appendix-b-owasp.md](rules/appendix-b-owasp.md) | 부록 B: OWASP Top 10 2025 매핑표 |
-| [appendix-c-checklist.md](rules/appendix-c-checklist.md) | 부록 C: 규칙 준수 체크리스트 (일상 참조용) |
+| 문서                                                     | 설명                                                                         |
+| -------------------------------------------------------- | ---------------------------------------------------------------------------- |
+| [01-security.md](rules/01-security.md)                   | 보안: 비밀정보·인증인가·입력검증·로그·암호화·Rate Limiting·AI 보안 등 [MUST] |
+| [02-function.md](rules/02-function.md)                   | 기능: API 설계·예외 처리·트랜잭션·상태 관리·SOLID [MUST]                     |
+| [03-technical.md](rules/03-technical.md)                 | 기술: 아키텍처·프레임워크·ORM/QueryDSL·통신·AOP·외부 라이브러리 [SHOULD]     |
+| [04-quality.md](rules/04-quality.md)                     | 품질: 코드·테스트·문서·주석 [MUST/SHOULD]                                    |
+| [05-operation.md](rules/05-operation.md)                 | 운영: 설정 분리·장애 대비·긴급 비활성화 [SHOULD]                             |
+| [06-auth-token.md](rules/06-auth-token.md)               | 인증/토큰: JWT·RSA·인가·OAuth/OIDC·토큰 무효화 [MUST]                        |
+| [07-platform.md](rules/07-platform.md)                   | 플랫폼: Spring Boot·React·Flutter 구현 가이드                                |
+| [08-javascript.md](rules/08-javascript.md)               | 프론트엔드 JavaScript: 변수·함수·비동기·에러 처리·네이밍 (7.2 React 하위)    |
+| [09-observability.md](rules/09-observability.md)         | Observability: 구조화 로깅·traceId/spanId·OpenTelemetry [MUST/SHOULD]        |
+| [10-container-k8s.md](rules/10-container-k8s.md)         | Container & Kubernetes 보안 (해당 환경 사용 시만 적용)                       |
+| [11-data-sovereignty.md](rules/11-data-sovereignty.md)   | 데이터 주권·개인정보: 최소화·파기·탈퇴·감사·마스킹 [MUST]                    |
+| [appendix-a-asvs.md](rules/appendix-a-asvs.md)           | 부록 A: ASVS 5.0 챕터별 대응 (문제→대책)                                     |
+| [appendix-b-owasp.md](rules/appendix-b-owasp.md)         | 부록 B: OWASP Top 10 2025 매핑표                                             |
+| [appendix-c-checklist.md](rules/appendix-c-checklist.md) | 부록 C: 규칙 준수 체크리스트 (일상 참조용)                                   |
 
 ---
 
@@ -96,5 +96,5 @@
 
 ---
 
-> **마지막 업데이트**: 2026-02-09  
+> **마지막 업데이트**: 2026-02-09
 > **버전**: 1.0.9 (챕터별 rules/ 분리 완료)
