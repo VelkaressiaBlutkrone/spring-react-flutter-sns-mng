@@ -263,14 +263,14 @@ docker compose --profile app --profile with-nginx up -d
 | -------- | ---- | ---------------------------------------------- |
 | MySQL    | 3306 | `localhost:3306` (MYSQL_USER / MYSQL_PASSWORD) |
 | Redis    | 6379 | `localhost:6379`                               |
-| Backend  | 8080 | http://localhost:8080                          |
-| Frontend | 5173 | http://localhost:5173                          |
-| Mobile   | 5174 | http://localhost:5174                          |
+| Backend  | 8080 | <http://localhost:8080>                        |
+| Frontend | 5173 | <http://localhost:5173>                        |
+| Mobile   | 5174 | <http://localhost:5174>                        |
 
 ### 7.2 Frontend / Mobile 접속 시
 
-- Frontend: http://localhost:5173 → SPA, `/api` 요청은 Backend로 프록시
-- Mobile: http://localhost:5174 → Flutter Web, `/api` 요청은 Backend로 프록시
+- Frontend: <http://localhost:5173> → SPA, `/api` 요청은 Backend로 프록시
+- Mobile: <http://localhost:5174> → Flutter Web, `/api` 요청은 Backend로 프록시
 - 두 앱 모두 같은 Backend(8080) API를 사용합니다.
 
 ---
@@ -380,7 +380,7 @@ docker compose logs app-backend
 **확인 사항**:
 
 - app-backend가 정상 동작 중인지 확인
-- 브라우저에서 http://localhost:5173 또는 http://localhost:5174 로 접속했는지 확인
+- 브라우저에서 <http://localhost:5173> 또는 <http://localhost:5174> 로 접속했는지 확인
 - nginx 설정에서 `proxy_pass http://app-backend:8080`이 올바른지 확인
 
 ### 9.4 Flutter Web 빌드 실패

@@ -1,16 +1,16 @@
 # Flutter 연동 API 구조 예시 (Step 20)
 
-> REST API 호출 구조, **인증(JWT Bearer, Refresh Token Secure Storage)**, 지도 SDK 연동 예시.  
+> REST API 호출 구조, **인증(JWT Bearer, Refresh Token Secure Storage)**, 지도 SDK 연동 예시.
 > RULE 6.1.6: 모바일에서는 **flutter_secure_storage** 사용(SharedPreferences 금지).
 
 ## 1. 개요
 
-| 항목 | 내용 |
-|------|------|
-| Base URL | 배포 서버 기준 예: `https://api.example.com` 또는 상대 경로 `/api` (Web) |
-| 인증 | Access Token: `Authorization: Bearer {token}` |
-| Refresh Token | 서버에서 Set-Cookie 또는 Body로 전달 시, **Secure Storage에만 저장** |
-| API 문서 | Swagger: `{baseUrl}/swagger-ui.html` |
+| 항목          | 내용                                                                     |
+| ------------- | ------------------------------------------------------------------------ |
+| Base URL      | 배포 서버 기준 예: `https://api.example.com` 또는 상대 경로 `/api` (Web) |
+| 인증          | Access Token: `Authorization: Bearer {token}`                            |
+| Refresh Token | 서버에서 Set-Cookie 또는 Body로 전달 시, **Secure Storage에만 저장**     |
+| API 문서      | Swagger: `{baseUrl}/swagger-ui.html`                                     |
 
 ---
 
@@ -119,14 +119,14 @@ if (response.statusCode == 200) {
 
 ## 3. 인증 요청 흐름 요약
 
-| 단계 | 설명 |
-|------|------|
-| 1 | 로그인: `POST /api/auth/login` → accessToken + refreshToken(또는 Set-Cookie) |
-| 2 | accessToken, refreshToken을 **Secure Storage**에 저장 |
-| 3 | API 요청 시 `Authorization: Bearer {accessToken}` 헤더 추가 |
-| 4 | 401 수신 시 `POST /api/auth/refresh`(Cookie 또는 Body에 refreshToken) 호출 |
-| 5 | 새 accessToken 저장 후 원래 요청 재시도 |
-| 6 | refresh 실패 시 로그인 화면으로 이동 |
+| 단계 | 설명                                                                         |
+| ---- | ---------------------------------------------------------------------------- |
+| 1    | 로그인: `POST /api/auth/login` → accessToken + refreshToken(또는 Set-Cookie) |
+| 2    | accessToken, refreshToken을 **Secure Storage**에 저장                        |
+| 3    | API 요청 시 `Authorization: Bearer {accessToken}` 헤더 추가                  |
+| 4    | 401 수신 시 `POST /api/auth/refresh`(Cookie 또는 Body에 refreshToken) 호출   |
+| 5    | 새 accessToken 저장 후 원래 요청 재시도                                      |
+| 6    | refresh 실패 시 로그인 화면으로 이동                                         |
 
 ---
 
@@ -136,21 +136,21 @@ if (response.statusCode == 200) {
 
 ### 4.1 반경 조회 API (백엔드)
 
-| API | Method | URL | Query |
-|-----|--------|-----|-------|
-| 반경 내 Pin | GET | /api/pins/nearby | lat, lng, radiusKm, page, size |
-| 반경 내 게시글 | GET | /api/posts/nearby | lat, lng, radiusKm, page, size |
-| 반경 내 이미지 게시글 | GET | /api/image-posts/nearby | lat, lng, radiusKm, page, size |
+| API                   | Method | URL                     | Query                          |
+| --------------------- | ------ | ----------------------- | ------------------------------ |
+| 반경 내 Pin           | GET    | /api/pins/nearby        | lat, lng, radiusKm, page, size |
+| 반경 내 게시글        | GET    | /api/posts/nearby       | lat, lng, radiusKm, page, size |
+| 반경 내 이미지 게시글 | GET    | /api/image-posts/nearby | lat, lng, radiusKm, page, size |
 
 - 인증 없이 호출 가능(비로그인 조회 허용).
 
 ### 4.2 Flutter 지도 패키지 선택
 
-| 플랫폼 | 패키지 예시 | 비고 |
-|--------|-------------|------|
-| **Google Maps** | `google_maps_flutter` | Android/iOS API 키 필요 |
-| **Kakao Map** | 카카오 지도 SDK Flutter 래퍼 또는 WebView | JavaScript API 키 사용 시 WebView |
-| **OpenStreetMap** | `flutter_map` + `latlong2` | 오픈소스, API 키 불필요 |
+| 플랫폼            | 패키지 예시                               | 비고                              |
+| ----------------- | ----------------------------------------- | --------------------------------- |
+| **Google Maps**   | `google_maps_flutter`                     | Android/iOS API 키 필요           |
+| **Kakao Map**     | 카카오 지도 SDK Flutter 래퍼 또는 WebView | JavaScript API 키 사용 시 WebView |
+| **OpenStreetMap** | `flutter_map` + `latlong2`                | 오픈소스, API 키 불필요           |
 
 ### 4.3 연동 흐름 예시 (의사 코드)
 
@@ -181,10 +181,10 @@ for (final pin in pins.data['content']) {
 
 ### 4.4 Pin별 게시글 목록
 
-| API | Method | URL | 설명 |
-|-----|--------|-----|------|
-| Pin별 게시글 | GET | /api/pins/{pinId}/posts | 해당 Pin에 연결된 게시글 |
-| Pin별 이미지 게시글 | GET | /api/pins/{pinId}/image-posts | 해당 Pin에 연결된 이미지 게시글 |
+| API                 | Method | URL                           | 설명                            |
+| ------------------- | ------ | ----------------------------- | ------------------------------- |
+| Pin별 게시글        | GET    | /api/pins/{pinId}/posts       | 해당 Pin에 연결된 게시글        |
+| Pin별 이미지 게시글 | GET    | /api/pins/{pinId}/image-posts | 해당 Pin에 연결된 이미지 게시글 |
 
 - Pin 마커 탭 시 위 API로 목록 조회 후 상세 화면으로 이동.
 
@@ -192,23 +192,23 @@ for (final pin in pins.data['content']) {
 
 ## 5. 에러 처리
 
-| HTTP | 처리 예시 |
-|------|-----------|
-| 401 | Refresh Token으로 갱신 시도 → 실패 시 로그인 화면 |
-| 403 | 권한 부족 메시지 표시 |
-| 429 | Rate Limit. 응답 헤더 `Retry-After`(초) 참고 후 재시도 안내 |
-| 4xx/5xx | `ErrorResponse` (code, message) 표시 |
+| HTTP    | 처리 예시                                                   |
+| ------- | ----------------------------------------------------------- |
+| 401     | Refresh Token으로 갱신 시도 → 실패 시 로그인 화면           |
+| 403     | 권한 부족 메시지 표시                                       |
+| 429     | Rate Limit. 응답 헤더 `Retry-After`(초) 참고 후 재시도 안내 |
+| 4xx/5xx | `ErrorResponse` (code, message) 표시                        |
 
 ---
 
 ## 6. 참고 문서
 
-| 문서 | 내용 |
-|------|------|
-| [API_SPEC.md](./API_SPEC.md) | REST API 상세 명세 |
-| [AUTH_DESIGN.md](./AUTH_DESIGN.md) | JWT·Refresh Token 설계 |
-| [MAP_API.md](./MAP_API.md) | 백엔드 지도 API·반경 조회 |
-| [DEPLOYMENT.md](./DEPLOYMENT.md) | 배포·환경 변수 |
+| 문서                               | 내용                      |
+| ---------------------------------- | ------------------------- |
+| [API_SPEC.md](./API_SPEC.md)       | REST API 상세 명세        |
+| [AUTH_DESIGN.md](./AUTH_DESIGN.md) | JWT·Refresh Token 설계    |
+| [MAP_API.md](./MAP_API.md)         | 백엔드 지도 API·반경 조회 |
+| [DEPLOYMENT.md](./DEPLOYMENT.md)   | 배포·환경 변수            |
 
 ---
 
