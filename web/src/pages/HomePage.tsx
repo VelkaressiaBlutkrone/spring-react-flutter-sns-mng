@@ -53,7 +53,15 @@ export default function HomePage() {
           )}
         </div>
       </nav>
-      <p className="text-gray-600">환영합니다.</p>
+      <p className="mb-4 text-gray-600">환영합니다.</p>
+      <div className="flex gap-4">
+        <Link to="/posts" className="text-sm font-medium text-blue-600 hover:text-blue-500">
+          게시글 목록
+        </Link>
+        <Link to="/image-posts" className="text-sm font-medium text-blue-600 hover:text-blue-500">
+          이미지 게시글 목록
+        </Link>
+      </div>
     </div>
   );
 }

@@ -4,6 +4,14 @@ import HomePage from '@/pages/HomePage';
 import LoginPage from '@/pages/LoginPage';
 import SignupPage from '@/pages/SignupPage';
 import MePage from '@/pages/MePage';
+import PostListPage from '@/pages/PostListPage';
+import PostDetailPage from '@/pages/PostDetailPage';
+import PostCreatePage from '@/pages/PostCreatePage';
+import PostEditPage from '@/pages/PostEditPage';
+import ImagePostListPage from '@/pages/ImagePostListPage';
+import ImagePostDetailPage from '@/pages/ImagePostDetailPage';
+import ImagePostCreatePage from '@/pages/ImagePostCreatePage';
+import ImagePostEditPage from '@/pages/ImagePostEditPage';
 
 function App() {
   return (
@@ -19,6 +27,14 @@ function App() {
           </PrivateRoute>
         }
       />
+      <Route path="/posts" element={<PostListPage />} />
+      <Route path="/posts/create" element={<PrivateRoute><PostCreatePage /></PrivateRoute>} />
+      <Route path="/posts/:id" element={<PostDetailPage />} />
+      <Route path="/posts/:id/edit" element={<PrivateRoute><PostEditPage /></PrivateRoute>} />
+      <Route path="/image-posts" element={<ImagePostListPage />} />
+      <Route path="/image-posts/create" element={<PrivateRoute><ImagePostCreatePage /></PrivateRoute>} />
+      <Route path="/image-posts/:id" element={<ImagePostDetailPage />} />
+      <Route path="/image-posts/:id/edit" element={<PrivateRoute><ImagePostEditPage /></PrivateRoute>} />
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );
