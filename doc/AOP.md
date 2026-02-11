@@ -100,4 +100,4 @@ public ResponseEntity<?> example(@Valid @RequestBody SomeRequest request) { ... 
 
 ---
 
-**마지막 업데이트**: 2026-02-09
+**마지막 업데이트**: 2026-02-11 (Step 19 점검)

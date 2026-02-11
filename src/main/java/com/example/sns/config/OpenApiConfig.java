@@ -26,7 +26,8 @@ public class OpenApiConfig {
         return new OpenAPI()
                 .info(new Info()
                         .title("지도 기반 SNS 웹/모바일 통합 플랫폼 API")
-                        .description("REST API 명세. 인증: JWT(Access+Refresh Token, RULE 6.1~6.5). 상세: doc/API_SPEC.md")
+                        .description("REST API 명세. 인증: JWT(Access+Refresh Token, RULE 6.1~6.5). "
+                                + "Rate Limiting(RULE 1.9): 로그인·가입·토큰 갱신 초과 시 429 Too Many Requests + Retry-After. 상세: doc/API_SPEC.md")
                         .version("1.0.0")
                         .contact(new Contact()
                                 .name("API 문서")

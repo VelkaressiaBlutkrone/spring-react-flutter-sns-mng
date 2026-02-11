@@ -66,6 +66,14 @@ app:
     issuer: ${JWT_ISSUER}
     audience: ${JWT_AUDIENCE}
     secret-key: ${JWT_SECRET_KEY}
+  # RULE 1.9, Step 18: Rate Limiting. 운영 시 환경 변수로 조정.
+  rate-limit:
+    login-capacity: ${RATE_LIMIT_LOGIN_CAPACITY:10}
+    login-period-minutes: ${RATE_LIMIT_LOGIN_PERIOD:1}
+    signup-capacity: ${RATE_LIMIT_SIGNUP_CAPACITY:10}
+    signup-period-minutes: ${RATE_LIMIT_SIGNUP_PERIOD:1}
+    refresh-capacity: ${RATE_LIMIT_REFRESH_CAPACITY:20}
+    refresh-period-minutes: ${RATE_LIMIT_REFRESH_PERIOD:5}
   upload:
     base-path: ${UPLOAD_BASE_PATH:/var/uploads}
     allowed-mime-types:

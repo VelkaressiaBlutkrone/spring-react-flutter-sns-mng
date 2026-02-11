@@ -98,6 +98,11 @@ dependencies {
     implementation 'com.google.maps:google-maps-services:2.2.0'
 
     /* ===============================
+     * Rate Limiting (RULE 1.9, Step 18)
+     * =============================== */
+    implementation 'com.bucket4j:bucket4j-core:8.10.1'
+
+    /* ===============================
      * JWT (jjwt 0.12.x)
      * =============================== */
     implementation 'io.jsonwebtoken:jjwt-api:0.12.6'

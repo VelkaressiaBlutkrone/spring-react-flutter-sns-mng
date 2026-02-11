@@ -28,6 +28,14 @@ app:
   map:
     provider: none
     kakao-js-app-key: ""
+  # Step 18: 테스트에서 429 검증을 위해 낮은 용량 사용
+  rate-limit:
+    login-capacity: 3
+    login-period-minutes: 1
+    signup-capacity: 3
+    signup-period-minutes: 1
+    refresh-capacity: 3
+    refresh-period-minutes: 1
   upload:
     base-path: ./build/uploads-test
     allowed-mime-types:

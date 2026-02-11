@@ -35,20 +35,25 @@ class AdminSecurityTest {
     @Test
     @DisplayName("GET /api/admin/members - 미인증 시 401을 반환한다")
     void adminMembers_미인증시_401을_반환한다() throws Exception {
-        mockMvc.perform(get("/api/admin/members"))
-                .andExpect(status().isUnauthorized())
+        // given
+        // when
+        var result = mockMvc.perform(get("/api/admin/members"));
+        // then
+        result.andExpect(status().isUnauthorized())
                 .andExpect(jsonPath("$.code").value("E002"));
     }
 
     @Test
     @DisplayName("GET /api/admin/members - ROLE_USER로 인증 시 403을 반환한다")
     void adminMembers_ROLE_USER인증시_403을_반환한다() throws Exception {
+        // given
         User user = new User("user@example.com", "password",
                 List.of(new SimpleGrantedAuthority("ROLE_USER")));
-
-        mockMvc.perform(get("/api/admin/members")
-                .with(user(user)))
-                .andExpect(status().isForbidden())
+        // when
+        var result = mockMvc.perform(get("/api/admin/members")
+                .with(user(user)));
+        // then
+        result.andExpect(status().isForbidden())
                 .andExpect(jsonPath("$.code").value("E003"));
     }
 }

@@ -83,16 +83,22 @@ class PostControllerTest {
     @Test
     @DisplayName("GET /api/posts - 비로그인 조회 시 200 반환")
     void list_비로그인_200() throws Exception {
-        mockMvc.perform(get("/api/posts"))
-                .andExpect(status().isOk())
+        // given
+        // when
+        var result = mockMvc.perform(get("/api/posts"));
+        // then
+        result.andExpect(status().isOk())
                 .andExpect(jsonPath("$.content").isArray());
     }
 
     @Test
     @DisplayName("GET /api/posts/{id} - 비로그인 상세 조회 시 200 반환")
     void get_비로그인_200() throws Exception {
-        mockMvc.perform(get("/api/posts/{id}", post.getId()))
-                .andExpect(status().isOk())
+        // given
+        // when
+        var result = mockMvc.perform(get("/api/posts/{id}", post.getId()));
+        // then
+        result.andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(post.getId()))
                 .andExpect(jsonPath("$.title").value("테스트 제목"));
     }
@@ -100,32 +106,37 @@ class PostControllerTest {
     @Test
     @DisplayName("POST /api/posts - 미인증 시 401 반환")
     void create_미인증_401() throws Exception {
+        // given
         String body = """
                 {"title":"새글","content":"내용"}
                 """.trim();
-        mockMvc.perform(post("/api/posts")
+        // when
+        var result = mockMvc.perform(post("/api/posts")
                 .with(csrf())
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(body))
-                .andExpect(status().isUnauthorized())
+                .content(body));
+        // then
+        result.andExpect(status().isUnauthorized())
                 .andExpect(jsonPath("$.code").value("E002"));
     }
 
     @Test
     @DisplayName("POST /api/posts - 로그인 시 201 반환")
     void create_로그인_201() throws Exception {
+        // given
         var auth = new UsernamePasswordAuthenticationToken(author, null,
                 java.util.Collections.singletonList(new SimpleGrantedAuthority(author.getRole().toAuthority())));
-
         String body = """
                 {"title":"새글","content":"내용"}
                 """.trim();
-        mockMvc.perform(post("/api/posts")
+        // when
+        var result = mockMvc.perform(post("/api/posts")
                 .with(csrf())
                 .with(authentication(auth))
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(body))
-                .andExpect(status().isCreated())
+                .content(body));
+        // then
+        result.andExpect(status().isCreated())
                 .andExpect(jsonPath("$.title").value("새글"))
                 .andExpect(jsonPath("$.authorId").value(author.getId()));
     }
@@ -133,31 +144,35 @@ class PostControllerTest {
     @Test
     @DisplayName("PUT /api/posts/{id} - 타인 글 수정 시 403 반환")
     void update_타인글_403() throws Exception {
+        // given
         var auth = new UsernamePasswordAuthenticationToken(otherUser, null,
                 java.util.Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER")));
-
         String body = """
                 {"title":"수정제목","content":"수정내용"}
                 """.trim();
-        mockMvc.perform(put("/api/posts/{id}", post.getId())
+        // when
+        var result = mockMvc.perform(put("/api/posts/{id}", post.getId())
                 .with(csrf())
                 .with(authentication(auth))
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(body))
-                .andExpect(status().isForbidden())
+                .content(body));
+        // then
+        result.andExpect(status().isForbidden())
                 .andExpect(jsonPath("$.code").value("E003"));
     }
 
     @Test
     @DisplayName("DELETE /api/posts/{id} - 타인 글 삭제 시 403 반환")
     void delete_타인글_403() throws Exception {
+        // given
         var auth = new UsernamePasswordAuthenticationToken(otherUser, null,
                 java.util.Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER")));
-
-        mockMvc.perform(delete("/api/posts/{id}", post.getId())
+        // when
+        var result = mockMvc.perform(delete("/api/posts/{id}", post.getId())
                 .with(csrf())
-                .with(authentication(auth)))
-                .andExpect(status().isForbidden())
+                .with(authentication(auth)));
+        // then
+        result.andExpect(status().isForbidden())
                 .andExpect(jsonPath("$.code").value("E003"));
     }
 }

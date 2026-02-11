@@ -29,11 +29,14 @@ class SampleControllerTest {
     @Test
     @DisplayName("@Valid 검증 성공 시 200 반환")
     void validate_success() throws Exception {
+        // given
         String body = "{\"name\":\"테스트\",\"description\":\"설명\"}";
-        mockMvc.perform(post("/api/sample/validate")
+        // when
+        var result = mockMvc.perform(post("/api/sample/validate")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(body))
-                .andExpect(status().isOk())
+                .content(body));
+        // then
+        result.andExpect(status().isOk())
                 .andExpect(jsonPath("$.result").value("success"))
                 .andExpect(jsonPath("$.name").value("테스트"));
     }
@@ -41,11 +44,14 @@ class SampleControllerTest {
     @Test
     @DisplayName("@Valid 검증 실패 시 ErrorResponse 반환")
     void validate_fail_returnsErrorResponse() throws Exception {
+        // given
         String body = "{\"name\":\"\",\"description\":\"설명\"}";
-        mockMvc.perform(post("/api/sample/validate")
+        // when
+        var result = mockMvc.perform(post("/api/sample/validate")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(body))
-                .andExpect(status().isBadRequest())
+                .content(body));
+        // then
+        result.andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.code").value("E005"))
                 .andExpect(jsonPath("$.fieldErrors").isArray());
     }
@@ -53,10 +59,13 @@ class SampleControllerTest {
     @Test
     @DisplayName("BusinessException 시 ErrorResponse 반환")
     void businessException_returnsErrorResponse() throws Exception {
-        mockMvc.perform(post("/api/sample/error/business")
+        // given
+        // when
+        var result = mockMvc.perform(post("/api/sample/error/business")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("{}"))
-                .andExpect(status().isBadRequest())
+                .content("{}"));
+        // then
+        result.andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.code").value("E001"))
                 .andExpect(jsonPath("$.message").exists());
     }

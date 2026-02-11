@@ -219,20 +219,41 @@
 | 항목                       | 내용                                                                        | 권장                                       |
 | -------------------------- | --------------------------------------------------------------------------- | ------------------------------------------ |
 | 1.1 local JWT secret       | application-local.yml에 기본 secret-key                                     | prod는 env 필수. local도 가능하면 env 권장 |
-| 4.2.2 Given-When-Then 주석 | PostControllerTest 등 통합 테스트에 `// given`, `// when`, `// then` 미적용 | RULE 4.2.2.6: 3줄 주석 필수                |
+| 4.2.2 Given-When-Then 주석 | Step 19에서 AuthControllerTest, AdminSecurityTest, PostControllerTest, SampleControllerTest에 `// given`, `// when`, `// then` 적용 완료 | ✅ |
 
-### 6.2 향후 적용 (Step 16~20)
+### 6.2 Step 18 완료 항목 (웹 보안·CORS·Rate Limiting)
+
+| 항목 | 결과 |
+| ---- | ---- |
+| CORS allow-list | ✅ 허용 오리진만 설정, `*` 미사용. dev 기본값 localhost:8080/5173, prod는 CORS_ALLOWED_ORIGINS 환경 변수 |
+| Rate Limiting | ✅ 로그인·가입·토큰 갱신에 Bucket4j 적용 (IP 기준). 429 + Retry-After 반환 |
+| 비밀정보·에러 | ✅ GlobalExceptionHandler 스택 트레이스 미노출, ErrorResponse 통일 |
+| 로깅 1.4.1~1.4.3 | ✅ 파라미터화 로깅, Rate limit 초과 시 WARN 로그(IP 마스킹) |
+| RULE 5.3 긴급 비활성화 | ⏳ 점검 완료: 핵심 기능(로그인·가입·토큰)은 Rate Limit으로 과도 호출 차단. Feature Toggle/Kill Switch는 운영 요구 시 별도 도입 권장. |
+
+### 6.3 Step 19 완료 항목 (테스트·문서·RULE 체크)
+
+| 항목 | 결과 |
+| ---- | ---- |
+| Given-When-Then·@DisplayName | ✅ AuthControllerTest, AdminSecurityTest, PostControllerTest, SampleControllerTest에 3줄 주석 및 @DisplayName 적용 |
+| AssertJ·BDDMockito | ✅ MemberServiceTest 등 단위 테스트에서 사용 |
+| 인증·인가 테스트 1.2.4 | ✅ 401: AuthControllerTest(me), AdminSecurityTest(admin), PostControllerTest(create). 403: AdminSecurityTest(ROLE_USER), PostControllerTest(타인 글 수정/삭제) |
+| Rate Limit 429 테스트 | ✅ AuthControllerTest login_rateLimit초과시_429_및_RetryAfter_반환 |
+| Swagger | ✅ 공개 API @Operation·@Tag 정리, OpenAPI 설명에 Rate Limiting(429) 반영 |
+| AOP RULE 3.5 | ✅ doc/AOP.md 존재, Pointcut·@Order·예외 재throw·제거 시 영향도 문서화 |
+| 로깅 RULE 1.4.3 | ✅ SLF4J, 파라미터화 로깅, 민감정보 미출력 점검 완료 |
+
+### 6.4 향후 적용 (Step 20)
 
 | RULE                  | 적용 시점                                                          |
 | --------------------- | ------------------------------------------------------------------ |
 | 2.3.2 트랜잭션·이벤트 | 이벤트 발행 기능 도입 시 @TransactionalEventListener(AFTER_COMMIT) |
 | 4.2.1.1 테스트 결정성 | 신규 테스트 시 Clock/TimeProvider                                  |
-| 5.3 긴급 비활성화     | Step 18 Feature Toggle/Kill Switch                                 |
-| 1.9 Rate Limiting     | Step 18                                                            |
+| 5.3 Kill Switch       | 운영 사고 대비 필요 시 설정/플래그 기반 기능 차단 도입             |
 | 3.6 Version Catalog   | build.gradle libs.versions.toml 도입 권장                          |
 
 ---
 
-> **최종 업데이트**: 2026-02-09
-> **점검 범위**: TASK_WEB.md 완료 Step 1, 2, 3, 4, 5, 5.1, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15
+> **최종 업데이트**: 2026-02-11
+> **점검 범위**: TASK_SERVER.md Step 1~19 (Step 19 테스트·문서·RULE 체크 포함)
 > **RULE 문서 버전**: 1.0.7 (2.1.4 URI 설계, 3.6 외부 라이브러리, 7.1.3 Spring Boot REST URI)
