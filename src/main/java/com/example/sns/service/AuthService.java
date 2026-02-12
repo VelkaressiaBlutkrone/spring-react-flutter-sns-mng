@@ -85,7 +85,7 @@ public class AuthService {
      */
     public LoginResponse refresh(String refreshToken) {
         if (refreshToken == null || refreshToken.isBlank()) {
-            log.warn("토큰 갱신 실패: refreshToken 없음");
+            log.debug("토큰 갱신 실패: refreshToken 없음 (비로그인 시 예상 동작)");
             throw new BusinessException(ErrorCode.UNAUTHORIZED, "Refresh Token이 필요합니다.");
         }
 

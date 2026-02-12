@@ -4,6 +4,7 @@ import HomePage from '@/pages/HomePage';
 import LoginPage from '@/pages/LoginPage';
 import SignupPage from '@/pages/SignupPage';
 import MePage from '@/pages/MePage';
+import PinPostsPage from '@/pages/PinPostsPage';
 import PostListPage from '@/pages/PostListPage';
 import PostDetailPage from '@/pages/PostDetailPage';
 import PostCreatePage from '@/pages/PostCreatePage';
@@ -17,6 +18,8 @@ function App() {
   return (
     <Routes>
       <Route path="/" element={<HomePage />} />
+      <Route path="/map" element={<Navigate to="/" replace />} />
+      <Route path="/pins/:id/posts" element={<PinPostsPage />} />
       <Route path="/login" element={<LoginPage />} />
       <Route path="/signup" element={<SignupPage />} />
       <Route

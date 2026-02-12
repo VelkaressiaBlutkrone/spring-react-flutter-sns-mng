@@ -12,9 +12,20 @@ export interface PostListParams {
   keyword?: string;
 }
 
+export interface PostNearbyParams {
+  lat: number;
+  lng: number;
+  radiusKm?: number;
+  page?: number;
+  size?: number;
+}
+
 export const postsApi = {
   list: (params?: PostListParams) =>
     apiClient.get<Page<PostResponse>>('/api/posts', { params }),
+
+  nearby: (params: PostNearbyParams) =>
+    apiClient.get<Page<PostResponse>>('/api/posts/nearby', { params }),
 
   get: (id: number) => apiClient.get<PostResponse>(`/api/posts/${id}`),
 

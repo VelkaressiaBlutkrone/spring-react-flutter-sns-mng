@@ -12,6 +12,14 @@ export interface ImagePostListParams {
   keyword?: string;
 }
 
+export interface ImagePostNearbyParams {
+  lat: number;
+  lng: number;
+  radiusKm?: number;
+  page?: number;
+  size?: number;
+}
+
 export interface ImagePostCreateParams {
   title: string;
   content: string;
@@ -30,6 +38,9 @@ export interface ImagePostUpdateParams {
 export const imagePostsApi = {
   list: (params?: ImagePostListParams) =>
     apiClient.get<Page<ImagePostResponse>>('/api/image-posts', { params }),
+
+  nearby: (params: ImagePostNearbyParams) =>
+    apiClient.get<Page<ImagePostResponse>>('/api/image-posts/nearby', { params }),
 
   get: (id: number) => apiClient.get<ImagePostResponse>(`/api/image-posts/${id}`),
 

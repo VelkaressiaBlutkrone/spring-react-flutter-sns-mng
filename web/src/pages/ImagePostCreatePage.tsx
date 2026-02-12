@@ -1,19 +1,20 @@
 /**
- * 이미지 게시글 작성 페이지 (TASK_WEB Step 3).
- * POST /api/image-posts (multipart/form-data). 로그인 필수.
+ * 이미지 게시글 작성 페이지 (TASK_WEB Step 3, Step 5).
+ * POST /api/image-posts (multipart/form-data). 로그인 필수. LocationPicker로 위치·Pin 선택.
  */
 import { Link, useNavigate } from 'react-router-dom';
 import { useMutation } from '@tanstack/react-query';
 import { useState } from 'react';
 import { imagePostsApi } from '@/api/imagePosts';
+import { LocationPicker } from '@/components/LocationPicker';
+import type { LocationValue } from '@/components/LocationPicker';
 
 export default function ImagePostCreatePage() {
   const navigate = useNavigate();
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [image, setImage] = useState<File | null>(null);
-  const [latitude, setLatitude] = useState<string>('');
-  const [longitude, setLongitude] = useState<string>('');
+  const [location, setLocation] = useState<LocationValue | null>(null);
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
 
   const createMutation = useMutation({
@@ -42,15 +43,13 @@ export default function ImagePostCreatePage() {
       return;
     }
 
-    const lat = latitude ? Number(latitude) : undefined;
-    const lng = longitude ? Number(longitude) : undefined;
-
     createMutation.mutate({
       title: title.trim(),
       content: content.trim(),
       image,
-      latitude: lat,
-      longitude: lng,
+      latitude: location?.latitude,
+      longitude: location?.longitude,
+      pinId: location?.pinId,
     });
   };
 
@@ -113,37 +112,7 @@ export default function ImagePostCreatePage() {
           {fieldErrors.image && <p className="mt-1 text-sm text-red-600">{fieldErrors.image}</p>}
         </div>
 
-        <div className="grid grid-cols-2 gap-4">
-          <div>
-            <label htmlFor="latitude" className="block text-sm font-medium text-gray-700">
-              위도 (선택)
-            </label>
-            <input
-              id="latitude"
-              type="number"
-              step="any"
-              value={latitude}
-              onChange={(e) => setLatitude(e.target.value)}
-              placeholder="예: 37.5665"
-              className="mt-1 w-full rounded border border-gray-300 px-3 py-2"
-            />
-          </div>
-          <div>
-            <label htmlFor="longitude" className="block text-sm font-medium text-gray-700">
-              경도 (선택)
-            </label>
-            <input
-              id="longitude"
-              type="number"
-              step="any"
-              value={longitude}
-              onChange={(e) => setLongitude(e.target.value)}
-              placeholder="예: 126.9780"
-              className="mt-1 w-full rounded border border-gray-300 px-3 py-2"
-            />
-          </div>
-        </div>
-        <p className="text-xs text-gray-500">지도 Pin 선택 UI는 Step 5에서 연동됩니다.</p>
+        <LocationPicker value={location} onChange={setLocation} mapHeight={280} />
 
         <div className="flex gap-4 pt-4">
           <button

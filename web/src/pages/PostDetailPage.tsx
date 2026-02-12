@@ -1,11 +1,13 @@
 /**
- * 게시글 상세 페이지 (TASK_WEB Step 3).
- * GET /api/posts/{id}. XSS 방지: React 기본 이스케이프.
+ * 게시글 상세 페이지 (TASK_WEB Step 3, Step 5).
+ * GET /api/posts/{id}. XSS 방지: React 기본 이스케이프. 지도·거리 표시.
  */
 import { Link, useParams, useNavigate } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { postsApi } from '@/api/posts';
 import { useAuthStore } from '@/store/authStore';
+import { MapWithLocation, DistanceDisplay } from '@/components';
+import { AppLayout } from '@/components/AppLayout';
 
 export default function PostDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -29,20 +31,20 @@ export default function PostDetailPage() {
     },
   });
 
-  if (Number.isNaN(postId)) return <div className="p-8 text-red-600">잘못된 경로입니다.</div>;
-  if (isLoading) return <div className="p-8 text-gray-600">로딩 중...</div>;
-  if (error || !data?.data) return <div className="p-8 text-red-600">게시글을 찾을 수 없습니다.</div>;
+  if (Number.isNaN(postId)) return <AppLayout><div className="text-red-600">잘못된 경로입니다.</div></AppLayout>;
+  if (isLoading) return <AppLayout><div className="text-slate-600">로딩 중...</div></AppLayout>;
+  if (error || !data?.data) return <AppLayout><div className="text-red-600">게시글을 찾을 수 없습니다.</div></AppLayout>;
 
   const post = data.data;
   const isAuthor = user?.id === post.authorId;
 
   return (
-    <div className="min-h-screen bg-gray-50 p-8">
-      <nav className="mb-6 flex items-center justify-between border-b border-gray-200 pb-4">
-        <Link to="/posts" className="text-sm font-medium text-blue-600 hover:text-blue-500">
-          ← 목록으로
-        </Link>
-        <div className="flex gap-4">
+    <AppLayout
+      nav={
+        <>
+          <Link to="/posts" className="text-sm font-medium text-slate-600 hover:text-slate-900">
+            ← 목록
+          </Link>
           {isAuthor && (
             <>
               <Link to={`/posts/${post.id}/edit`} className="text-sm font-medium text-blue-600 hover:text-blue-500">
@@ -60,28 +62,36 @@ export default function PostDetailPage() {
               </button>
             </>
           )}
-        </div>
-      </nav>
-
-      <article className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
+          <Link to="/" className="text-sm font-medium text-slate-600 hover:text-slate-900">
+            홈
+          </Link>
+        </>
+      }
+    >
+      <article className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
         <div className="mb-4 flex items-center gap-2">
           {post.notice && (
-            <span className="rounded bg-amber-100 px-2 py-0.5 text-xs font-medium text-amber-800">
+            <span className="rounded-md bg-amber-100 px-2 py-0.5 text-xs font-medium text-amber-800">
               공지
             </span>
           )}
-          <h1 className="text-2xl font-bold text-gray-900">{post.title}</h1>
+          <h1 className="text-2xl font-bold text-slate-900">{post.title}</h1>
         </div>
-        <p className="mb-4 text-sm text-gray-500">
+        <p className="mb-4 text-sm text-slate-500">
           {post.authorNickname} · {new Date(post.createdAt).toLocaleString('ko-KR')}
         </p>
-        <div className="whitespace-pre-wrap text-gray-700">{post.content}</div>
-        {(post.latitude != null || post.longitude != null) && (
-          <p className="mt-4 text-sm text-gray-500">
-            위치: {post.latitude}, {post.longitude}
-          </p>
+        <div className="whitespace-pre-wrap text-slate-700">{post.content}</div>
+        {post.latitude != null && post.longitude != null && (
+          <div className="mt-6 space-y-2">
+            <MapWithLocation
+              latitude={post.latitude}
+              longitude={post.longitude}
+              label="게시글 위치"
+            />
+            <DistanceDisplay destLat={post.latitude} destLng={post.longitude} />
+          </div>
         )}
       </article>
-    </div>
+    </AppLayout>
   );
 }

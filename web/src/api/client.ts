@@ -34,10 +34,15 @@ apiClient.interceptors.response.use(
     const originalRequest = err.config;
 
     if (err.response?.status === 401 && !originalRequest._retry) {
-      const isRefresh = typeof originalRequest.url === 'string' && originalRequest.url.includes('/api/auth/refresh');
-      if (isRefresh) {
-        useAuthStore.getState().clearAuth();
-        redirectToLogin();
+      const url = typeof originalRequest.url === 'string' ? originalRequest.url : '';
+      const isRefresh = url.includes('/api/auth/refresh');
+      const isLogin = url.includes('/api/auth/login');
+      // 로그인/가입 실패 시 Refresh 시도하지 않음 (세션 없음)
+      if (isRefresh || isLogin) {
+        if (isRefresh) {
+          useAuthStore.getState().clearAuth();
+          redirectToLogin();
+        }
         return Promise.reject(err);
       }
 

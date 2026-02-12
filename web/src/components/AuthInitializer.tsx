@@ -30,7 +30,7 @@ export function AuthInitializer({ children }: { children: React.ReactNode }) {
       .catch(() => {
         // Refresh 실패 시 무시 (비로그인 상태 유지)
       });
-  }, []);
+  }, [accessToken, setAuth]);
 
   return <>{children}</>;
 }

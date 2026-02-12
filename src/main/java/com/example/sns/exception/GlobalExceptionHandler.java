@@ -31,7 +31,12 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(BusinessException.class)
     public ResponseEntity<ErrorResponse> handleBusinessException(BusinessException e) {
-        log.warn("BusinessException: code={}, message={}", e.getErrorCode().getCode(), e.getMessage());
+        // Refresh Token 없음: 비로그인 시 예상 동작, DEBUG로 처리
+        if (e.getErrorCode() == ErrorCode.UNAUTHORIZED && "Refresh Token이 필요합니다.".equals(e.getMessage())) {
+            log.debug("BusinessException: code={}, message={}", e.getErrorCode().getCode(), e.getMessage());
+        } else {
+            log.warn("BusinessException: code={}, message={}", e.getErrorCode().getCode(), e.getMessage());
+        }
         ErrorResponse response = ErrorResponse.of(e.getErrorCode(), e.getMessage());
         return ResponseEntity.status(e.getErrorCode().getHttpStatus()).body(response);
     }

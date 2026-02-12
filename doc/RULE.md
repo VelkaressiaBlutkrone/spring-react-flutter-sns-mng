@@ -68,6 +68,7 @@
 
 ### 기술 [SHOULD]
 
+- 인코딩: 로그·서버·클라이언트·모바일의 인코딩은 모두 UTF-8로 지정함.
 - 계층: Controller → Service → Domain/Repository 단방향. N+1 대응, 엔티티 직접 반환 금지. QueryDSL 사용 시에만 해당 규칙 적용.
 - AOP: 횡단 관심사 전용, 비즈니스 로직 금지. 상세는 rules/aop-guide.md 분리 권장.
 - 외부 호출: Timeout·Retry 정책 명시. 라이브러리 버전은 TECH-STACK.md / libs.versions.toml 관리.
@@ -96,5 +97,5 @@
 
 ---
 
-> **마지막 업데이트**: 2026-02-09
-> **버전**: 1.0.9 (챕터별 rules/ 분리 완료)
+> **마지막 업데이트**: 2026-02-12
+> **버전**: 1.0.10 (인코딩 UTF-8 규칙 추가)

@@ -1,13 +1,14 @@
 /**
- * 이미지 게시글 상세 페이지 (TASK_WEB Step 3).
+ * 이미지 게시글 상세 페이지 (TASK_WEB Step 3, Step 5).
  * GET /api/image-posts/{id}, 이미지 URL /api/image-posts/{id}/image.
- * XSS 방지: React 기본 이스케이프.
+ * XSS 방지: React 기본 이스케이프. 지도·거리 표시.
  */
 import { Link, useParams, useNavigate } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { imagePostsApi } from '@/api/imagePosts';
 import { useAuthStore } from '@/store/authStore';
 import { getImageUrl } from '@/utils/imageUrl';
+import { MapWithLocation, DistanceDisplay } from '@/components';
 
 export default function ImagePostDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -84,10 +85,15 @@ export default function ImagePostDetailPage() {
             {post.authorNickname} · {new Date(post.createdAt).toLocaleString('ko-KR')}
           </p>
           <div className="whitespace-pre-wrap text-gray-700">{post.content}</div>
-          {(post.latitude != null || post.longitude != null) && (
-            <p className="mt-4 text-sm text-gray-500">
-              위치: {post.latitude}, {post.longitude}
-            </p>
+          {post.latitude != null && post.longitude != null && (
+            <div className="mt-4 space-y-2">
+              <MapWithLocation
+                latitude={post.latitude}
+                longitude={post.longitude}
+                label="게시글 위치"
+              />
+              <DistanceDisplay destLat={post.latitude} destLng={post.longitude} />
+            </div>
           )}
         </div>
       </article>

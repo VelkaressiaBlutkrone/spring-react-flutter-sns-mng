@@ -6,9 +6,9 @@
 
 -- 1) 회원 (USER 2명, ADMIN 1명)
 INSERT INTO users (email, password_hash, nickname, role, created_at, updated_at) VALUES
-('user1@example.com', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy', '테스트유저1', 'USER', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-('user2@example.com', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy', '테스트유저2', 'USER', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-('admin@example.com', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy', '관리자', 'ADMIN', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+('user1@example.com', '$2a$10$l2plFKZEt9GCNmSFEIReTe750sekSAaWb29idZcLKoBEKwNzI2vmq', '테스트유저1', 'USER', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+('user2@example.com', '$2a$10$l2plFKZEt9GCNmSFEIReTe750sekSAaWb29idZcLKoBEKwNzI2vmq', '테스트유저2', 'USER', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+('admin@example.com', '$2a$10$l2plFKZEt9GCNmSFEIReTe750sekSAaWb29idZcLKoBEKwNzI2vmq', '관리자', 'ADMIN', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 
 -- 2) Pin (user1: 2개, user2: 1개)
 INSERT INTO pins (user_id, description, latitude, longitude, created_at, updated_at) VALUES

@@ -18,7 +18,12 @@ spring:
     console:
       enabled: true
       path: /h2-console
+  sql:
+    init:
+      data-locations: classpath:data/test_data.sql
+      mode: always
   jpa:
+    defer-datasource-initialization: true
     hibernate:
       ddl-auto: ${JPA_DDL_AUTO:create-drop}
     properties:
@@ -32,7 +37,10 @@ server:
   port: ${SERVER_PORT:8080}
 
 # RULE 1.4.3: 개발 환경 DEBUG, 파일 보관 30일
+# Windows 콘솔 한글 깨짐 방지 (UTF-8)
 logging:
+  charset:
+    console: UTF-8
   pattern:
     console: "%d{yyyy-MM-dd HH:mm:ss.SSS} │ %highlight(%-5level) │ %cyan(%-20logger{20}) │ %msg%n"
   level:

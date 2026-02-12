@@ -53,7 +53,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 if (jti != null && tokenStore.isBlacklisted(jti)) {
                     log.debug("블랙리스트된 토큰: jti={}", jti);
                 } else {
-                    Long userId = claims.get(CLAIM_USER_ID, Long.class);
+                    Long userId = extractUserId(claims);
                     if (userId != null) {
                         userRepository.findById(userId).ifPresent(user -> {
                             var auth = new UsernamePasswordAuthenticationToken(
@@ -90,4 +90,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     }
 
     private static final String CLAIM_USER_ID = "userId";
+
+    /** JJWT는 JSON 파싱 시 숫자를 Double로 반환할 수 있으므로 Number로 추출 후 Long 변환. */
+    private static Long extractUserId(Claims claims) {
+        Object raw = claims.get(CLAIM_USER_ID);
+        if (raw instanceof Number num) {
+            return num.longValue();
+        }
+        return null;
+    }
 }
