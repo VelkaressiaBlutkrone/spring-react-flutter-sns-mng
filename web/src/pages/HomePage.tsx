@@ -12,6 +12,7 @@ import { authApi } from '@/api/auth';
 import { postsApi } from '@/api/posts';
 import { imagePostsApi } from '@/api/imagePosts';
 import { pinsApi } from '@/api/pins';
+import { mapApi } from '@/api/map';
 import { useAuthStore } from '@/store/authStore';
 import { MapView } from '@/components/MapView';
 import { PinMarker } from '@/components/PinMarker';
@@ -94,6 +95,19 @@ export default function HomePage() {
     enabled: !geoLoading,
   });
 
+  const [p0, p1] = measurePoints;
+  const { data: directionsData } = useQuery({
+    queryKey: ['map', 'directions', p0?.lat, p0?.lng, p1?.lat, p1?.lng],
+    queryFn: () =>
+      mapApi.directions({
+        originLat: p0!.lat,
+        originLng: p0!.lng,
+        destLat: p1!.lat,
+        destLng: p1!.lng,
+      }),
+    enabled: measurePoints.length === 2 && p0 != null && p1 != null,
+  });
+
   const { data: postsData } = useQuery({
     queryKey: ['posts', 'recent', 5],
     queryFn: () => postsApi.list({ page: 0, size: 5 }),
@@ -131,10 +145,15 @@ export default function HomePage() {
       })),
   ];
 
-  const measureDistance =
-    measurePoints.length === 2
-      ? haversineDistance(measurePoints[0], measurePoints[1])
-      : null;
+  const directionsResponse = directionsData?.data;
+  const measurePath = directionsResponse?.path ?? (measurePoints.length === 2 ? measurePoints : null);
+  const measureDistanceKm =
+    directionsResponse != null
+      ? directionsResponse.distanceMeters / 1000
+      : measurePoints.length === 2
+        ? haversineDistance(measurePoints[0], measurePoints[1])
+        : null;
+  const isRoadRoute = directionsResponse?.isRoadRoute ?? false;
 
   const handleLogout = async () => {
     try {
@@ -229,9 +248,12 @@ export default function HomePage() {
                       초기화
                     </button>
                   )}
-                  {measureDistance != null && (
+                  {measureDistanceKm != null && (
                     <span className="text-sm font-semibold text-blue-600">
-                      거리: {formatDistance(measureDistance)}
+                      거리: {formatDistance(measureDistanceKm)}
+                      {isRoadRoute && (
+                        <span className="ml-1 text-xs font-normal text-slate-500">(실제 도로)</span>
+                      )}
                     </span>
                   )}
                   <KakaoMapLinks
@@ -275,10 +297,10 @@ export default function HomePage() {
                       </div>
                     </MapMarker>
                   ))}
-                  {measurePoints.length === 2 && (
+                  {measurePath != null && measurePath.length >= 2 && (
                     <Polyline
-                      path={measurePoints}
-                      strokeColor="#2563eb"
+                      path={measurePath}
+                      strokeColor={isRoadRoute ? '#16a34a' : '#2563eb'}
                       strokeWeight={4}
                       strokeOpacity={0.8}
                     />

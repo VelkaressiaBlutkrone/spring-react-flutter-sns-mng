@@ -88,6 +88,7 @@ public class SecurityConfig {
                         .requestMatchers(org.springframework.http.HttpMethod.POST, "/api/image-posts").authenticated()
                         .requestMatchers(org.springframework.http.HttpMethod.PUT, "/api/image-posts/*").authenticated()
                         .requestMatchers(org.springframework.http.HttpMethod.DELETE, "/api/image-posts/*").authenticated()
+                        .requestMatchers(org.springframework.http.HttpMethod.GET, "/api/map/directions").permitAll()
                         .requestMatchers(org.springframework.http.HttpMethod.GET, "/api/pins/nearby").permitAll()
                         .requestMatchers(org.springframework.http.HttpMethod.GET, "/api/pins/*/posts", "/api/pins/*/image-posts").permitAll()
                         .requestMatchers("/api/pins", "/api/pins/**").authenticated()

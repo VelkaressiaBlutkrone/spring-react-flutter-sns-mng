@@ -37,6 +37,12 @@ public record MapProperties(
         String kakaoApiKey,
 
         /**
+         * Kakao Mobility Directions API Key (경로/거리 측정용).
+         * 미설정 시 kakao-api-key 사용. MAP_KAKAO_MOBILITY_API_KEY 환경 변수.
+         */
+        String kakaoMobilityApiKey,
+
+        /**
          * Naver Client ID (provider=naver 시 환경 변수 필수).
          */
         String naverClientId,

@@ -72,6 +72,7 @@ app:
     retry-count: ${MAP_RETRY_COUNT:2}
     google-api-key: ${MAP_GOOGLE_API_KEY:}
     kakao-api-key: ${MAP_KAKAO_API_KEY:}
+    kakao-mobility-api-key: ${MAP_KAKAO_MOBILITY_API_KEY:${MAP_KAKAO_API_KEY:}}
     kakao-js-app-key: ${MAP_KAKAO_JS_APP_KEY:}
     naver-client-id: ${MAP_NAVER_CLIENT_ID:}
     naver-client-secret: ${MAP_NAVER_CLIENT_SECRET:}
