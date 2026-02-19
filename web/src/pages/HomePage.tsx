@@ -180,12 +180,11 @@ export default function HomePage() {
             <Link to="/about" className="text-sm font-medium text-slate-600 hover:text-slate-900">
               About
             </Link>
-            <Link to="/posts/create" className="text-sm font-medium text-blue-600 hover:text-blue-500">
-              글쓰기
-            </Link>
-            <Link to="/image-posts/create" className="text-sm font-medium text-blue-600 hover:text-blue-500">
-              이미지 글쓰기
-            </Link>
+            {user?.role === 'ADMIN' && (
+              <Link to="/admin/members" className="text-sm font-medium text-amber-600 hover:text-amber-500">
+                관리자
+              </Link>
+            )}
             {accessToken ? (
               <>
                 {user && (

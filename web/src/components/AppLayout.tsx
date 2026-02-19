@@ -58,6 +58,11 @@ export function AppLayout({ children, maxWidth = '4xl', title, nav }: AppLayoutP
                 <Link to="/about" className="text-sm font-medium text-slate-600 hover:text-slate-900">
                   About
                 </Link>
+                {user?.role === 'ADMIN' && (
+                  <Link to="/admin/members" className="text-sm font-medium text-amber-600 hover:text-amber-500">
+                    관리자
+                  </Link>
+                )}
                 <Link to="/" className="text-sm font-medium text-slate-600 hover:text-slate-900">
                   홈
                 </Link>

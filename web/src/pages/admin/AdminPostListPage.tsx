@@ -1,24 +1,31 @@
 /**
- * 게시글 목록 페이지 (TASK_WEB Step 3).
- * GET /api/posts, 페이징·검색·공지 상단.
+ * 관리자 게시글 목록 페이지 (TASK_WEB Step 7).
+ * GET /api/admin/posts. 페이징·검색·공지 토글·수정·삭제.
+ * RULE 1.2: ROLE_ADMIN 전용.
  */
 import { Link } from 'react-router-dom';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
-import { postsApi } from '@/api/posts';
-import { useAuthStore } from '@/store/authStore';
+import { adminPostsApi } from '@/api/admin';
 import { AppLayout } from '@/components/AppLayout';
 
-export default function PostListPage() {
-  const user = useAuthStore((s) => s.user);
+export default function AdminPostListPage() {
+  const queryClient = useQueryClient();
   const [page, setPage] = useState(0);
   const [keyword, setKeyword] = useState('');
   const [searchInput, setSearchInput] = useState('');
   const size = 10;
 
   const { data, isLoading, error } = useQuery({
-    queryKey: ['posts', page, keyword],
-    queryFn: () => postsApi.list({ page, size, keyword: keyword || undefined }),
+    queryKey: ['admin', 'posts', page, keyword],
+    queryFn: () => adminPostsApi.list({ page, size, keyword: keyword || undefined }),
+  });
+
+  const deleteMutation = useMutation({
+    mutationFn: (id: number) => adminPostsApi.delete(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['admin', 'posts'] });
+    },
   });
 
   const handleSearch = (e: React.FormEvent) => {
@@ -27,8 +34,8 @@ export default function PostListPage() {
     setPage(0);
   };
 
-  if (isLoading) return <AppLayout title="게시글"><div className="text-slate-600">로딩 중...</div></AppLayout>;
-  if (error) return <AppLayout title="게시글"><div className="text-red-600">목록을 불러오지 못했습니다.</div></AppLayout>;
+  if (isLoading) return <AppLayout title="관리자 - 게시글"><div className="text-slate-600">로딩 중...</div></AppLayout>;
+  if (error) return <AppLayout title="관리자 - 게시글"><div className="text-red-600">목록을 불러오지 못했습니다.</div></AppLayout>;
 
   const content = data?.data.content ?? [];
   const totalPages = data?.data.totalPages ?? 0;
@@ -36,11 +43,14 @@ export default function PostListPage() {
 
   return (
     <AppLayout
-      title="게시글"
+      title="관리자 - 게시글"
       nav={
         <>
-          <Link to="/image-posts" className="text-sm font-medium text-slate-600 hover:text-slate-900">
-            이미지
+          <Link to="/admin/members" className="text-sm font-medium text-slate-600 hover:text-slate-900">
+            회원
+          </Link>
+          <Link to="/admin/image-posts" className="text-sm font-medium text-slate-600 hover:text-slate-900">
+            이미지 게시글
           </Link>
           <Link to="/" className="text-sm font-medium text-slate-600 hover:text-slate-900">
             홈
@@ -48,14 +58,7 @@ export default function PostListPage() {
         </>
       }
     >
-      <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
-        <Link
-          to="/posts/create"
-          className="inline-flex items-center rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-500"
-        >
-          글쓰기
-        </Link>
-        <form onSubmit={handleSearch} className="flex gap-2">
+      <form onSubmit={handleSearch} className="mb-6 flex gap-2">
         <input
           type="text"
           value={searchInput}
@@ -63,11 +66,10 @@ export default function PostListPage() {
           placeholder="검색어"
           className="rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
         />
-        <button type="submit" className="rounded-lg bg-slate-600 px-4 py-2 text-sm font-medium text-white hover:bg-slate-500">
+        <button type="submit" className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-500">
           검색
         </button>
       </form>
-      </div>
 
       <ul className="space-y-4">
         {content.length === 0 ? (
@@ -92,14 +94,27 @@ export default function PostListPage() {
                     {post.authorNickname} · {new Date(post.createdAt).toLocaleDateString('ko-KR')}
                   </p>
                 </Link>
-                {user?.id === post.authorId && (
+                <div className="flex shrink-0 items-center gap-2">
+                  <NoticeToggleButton postId={post.id} notice={post.notice} />
                   <Link
-                    to={`/posts/${post.id}/edit`}
-                    className="shrink-0 text-sm font-medium text-blue-600 hover:text-blue-500"
+                    to={`/admin/posts/${post.id}/edit`}
+                    className="text-sm font-medium text-blue-600 hover:text-blue-500"
                   >
                     수정
                   </Link>
-                )}
+                  <button
+                    type="button"
+                    onClick={() => {
+                      if (window.confirm('정말 삭제하시겠습니까?')) {
+                        deleteMutation.mutate(post.id);
+                      }
+                    }}
+                    disabled={deleteMutation.isPending}
+                    className="text-sm font-medium text-red-600 hover:text-red-500 disabled:opacity-50"
+                  >
+                    삭제
+                  </button>
+                </div>
               </div>
             </li>
           ))
@@ -132,5 +147,27 @@ export default function PostListPage() {
 
       <p className="mt-4 text-sm text-slate-500">총 {totalElements}건</p>
     </AppLayout>
+  );
+}
+
+function NoticeToggleButton({ postId, notice }: { postId: number; notice: boolean }) {
+  const queryClient = useQueryClient();
+  const mutation = useMutation({
+    mutationFn: () => adminPostsApi.toggleNotice(postId, !notice),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['admin', 'posts'] });
+    },
+  });
+  return (
+    <button
+      type="button"
+      onClick={() => mutation.mutate()}
+      disabled={mutation.isPending}
+      className={`rounded-md px-2 py-1 text-xs font-medium ${
+        notice ? 'bg-amber-100 text-amber-800' : 'bg-slate-100 text-slate-600'
+      } hover:opacity-80 disabled:opacity-50`}
+    >
+      {notice ? '공지 해제' : '공지'}
+    </button>
   );
 }
