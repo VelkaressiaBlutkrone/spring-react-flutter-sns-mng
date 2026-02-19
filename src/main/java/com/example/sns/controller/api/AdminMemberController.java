@@ -20,8 +20,6 @@ import com.example.sns.aop.ValidCheck;
 import com.example.sns.dto.request.AdminMemberCreateRequest;
 import com.example.sns.dto.request.AdminMemberUpdateRequest;
 import com.example.sns.dto.response.MemberResponse;
-import com.example.sns.exception.BusinessException;
-import com.example.sns.exception.ErrorCode;
 import com.example.sns.service.MemberService;
 
 import io.swagger.v3.oas.annotations.Operation;

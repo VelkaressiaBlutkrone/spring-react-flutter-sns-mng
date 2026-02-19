@@ -28,16 +28,16 @@ import lombok.extern.slf4j.Slf4j;
 /**
  * Rate Limiting 필터 (RULE 1.9, Step 18).
  *
- * 로그인·회원가입·토큰 갱신 등 공개 API에 IP 기준 제한 적용.
+ * 로그인·회원가입·토큰 갱신·비인증 공개 API에 IP 기준 제한 적용.
  * 초과 시 429 Too Many Requests + Retry-After 헤더 반환.
  */
 @Slf4j
 @Component
-@Order(Ordered.HIGHEST_PRECEDENCE)
+@Order(Ordered.HIGHEST_PRECEDENCE + 1)
 @RequiredArgsConstructor
 public class RateLimitFilter extends OncePerRequestFilter {
 
-    private static final List<String> RATE_LIMIT_PATHS = List.of(
+    private static final List<String> AUTH_RATE_LIMIT_PATHS = List.of(
             "POST:/api/auth/login",
             "POST:/api/members",
             "POST:/api/auth/refresh"
@@ -48,8 +48,29 @@ public class RateLimitFilter extends OncePerRequestFilter {
 
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) {
-        String key = request.getMethod() + ":" + request.getRequestURI();
-        return !RATE_LIMIT_PATHS.contains(key);
+        String method = request.getMethod();
+        String path = request.getRequestURI();
+        return !isRateLimitedPath(method, path);
+    }
+
+    /** RULE 1.9: 인증 API + 비인증 공개 API Rate Limiting 대상 여부. */
+    private boolean isRateLimitedPath(String method, String path) {
+        if (AUTH_RATE_LIMIT_PATHS.contains(method + ":" + path)) {
+            return true;
+        }
+        if (!"GET".equals(method)) {
+            return false;
+        }
+        if (path.startsWith("/api/posts") || path.startsWith("/api/image-posts")) {
+            return true;
+        }
+        if ("/api/pins/nearby".equals(path)) {
+            return true;
+        }
+        if (path.matches("/api/pins/\\d+/posts") || path.matches("/api/pins/\\d+/image-posts")) {
+            return true;
+        }
+        return "/api/map/directions".equals(path);
     }
 
     @Override
@@ -97,7 +118,7 @@ public class RateLimitFilter extends OncePerRequestFilter {
         if ("/api/auth/refresh".equals(path) && "POST".equals(method)) {
             return "refresh:" + clientKey;
         }
-        return "default:" + clientKey;
+        return "public:" + clientKey;
     }
 
     private Bucket buildBucket(String path, String method) {
@@ -109,7 +130,7 @@ public class RateLimitFilter extends OncePerRequestFilter {
         } else if ("/api/auth/refresh".equals(path) && "POST".equals(method)) {
             bandwidth = Bandwidth.simple(props.getRefreshCapacity(), Duration.ofMinutes(props.getRefreshPeriodMinutes()));
         } else {
-            bandwidth = Bandwidth.simple(100, Duration.ofMinutes(1));
+            bandwidth = Bandwidth.simple(props.getPublicApiCapacity(), Duration.ofMinutes(props.getPublicApiPeriodMinutes()));
         }
         return Bucket.builder().addLimit(bandwidth).build();
     }

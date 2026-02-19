@@ -13,7 +13,6 @@ import org.springframework.security.config.annotation.web.configurers.HeadersCon
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -24,7 +23,6 @@ import com.example.sns.security.JwtAuthenticationFilter;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -80,23 +78,29 @@ public class SecurityConfig {
                         .requestMatchers("/api/me", "/api/me/**").authenticated()
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
                         .requestMatchers("/api/sample/**").permitAll()
-                        .requestMatchers(org.springframework.http.HttpMethod.GET, "/api/posts", "/api/posts/*").permitAll()
+                        .requestMatchers(org.springframework.http.HttpMethod.GET, "/api/posts", "/api/posts/*")
+                        .permitAll()
                         .requestMatchers(org.springframework.http.HttpMethod.POST, "/api/posts").authenticated()
                         .requestMatchers(org.springframework.http.HttpMethod.PUT, "/api/posts/*").authenticated()
                         .requestMatchers(org.springframework.http.HttpMethod.DELETE, "/api/posts/*").authenticated()
-                        .requestMatchers(org.springframework.http.HttpMethod.GET, "/api/image-posts", "/api/image-posts/*").permitAll()
+                        .requestMatchers(org.springframework.http.HttpMethod.GET, "/api/image-posts",
+                                "/api/image-posts/*")
+                        .permitAll()
                         .requestMatchers(org.springframework.http.HttpMethod.POST, "/api/image-posts").authenticated()
                         .requestMatchers(org.springframework.http.HttpMethod.PUT, "/api/image-posts/*").authenticated()
-                        .requestMatchers(org.springframework.http.HttpMethod.DELETE, "/api/image-posts/*").authenticated()
+                        .requestMatchers(org.springframework.http.HttpMethod.DELETE, "/api/image-posts/*")
+                        .authenticated()
                         .requestMatchers(org.springframework.http.HttpMethod.GET, "/api/map/directions").permitAll()
                         .requestMatchers(org.springframework.http.HttpMethod.GET, "/api/pins/nearby").permitAll()
-                        .requestMatchers(org.springframework.http.HttpMethod.GET, "/api/pins/*/posts", "/api/pins/*/image-posts").permitAll()
+                        .requestMatchers(org.springframework.http.HttpMethod.GET, "/api/pins/*/posts",
+                                "/api/pins/*/image-posts")
+                        .permitAll()
                         .requestMatchers("/api/pins", "/api/pins/**").authenticated()
                         .requestMatchers("/error", "/favicon.ico").permitAll()
                         .anyRequest().denyAll())
                 .exceptionHandling(ex -> ex
                         .authenticationEntryPoint((HttpServletRequest request, HttpServletResponse response,
-                                                  org.springframework.security.core.AuthenticationException authException) -> {
+                                org.springframework.security.core.AuthenticationException authException) -> {
                             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                             response.setContentType("application/json;charset=UTF-8");
                             response.getWriter().write("{\"code\":\"E002\",\"message\":\"인증이 필요합니다.\"}");

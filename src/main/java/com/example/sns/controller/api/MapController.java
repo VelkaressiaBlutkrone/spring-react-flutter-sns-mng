@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.sns.service.map.KakaoMobilityDirectionsService;
 import com.example.sns.service.map.KakaoMobilityDirectionsService.DirectionsResult;
-import com.example.sns.utils.haversine.HaversineUtil;
+import com.example.sns.util.haversine.HaversineUtil;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -20,7 +20,8 @@ import lombok.RequiredArgsConstructor;
 /**
  * 지도 API — 경로·거리 조회.
  *
- * <p>Kakao Mobility Directions API로 실제 도로 경로 및 이동 거리 제공.
+ * <p>
+ * Kakao Mobility Directions API로 실제 도로 경로 및 이동 거리 제공.
  * API 키 미설정 시 직선 거리(Haversine)만 반환.
  */
 @Tag(name = "Map", description = "지도 경로·거리 조회")

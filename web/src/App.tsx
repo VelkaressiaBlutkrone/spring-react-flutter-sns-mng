@@ -4,6 +4,8 @@ import HomePage from '@/pages/HomePage';
 import LoginPage from '@/pages/LoginPage';
 import SignupPage from '@/pages/SignupPage';
 import MePage from '@/pages/MePage';
+import MeEditPage from '@/pages/MeEditPage';
+import AboutPage from '@/pages/AboutPage';
 import PinPostsPage from '@/pages/PinPostsPage';
 import PostListPage from '@/pages/PostListPage';
 import PostDetailPage from '@/pages/PostDetailPage';
@@ -30,6 +32,15 @@ function App() {
           </PrivateRoute>
         }
       />
+      <Route
+        path="/me/edit"
+        element={
+          <PrivateRoute>
+            <MeEditPage />
+          </PrivateRoute>
+        }
+      />
+      <Route path="/about" element={<AboutPage />} />
       <Route path="/posts" element={<PostListPage />} />
       <Route path="/posts/create" element={<PrivateRoute><PostCreatePage /></PrivateRoute>} />
       <Route path="/posts/:id" element={<PostDetailPage />} />

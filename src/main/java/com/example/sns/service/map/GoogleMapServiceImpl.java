@@ -4,10 +4,11 @@ import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.stereotype.Service;
 
 import com.example.sns.config.MapProperties;
+import com.example.sns.exception.BusinessException;
+import com.example.sns.exception.ErrorCode;
 import com.google.maps.GeoApiContext;
 import com.google.maps.GeocodingApi;
 import com.google.maps.model.GeocodingResult;
@@ -19,7 +20,8 @@ import lombok.extern.slf4j.Slf4j;
 /**
  * Google Maps Geocoding API 구현체.
  *
- * <p>PRD 2.2: 지도 API 추상화 구현체 (Google).
+ * <p>
+ * PRD 2.2: 지도 API 추상화 구현체 (Google).
  * RULE 3.4: Timeout·Retry 정책 (MapProperties).
  * RULE 1.4.3: 외부 API 호출·실패 시 파라미터화 로깅.
  * Step 11: app.map.provider=google 시 활성화.
@@ -69,7 +71,8 @@ public class GoogleMapServiceImpl implements MapService {
     private GeoApiContext createContext() {
         String apiKey = mapProperties.googleApiKey();
         if (apiKey == null || apiKey.isBlank()) {
-            throw new IllegalStateException("Google Maps API Key가 설정되지 않았습니다. app.map.google-api-key 환경 변수를 확인하세요.");
+            throw new BusinessException(ErrorCode.BAD_REQUEST,
+                    "Google Maps API Key가 설정되지 않았습니다. app.map.google-api-key 환경 변수를 확인하세요.");
         }
         return new GeoApiContext.Builder()
                 .apiKey(apiKey)

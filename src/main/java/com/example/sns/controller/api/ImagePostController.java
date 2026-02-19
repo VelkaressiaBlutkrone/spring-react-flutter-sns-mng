@@ -89,7 +89,9 @@ public class ImagePostController {
         }
         return ResponseEntity.ok()
                 .contentType(MediaType.parseMediaType(contentType))
-                .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + (resource.getFilename() != null ? resource.getFilename() : "image") + "\"")
+                .header(HttpHeaders.CONTENT_DISPOSITION,
+                        "inline; filename=\"" + (resource.getFilename() != null ? resource.getFilename() : "image")
+                                + "\"")
                 .body(resource);
     }
 

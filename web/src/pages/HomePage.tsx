@@ -177,6 +177,9 @@ export default function HomePage() {
             <Link to="/image-posts" className="text-sm font-medium text-slate-600 hover:text-slate-900">
               이미지
             </Link>
+            <Link to="/about" className="text-sm font-medium text-slate-600 hover:text-slate-900">
+              About
+            </Link>
             <Link to="/posts/create" className="text-sm font-medium text-blue-600 hover:text-blue-500">
               글쓰기
             </Link>

@@ -264,6 +264,53 @@
 
 ---
 
-> **최종 업데이트**: 2026-02-11
-> **점검 범위**: TASK_SERVER.md Step 1~20 (Step 20 배포 설정·최종 점검 포함)
-> **RULE 문서 버전**: 1.0.7 (2.1.4 URI 설계, 3.6 외부 라이브러리, 7.1.3 Spring Boot REST URI)
+---
+
+## 7. 전체 RULE 재확인 (2026-02-19)
+
+> Java 전체 코드 기준 RULE.md 규칙 정확 재확인.
+
+### 7.1 준수 항목 (✅)
+
+| RULE | 항목 | 검증 내용 |
+|------|------|-----------|
+| 1.1 | 비밀정보 | application-prod.yml: DB·JWT·Redis 모두 환경변수 주입. application-dev.yml: JWT secret 기본값(개발용)만 존재 |
+| 1.2 | 인증·인가 | deny-by-default, 401/403 명확, CORS allow-list, IDOR 검증(isAuthor, isOwner) |
+| 1.3 | 입력 검증 | @Valid, @ValidCheck, Controller 검증 + Service 비즈니스 검증 |
+| 1.4.3 | 로깅 | SLF4J, `{}` 파라미터화, System.out/err 미사용, 민감정보 미출력 |
+| 1.5.6 | BCrypt | PasswordEncoder 사용 |
+| 1.6 | 보안 설정 | HSTS, X-Content-Type-Options, CSP, Actuator 제한 |
+| 2.1 | API 설계 | HTTP Method 준수, 계층형 URI, Admin API 분리 |
+| 2.2 | 예외 처리 | BusinessException + ErrorCode, GlobalExceptionHandler, 스택트레이스 미반환 |
+| 2.3 | 트랜잭션 | Service 계층만, readOnly 조회 |
+| 3.1 | 계층 분리 | Controller→Service→Repository 단방향 |
+| 3.3 | 엔티티 반환 | DTO(PostResponse 등) 사용, 엔티티 직접 반환 없음 |
+| 3.5 | AOP | 횡단 관심사 전용, @Order, doc/AOP.md, 예외 재throw |
+| 3.5.7 | @Transactional | Service 계층에만, Controller·Repository 없음 |
+| 4.3 | API 문서화 | Swagger/OpenAPI |
+| 5.1 | 설정 분리 | application-dev/prod |
+| 6.1~6.5 | JWT | iss/aud/jti, 15분 Access, Redis Refresh, 블랙리스트 |
+
+### 7.2 위반·개선 필요 (❌ / ⚠️) — 2026-02-19 수정 완료
+
+| RULE | 항목 | 수정 내용 |
+|------|------|-----------|
+| **2.2.4** | Controller/Service에서 IllegalArgumentException 등 직접 사용 금지 | ✅ `GoogleMapServiceImpl`: `BusinessException` + `ErrorCode.BAD_REQUEST`로 교체 |
+| **3.4** | 외부 호출 Timeout 필수 | ✅ `MapConfig`: RestTemplate Bean 등록 (connectTimeout·readTimeout), `KakaoMobilityDirectionsService` 주입 |
+| **1.9** | 모든 공개 API Rate Limiting | ✅ `RateLimitFilter`: 비인증 API(GET /api/posts, /api/image-posts, /api/pins/nearby 등) 100 req/분 IP 제한 추가 |
+| **9.1** | traceId/spanId MDC [MUST] | ✅ `TraceIdFilter` 추가, 로그 패턴에 `%X{traceId}`, `%X{spanId}` 포함 |
+| **3.6** | Version Catalog | ⏳ libs.versions.toml 도입 권장 (SHOULD) |
+
+### 7.3 주의·권장 (⚠️)
+
+| RULE | 항목 | 내용 |
+|------|------|------|
+| 1.1 | dev JWT secret | application-dev.yml `local-secret-key-min-256-bits...` 기본값 — 로컬 개발용. prod는 env 필수 |
+| 4.2.2 | 테스트 Given-When-Then | 일부 테스트에 `// given`, `// when`, `// then` 주석 미비 |
+| KakaoMobilityDirectionsService | KA·Origin 헤더 | ✅ `MAP_KAKAO_ORIGIN` 환경변수로 분리 (미설정 시 http://localhost:5173) |
+
+---
+
+> **최종 업데이트**: 2026-02-19 (전체 RULE 재확인)
+> **점검 범위**: TASK_SERVER.md Step 1~20, Java 전체 코드
+> **RULE 문서 버전**: 1.0.10

@@ -55,6 +55,9 @@ export function AppLayout({ children, maxWidth = '4xl', title, nav }: AppLayoutP
                 <Link to="/image-posts" className="text-sm font-medium text-slate-600 hover:text-slate-900">
                   이미지
                 </Link>
+                <Link to="/about" className="text-sm font-medium text-slate-600 hover:text-slate-900">
+                  About
+                </Link>
                 <Link to="/" className="text-sm font-medium text-slate-600 hover:text-slate-900">
                   홈
                 </Link>

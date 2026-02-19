@@ -27,9 +27,10 @@ import lombok.extern.slf4j.Slf4j;
 public class KakaoMobilityDirectionsService {
 
     private static final String API_URL = "https://apis-navi.kakaomobility.com/v1/directions";
+    private static final String DEFAULT_ORIGIN = "http://localhost:5173";
 
     private final MapProperties mapProperties;
-    private final RestTemplate restTemplate = new RestTemplate();
+    private final RestTemplate restTemplate;
 
     /**
      * 출발지→목적지 실제 도로 경로와 거리 조회.
@@ -63,9 +64,10 @@ public class KakaoMobilityDirectionsService {
             headers.set("Authorization", "KakaoAK " + apiKey);
             headers.set("Content-Type", "application/json");
             // KA Header: 서버 호출 시 os 또는 origin 필수 (401 방지)
-            // os/javascript + origin: 웹앱에서의 호출로 간주
-            headers.set("KA", "sdk/1.0 os/javascript origin/http://localhost:5173");
-            headers.set("Origin", "http://localhost:5173");
+            String originHeader = (mapProperties.kakaoOrigin() != null && !mapProperties.kakaoOrigin().isBlank())
+                    ? mapProperties.kakaoOrigin() : DEFAULT_ORIGIN;
+            headers.set("KA", "sdk/1.0 os/javascript origin/" + originHeader);
+            headers.set("Origin", originHeader);
 
             ResponseEntity<JsonNode> response = restTemplate.exchange(
                     url,

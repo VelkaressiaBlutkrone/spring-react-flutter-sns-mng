@@ -42,7 +42,7 @@ server:
 # RULE 1.4.3: 운영 환경 INFO 이상, 파일 롤링·보관 90일. 색상 최소화(ELK/Datadog 수집 고려)
 logging:
   pattern:
-    console: "%d{yyyy-MM-dd HH:mm:ss} [%level] [%logger{36}] : %msg%n"
+    console: "%d{yyyy-MM-dd HH:mm:ss} [%level] [%X{traceId:-}] [%X{spanId:-}] [%logger{36}] : %msg%n"
   level:
     root: ${LOG_LEVEL_ROOT:INFO}
     com.example: ${LOG_LEVEL_APP:INFO}
@@ -78,6 +78,10 @@ app:
     signup-period-minutes: ${RATE_LIMIT_SIGNUP_PERIOD:1}
     refresh-capacity: ${RATE_LIMIT_REFRESH_CAPACITY:20}
     refresh-period-minutes: ${RATE_LIMIT_REFRESH_PERIOD:5}
+    public-api-capacity: ${RATE_LIMIT_PUBLIC_API_CAPACITY:100}
+    public-api-period-minutes: ${RATE_LIMIT_PUBLIC_API_PERIOD:1}
+  map:
+    kakao-origin: ${MAP_KAKAO_ORIGIN:}
   upload:
     base-path: ${UPLOAD_BASE_PATH:/var/uploads}
     allowed-mime-types:

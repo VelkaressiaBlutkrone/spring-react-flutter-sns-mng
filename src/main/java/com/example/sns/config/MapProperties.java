@@ -56,7 +56,13 @@ public record MapProperties(
          * Kakao Maps JavaScript API App Key (Step 12: 프론트 지도 표시용).
          * RULE 1.1: 환경 변수로 주입.
          */
-        String kakaoJsAppKey
+        String kakaoJsAppKey,
+
+        /**
+         * Kakao Mobility API KA/Origin 헤더용 (서버 호출 시 필수).
+         * 미설정 시 http://localhost:5173 (개발 기본값).
+         */
+        String kakaoOrigin
 ) {
     public MapProperties {
         if (provider == null) provider = "none";

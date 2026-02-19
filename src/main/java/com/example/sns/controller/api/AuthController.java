@@ -1,5 +1,6 @@
 package com.example.sns.controller.api;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,8 +22,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
-import org.springframework.beans.factory.annotation.Value;
-
 /**
  * 인증 API — 로그인·토큰 갱신·로그아웃·현재 사용자 조회.
  *
@@ -43,7 +42,7 @@ public class AuthController {
     @PostMapping("/login")
     @ValidCheck
     public ResponseEntity<LoginResponse> login(@Valid @RequestBody LoginRequest request,
-                                               HttpServletResponse response) {
+            HttpServletResponse response) {
         var result = authService.login(request);
         CookieUtil.setRefreshTokenCookie(response, result.refreshToken(), result.refreshTtlSeconds(), cookieSecure);
         return ResponseEntity.ok(result.loginResponse());

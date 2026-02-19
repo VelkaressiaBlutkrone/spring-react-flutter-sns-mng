@@ -42,7 +42,7 @@ logging:
   charset:
     console: UTF-8
   pattern:
-    console: "%d{yyyy-MM-dd HH:mm:ss.SSS} │ %highlight(%-5level) │ %cyan(%-20logger{20}) │ %msg%n"
+    console: "%d{yyyy-MM-dd HH:mm:ss.SSS} │ %highlight(%-5level) │ [%X{traceId:-}] [%X{spanId:-}] │ %cyan(%-20logger{20}) │ %msg%n"
   level:
     root: ${LOG_LEVEL_ROOT:INFO}
     com.example: ${LOG_LEVEL_APP:DEBUG}
@@ -74,6 +74,7 @@ app:
     kakao-api-key: ${MAP_KAKAO_API_KEY:}
     kakao-mobility-api-key: ${MAP_KAKAO_MOBILITY_API_KEY:${MAP_KAKAO_API_KEY:}}
     kakao-js-app-key: ${MAP_KAKAO_JS_APP_KEY:}
+    kakao-origin: ${MAP_KAKAO_ORIGIN:http://localhost:5173}
     naver-client-id: ${MAP_NAVER_CLIENT_ID:}
     naver-client-secret: ${MAP_NAVER_CLIENT_SECRET:}
   rate-limit:
@@ -83,6 +84,8 @@ app:
     signup-period-minutes: ${RATE_LIMIT_SIGNUP_PERIOD:1}
     refresh-capacity: ${RATE_LIMIT_REFRESH_CAPACITY:20}
     refresh-period-minutes: ${RATE_LIMIT_REFRESH_PERIOD:5}
+    public-api-capacity: ${RATE_LIMIT_PUBLIC_API_CAPACITY:100}
+    public-api-period-minutes: ${RATE_LIMIT_PUBLIC_API_PERIOD:1}
   upload:
     base-path: ${UPLOAD_BASE_PATH:./uploads}
     allowed-mime-types:

@@ -1,6 +1,4 @@
-package com.example.sns.utils.haversine;
-
-import java.lang.Math;
+package com.example.sns.util.haversine;
 
 /**
  * Haversine 공식으로 두 좌표 간 직선 거리(미터) 계산.
@@ -26,7 +24,7 @@ public final class HaversineUtil {
         double dLng = Math.toRadians(lng2 - lng1);
         double a = Math.sin(dLat / 2) * Math.sin(dLat / 2)
                 + Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2))
-                * Math.sin(dLng / 2) * Math.sin(dLng / 2);
+                        * Math.sin(dLng / 2) * Math.sin(dLng / 2);
         double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
         return EARTH_RADIUS_METERS * c;
     }

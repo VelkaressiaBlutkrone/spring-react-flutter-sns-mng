@@ -30,4 +30,9 @@ public class RateLimitProperties {
     private int refreshCapacity = 20;
     /** 토큰 갱신 API: 제한 주기(분). */
     private int refreshPeriodMinutes = 5;
+
+    /** 비인증 공개 API: 분당 최대 요청 수 (IP 기준). RULE 1.9.2. */
+    private int publicApiCapacity = 100;
+    /** 비인증 공개 API: 제한 주기(분). */
+    private int publicApiPeriodMinutes = 1;
 }
