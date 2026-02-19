@@ -104,7 +104,12 @@ public class PostService {
             log.warn("게시글 수정 IDOR 시도: postId={}, userId={}", id, currentUser.getId());
             throw new BusinessException(ErrorCode.FORBIDDEN, "본인의 게시글만 수정할 수 있습니다.");
         }
-        post.update(request.title(), request.content());
+        Double lat = request.latitude() != null ? request.latitude() : post.getLatitude();
+        Double lng = request.longitude() != null ? request.longitude() : post.getLongitude();
+        var pin = request.pinId() != null
+                ? pinRepository.findById(request.pinId()).orElse(null)
+                : (lat == null && lng == null ? null : post.getPin());
+        post.update(request.title(), request.content(), lat, lng, pin);
         return PostResponse.from(post);
     }
 
@@ -165,7 +170,12 @@ public class PostService {
     public PostResponse updateByAdmin(Long id, PostUpdateRequest request) {
         Post post = postRepository.findById(id)
                 .orElseThrow(() -> new BusinessException(ErrorCode.NOT_FOUND, MSG_POST_NOT_FOUND));
-        post.update(request.title(), request.content());
+        Double lat = request.latitude() != null ? request.latitude() : post.getLatitude();
+        Double lng = request.longitude() != null ? request.longitude() : post.getLongitude();
+        var pin = request.pinId() != null
+                ? pinRepository.findById(request.pinId()).orElse(null)
+                : (lat == null && lng == null ? null : post.getPin());
+        post.update(request.title(), request.content(), lat, lng, pin);
         log.info("관리자 게시글 수정: postId={}", id);
         return PostResponse.from(post);
     }

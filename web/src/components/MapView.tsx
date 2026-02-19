@@ -1,7 +1,9 @@
 /**
  * 지도 뷰 컴포넌트 (TASK_WEB Step 4).
  * Kakao Map 기반, 환경 변수 VITE_MAP_KAKAO_JS_APP_KEY 주입 (RULE 1.1).
+ * 기본 커서: default, 드래그 시에만 grab/grabbing.
  */
+import { useState } from 'react';
 import { Map, useKakaoLoader } from 'react-kakao-maps-sdk';
 
 const KAKAO_APP_KEY = import.meta.env.VITE_MAP_KAKAO_JS_APP_KEY ?? '';
@@ -20,6 +22,7 @@ export interface MapViewProps {
 }
 
 export function MapView({ center, level = 5, style, children, onMapClick, draggable = true, onCenterChanged }: MapViewProps) {
+  const [isDragging, setIsDragging] = useState(false);
   const [loading, error] = useKakaoLoader({
     appkey: KAKAO_APP_KEY,
     libraries: [],
@@ -72,14 +75,21 @@ export function MapView({ center, level = 5, style, children, onMapClick, dragga
       }
     : undefined;
 
+  const mapStyle: React.CSSProperties = {
+    ...(style ?? { width: '100%', height: '400px' }),
+    cursor: draggable && isDragging ? 'grabbing' : 'default',
+  };
+
   return (
     <Map
       center={center}
       level={level}
-      style={style ?? { width: '100%', height: '400px' }}
+      style={mapStyle}
       onClick={handleClick}
       draggable={draggable}
       onCenterChanged={handleCenterChanged}
+      onDragStart={() => setIsDragging(true)}
+      onDragEnd={() => setIsDragging(false)}
     >
       {children}
     </Map>

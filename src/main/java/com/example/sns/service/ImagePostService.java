@@ -103,11 +103,12 @@ public class ImagePostService {
     }
 
     /**
-     * 이미지 게시글 수정. 작성자만. image가 있으면 교체.
+     * 이미지 게시글 수정. 작성자만. image가 있으면 교체. latitude/longitude/pinId로 위치 수정.
      */
     @Transactional
     public ImagePostResponse update(Long id, String title, String content,
-                                    MultipartFile image, User currentUser) {
+                                    MultipartFile image, Double latitude, Double longitude, Long pinId,
+                                    User currentUser) {
         ImagePost post = findById(id);
         if (!post.isAuthor(currentUser)) {
             log.warn("이미지 게시글 수정 IDOR 시도: imagePostId={}, userId={}", id, currentUser.getId());
@@ -119,7 +120,8 @@ public class ImagePostService {
             fileStorageService.deleteIfExists(post.getImageStoragePath());
             newPath = fileStorageService.storeImage(image, STORAGE_SUB_DIR);
         }
-        post.update(title, content, newPath);
+        var pin = pinId != null ? pinRepository.findById(pinId).orElse(null) : null;
+        post.update(title, content, newPath, latitude, longitude, pin);
         return ImagePostResponse.from(post);
     }
 

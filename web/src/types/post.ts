@@ -27,4 +27,7 @@ export interface PostCreateRequest {
 export interface PostUpdateRequest {
   title: string;
   content: string;
+  latitude?: number | null;
+  longitude?: number | null;
+  pinId?: number | null;
 }

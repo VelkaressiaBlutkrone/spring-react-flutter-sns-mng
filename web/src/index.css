@@ -6,3 +6,19 @@
     -webkit-font-smoothing: antialiased;
   }
 }
+
+/* react-masonry-css */
+.masonry-grid {
+  display: flex;
+  margin-left: calc(var(--masonry-gap, 16px) * -1);
+  width: auto;
+}
+
+.masonry-grid-column {
+  padding-left: var(--masonry-gap, 16px);
+  background-clip: padding-box;
+}
+
+.masonry-grid-column > * {
+  margin-bottom: var(--masonry-gap, 16px);
+}

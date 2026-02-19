@@ -7,7 +7,9 @@ import { useEffect, useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { postsApi } from '@/api/posts';
 import { useAuthStore } from '@/store/authStore';
+import { LocationPicker } from '@/components/LocationPicker';
 import type { PostUpdateRequest } from '@/types/post';
+import type { LocationValue } from '@/components/LocationPicker';
 
 export default function PostEditPage() {
   const { id } = useParams<{ id: string }>();
@@ -19,6 +21,7 @@ export default function PostEditPage() {
 
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
+  const [location, setLocation] = useState<LocationValue | null>(null);
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
 
   const { data, isLoading, error } = useQuery({
@@ -33,6 +36,15 @@ export default function PostEditPage() {
     if (post) {
       setTitle(post.title);
       setContent(post.content);
+      if (post.latitude != null && post.longitude != null) {
+        setLocation({
+          latitude: post.latitude,
+          longitude: post.longitude,
+          pinId: post.pinId ?? undefined,
+        });
+      } else {
+        setLocation(null);
+      }
     }
   }, [post]);
 
@@ -66,7 +78,13 @@ export default function PostEditPage() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setFieldErrors({});
-    updateMutation.mutate({ title: title.trim(), content: content.trim() });
+    updateMutation.mutate({
+      title: title.trim(),
+      content: content.trim(),
+      latitude: location?.latitude ?? null,
+      longitude: location?.longitude ?? null,
+      pinId: location?.pinId ?? null,
+    });
   };
 
   return (
@@ -112,6 +130,8 @@ export default function PostEditPage() {
           />
           {fieldErrors.content && <p className="mt-1 text-sm text-red-600">{fieldErrors.content}</p>}
         </div>
+
+        <LocationPicker value={location} onChange={setLocation} mapHeight={280} />
 
         <div className="flex gap-4 pt-4">
           <button

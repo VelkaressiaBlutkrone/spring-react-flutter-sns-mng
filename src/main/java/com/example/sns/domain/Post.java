@@ -64,9 +64,12 @@ public class Post extends BaseEntity {
         onCreate();
     }
 
-    public void update(String title, String content) {
+    public void update(String title, String content, Double latitude, Double longitude, Pin pin) {
         this.title = title;
         this.content = content;
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.pin = pin;
         onUpdate();
     }
 

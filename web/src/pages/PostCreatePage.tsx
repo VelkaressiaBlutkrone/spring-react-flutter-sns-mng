@@ -3,7 +3,7 @@
  * POST /api/posts. 로그인 필수. LocationPicker로 위치·Pin 선택.
  */
 import { Link, useNavigate } from 'react-router-dom';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import { postsApi } from '@/api/posts';
 import { LocationPicker } from '@/components/LocationPicker';
@@ -13,6 +13,7 @@ import type { LocationValue } from '@/components/LocationPicker';
 
 export default function PostCreatePage() {
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [location, setLocation] = useState<LocationValue | null>(null);
@@ -21,6 +22,7 @@ export default function PostCreatePage() {
   const createMutation = useMutation({
     mutationFn: (data: PostCreateRequest) => postsApi.create(data),
     onSuccess: (res) => {
+      queryClient.invalidateQueries({ queryKey: ['posts'] });
       navigate(`/posts/${res.data.id}`);
     },
     onError: (err: { response?: { data?: { fieldErrors?: Array<{ field: string; reason: string }> } } }) => {

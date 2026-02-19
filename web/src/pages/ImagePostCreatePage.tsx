@@ -3,7 +3,7 @@
  * POST /api/image-posts (multipart/form-data). 로그인 필수. LocationPicker로 위치·Pin 선택.
  */
 import { Link, useNavigate } from 'react-router-dom';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import { imagePostsApi } from '@/api/imagePosts';
 import { LocationPicker } from '@/components/LocationPicker';
@@ -11,6 +11,7 @@ import type { LocationValue } from '@/components/LocationPicker';
 
 export default function ImagePostCreatePage() {
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [image, setImage] = useState<File | null>(null);
@@ -20,6 +21,7 @@ export default function ImagePostCreatePage() {
   const createMutation = useMutation({
     mutationFn: (params: Parameters<typeof imagePostsApi.create>[0]) => imagePostsApi.create(params),
     onSuccess: (res) => {
+      queryClient.invalidateQueries({ queryKey: ['image-posts'] });
       navigate(`/image-posts/${res.data.id}`);
     },
     onError: (err: { response?: { data?: { fieldErrors?: Array<{ field: string; reason: string }> } } }) => {

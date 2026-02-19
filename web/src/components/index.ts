@@ -10,3 +10,4 @@ export { KakaoMapLinks } from './KakaoMapLinks';
 export { AppLayout } from './AppLayout';
 export { PostMarker } from './PostMarker';
 export type { PostMarkerData } from './PostMarker';
+export { MasonryGrid, MASONRY_GRID_CLASS, MASONRY_COLUMN_CLASS } from './MasonryGrid';

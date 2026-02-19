@@ -33,6 +33,9 @@ export interface ImagePostUpdateParams {
   title: string;
   content: string;
   image?: File;
+  latitude?: number | null;
+  longitude?: number | null;
+  pinId?: number | null;
 }
 
 export const imagePostsApi = {
@@ -61,6 +64,9 @@ export const imagePostsApi = {
     formData.append('title', params.title);
     formData.append('content', params.content);
     if (params.image) formData.append('image', params.image);
+    if (params.latitude != null) formData.append('latitude', String(params.latitude));
+    if (params.longitude != null) formData.append('longitude', String(params.longitude));
+    if (params.pinId != null) formData.append('pinId', String(params.pinId));
 
     return apiClient.put<ImagePostResponse>(`/api/image-posts/${id}`, formData);
   },

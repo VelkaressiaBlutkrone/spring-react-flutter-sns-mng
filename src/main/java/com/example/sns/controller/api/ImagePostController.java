@@ -119,7 +119,10 @@ public class ImagePostController {
             @PathVariable Long id,
             @RequestParam String title,
             @RequestParam String content,
-            @RequestParam(required = false) MultipartFile image) {
+            @RequestParam(required = false) MultipartFile image,
+            @RequestParam(required = false) Double latitude,
+            @RequestParam(required = false) Double longitude,
+            @RequestParam(required = false) Long pinId) {
         if (title == null || title.isBlank()) {
             throw new BusinessException(ErrorCode.VALIDATION_ERROR, "제목은 필수입니다.");
         }
@@ -130,7 +133,7 @@ public class ImagePostController {
         User currentUser = authService.getCurrentUserEntity()
                 .orElseThrow(() -> new BusinessException(ErrorCode.UNAUTHORIZED));
 
-        return ResponseEntity.ok(imagePostService.update(id, title, content, image, currentUser));
+        return ResponseEntity.ok(imagePostService.update(id, title, content, image, latitude, longitude, pinId, currentUser));
     }
 
     @Operation(summary = "이미지 게시글 삭제", description = "로그인 필수, 작성자만")

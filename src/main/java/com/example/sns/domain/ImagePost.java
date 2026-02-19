@@ -74,14 +74,25 @@ public class ImagePost extends BaseEntity {
     }
 
     /**
-     * 제목·내용·이미지 경로 수정.
+     * 제목·내용·이미지 경로 수정. 위치는 기존 유지.
      */
     public void update(String title, String content, String imageStoragePath) {
+        update(title, content, imageStoragePath, this.latitude, this.longitude, this.pin);
+    }
+
+    /**
+     * 제목·내용·이미지 경로·위치 수정.
+     */
+    public void update(String title, String content, String imageStoragePath,
+                      Double latitude, Double longitude, Pin pin) {
         this.title = title;
         this.content = content;
         if (imageStoragePath != null && !imageStoragePath.isBlank()) {
             this.imageStoragePath = imageStoragePath;
         }
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.pin = pin;
         onUpdate();
     }
 

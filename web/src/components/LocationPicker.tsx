@@ -3,7 +3,7 @@
  * 지도 클릭 또는 기존 Pin 선택으로 게시글 작성 시 위치 연결.
  * RULE 1.5.6(XSS) - 사용자 입력 이스케이프.
  */
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { MapMarker } from 'react-kakao-maps-sdk';
 import { MapView } from '@/components/MapView';
@@ -32,6 +32,12 @@ export function LocationPicker({ value, onChange, mapHeight = 320 }: LocationPic
   const { position } = useGeolocation();
   const center = position ?? DEFAULT_CENTER;
   const [mapCenter, setMapCenter] = useState(center);
+
+  useEffect(() => {
+    if (position && !value) {
+      setMapCenter(position);
+    }
+  }, [position, value]);
 
   const { data: pinsData } = useQuery({
     queryKey: ['pins', 'nearby', center.lat, center.lng, DEFAULT_RADIUS_KM],
