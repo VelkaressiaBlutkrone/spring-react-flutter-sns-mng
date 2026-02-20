@@ -63,7 +63,7 @@ public class AuthService {
 
         var accessResult = jwtService.createAccessToken(user);
         String refreshJti = jwtService.createRefreshTokenJti();
-        long refreshTtlSeconds = (long) jwtProperties.getRefreshTtlDays() * 24 * 60 * 60;
+        long refreshTtlSeconds = (long) jwtProperties.refreshTtlDays() * 24 * 60 * 60;
         String refreshPayload = user.getId() + ":" + user.getRole().name();
         tokenStore.saveRefreshToken(refreshJti, refreshPayload, refreshTtlSeconds);
 

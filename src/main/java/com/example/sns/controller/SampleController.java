@@ -32,7 +32,7 @@ public class SampleController {
     public ResponseEntity<Map<String, String>> validate(@Valid @RequestBody SampleValidationRequest request) {
         return ResponseEntity.ok(Map.of(
                 "result", "success",
-                "name", request.getName()));
+                "name", request.name()));
     }
 
     @LogAccess

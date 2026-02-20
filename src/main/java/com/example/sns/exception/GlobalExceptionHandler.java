@@ -44,11 +44,10 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResponse> handleMethodArgumentNotValid(MethodArgumentNotValidException e) {
         List<ErrorResponse.FieldError> fieldErrors = e.getBindingResult().getFieldErrors().stream()
-                .map(err -> ErrorResponse.FieldError.builder()
-                        .field(err.getField())
-                        .value(err.getRejectedValue() != null ? err.getRejectedValue().toString() : null)
-                        .reason(err.getDefaultMessage())
-                        .build())
+                .map(err -> new ErrorResponse.FieldError(
+                        err.getField(),
+                        err.getRejectedValue() != null ? err.getRejectedValue().toString() : null,
+                        err.getDefaultMessage()))
                 .toList();
         log.warn("Validation failed: {}", fieldErrors);
         ErrorResponse response = ErrorResponse.of(ErrorCode.VALIDATION_ERROR, fieldErrors);
@@ -58,11 +57,10 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(BindException.class)
     public ResponseEntity<ErrorResponse> handleBindException(BindException e) {
         List<ErrorResponse.FieldError> fieldErrors = e.getBindingResult().getFieldErrors().stream()
-                .map(err -> ErrorResponse.FieldError.builder()
-                        .field(err.getField())
-                        .value(err.getRejectedValue() != null ? err.getRejectedValue().toString() : null)
-                        .reason(err.getDefaultMessage())
-                        .build())
+                .map(err -> new ErrorResponse.FieldError(
+                        err.getField(),
+                        err.getRejectedValue() != null ? err.getRejectedValue().toString() : null,
+                        err.getDefaultMessage()))
                 .toList();
         log.warn("Bind validation failed: {}", fieldErrors);
         ErrorResponse response = ErrorResponse.of(ErrorCode.VALIDATION_ERROR, fieldErrors);
@@ -72,11 +70,10 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(ConstraintViolationException.class)
     public ResponseEntity<ErrorResponse> handleConstraintViolation(ConstraintViolationException e) {
         List<ErrorResponse.FieldError> fieldErrors = e.getConstraintViolations().stream()
-                .map(v -> ErrorResponse.FieldError.builder()
-                        .field(v.getPropertyPath().toString())
-                        .value(v.getInvalidValue() != null ? v.getInvalidValue().toString() : null)
-                        .reason(v.getMessage())
-                        .build())
+                .map(v -> new ErrorResponse.FieldError(
+                        v.getPropertyPath().toString(),
+                        v.getInvalidValue() != null ? v.getInvalidValue().toString() : null,
+                        v.getMessage()))
                 .toList();
         log.warn("Constraint violation: {}", fieldErrors);
         ErrorResponse response = ErrorResponse.of(ErrorCode.VALIDATION_ERROR, fieldErrors);

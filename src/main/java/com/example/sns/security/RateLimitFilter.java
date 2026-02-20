@@ -89,7 +89,7 @@ public class RateLimitFilter extends OncePerRequestFilter {
             response.setStatus(429); // Too Many Requests (RULE 1.9)
             response.setHeader("Retry-After", String.valueOf(retryAfterSeconds));
             response.setContentType("application/json;charset=UTF-8");
-            String body = String.format("{\"code\":\"%s\",\"message\":\"%s\"}",
+            String body = "{\"code\":\"%s\",\"message\":\"%s\"}".formatted(
                     ErrorCode.TOO_MANY_REQUESTS.getCode(),
                     ErrorCode.TOO_MANY_REQUESTS.getDefaultMessage());
             response.getWriter().write(body);
@@ -122,15 +122,15 @@ public class RateLimitFilter extends OncePerRequestFilter {
     private Bucket buildBucket(String path, String method) {
         Bandwidth bandwidth;
         if ("/api/auth/login".equals(path) && "POST".equals(method)) {
-            bandwidth = Bandwidth.simple(props.getLoginCapacity(), Duration.ofMinutes(props.getLoginPeriodMinutes()));
+            bandwidth = Bandwidth.simple(props.loginCapacity(), Duration.ofMinutes(props.loginPeriodMinutes()));
         } else if ("/api/members".equals(path) && "POST".equals(method)) {
-            bandwidth = Bandwidth.simple(props.getSignupCapacity(), Duration.ofMinutes(props.getSignupPeriodMinutes()));
+            bandwidth = Bandwidth.simple(props.signupCapacity(), Duration.ofMinutes(props.signupPeriodMinutes()));
         } else if ("/api/auth/refresh".equals(path) && "POST".equals(method)) {
-            bandwidth = Bandwidth.simple(props.getRefreshCapacity(),
-                    Duration.ofMinutes(props.getRefreshPeriodMinutes()));
+            bandwidth = Bandwidth.simple(props.refreshCapacity(),
+                    Duration.ofMinutes(props.refreshPeriodMinutes()));
         } else {
-            bandwidth = Bandwidth.simple(props.getPublicApiCapacity(),
-                    Duration.ofMinutes(props.getPublicApiPeriodMinutes()));
+            bandwidth = Bandwidth.simple(props.publicApiCapacity(),
+                    Duration.ofMinutes(props.publicApiPeriodMinutes()));
         }
         return Bucket.builder().addLimit(bandwidth).build();
     }

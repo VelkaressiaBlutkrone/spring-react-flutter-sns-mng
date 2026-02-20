@@ -4,3 +4,4 @@ export { default as AdminPostListPage } from './AdminPostListPage';
 export { default as AdminImagePostListPage } from './AdminImagePostListPage';
 export { default as AdminPostEditPage } from './AdminPostEditPage';
 export { default as AdminImagePostEditPage } from './AdminImagePostEditPage';
+export { default as AdminStatsPage } from './AdminStatsPage';

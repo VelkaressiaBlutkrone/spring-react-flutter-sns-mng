@@ -122,6 +122,9 @@ export default function AdminMemberFormPage() {
           <Link to="/admin/image-posts" className="text-sm font-medium text-slate-600 hover:text-slate-900">
             이미지 게시글
           </Link>
+          <Link to="/admin/stats" className="text-sm font-medium text-slate-600 hover:text-slate-900">
+            통계
+          </Link>
           <Link to="/" className="text-sm font-medium text-slate-600 hover:text-slate-900">
             홈
           </Link>

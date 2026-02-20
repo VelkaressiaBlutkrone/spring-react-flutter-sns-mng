@@ -2,7 +2,6 @@ package com.example.sns.config.auth;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
@@ -40,7 +39,7 @@ public class CorsProperties {
             this.allowedOrigins = Arrays.stream(value.split(","))
                     .map(String::trim)
                     .filter(s -> !s.isEmpty())
-                    .collect(Collectors.toList());
+                    .toList();
         }
     }
 }

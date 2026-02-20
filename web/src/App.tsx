@@ -23,6 +23,7 @@ import {
   AdminImagePostListPage,
   AdminPostEditPage,
   AdminImagePostEditPage,
+  AdminStatsPage,
 } from '@/pages/admin';
 
 function App() {
@@ -111,6 +112,14 @@ function App() {
         element={
           <AdminRoute>
             <AdminImagePostEditPage />
+          </AdminRoute>
+        }
+      />
+      <Route
+        path="/admin/stats"
+        element={
+          <AdminRoute>
+            <AdminStatsPage />
           </AdminRoute>
         }
       />

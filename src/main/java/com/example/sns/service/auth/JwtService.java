@@ -41,7 +41,7 @@ public class JwtService {
      */
     public TokenResult createAccessToken(User user) {
         String jti = UUID.randomUUID().toString();
-        long expiresInSeconds = jwtProperties.getAccessTtlMinutes() * 60L;
+        long expiresInSeconds = jwtProperties.accessTtlMinutes() * 60L;
         Date expiry = new Date(System.currentTimeMillis() + expiresInSeconds * 1000);
 
         String token = Jwts.builder()
@@ -49,8 +49,8 @@ public class JwtService {
                 .claim(CLAIM_USER_ID, user.getId())
                 .claim(CLAIM_ROLE, user.getRole().name())
                 .id(jti)
-                .issuer(jwtProperties.getIssuer())
-                .audience().add(jwtProperties.getAudience()).and()
+                .issuer(jwtProperties.issuer())
+                .audience().add(jwtProperties.audience()).and()
                 .issuedAt(new Date())
                 .expiration(expiry)
                 .signWith(getSigningKey())
@@ -76,8 +76,8 @@ public class JwtService {
     public Claims parseAccessToken(String token) {
         return Jwts.parser()
                 .verifyWith(getSigningKey())
-                .requireIssuer(jwtProperties.getIssuer())
-                .requireAudience(jwtProperties.getAudience())
+                .requireIssuer(jwtProperties.issuer())
+                .requireAudience(jwtProperties.audience())
                 .build()
                 .parseSignedClaims(token)
                 .getPayload();
@@ -95,7 +95,7 @@ public class JwtService {
     }
 
     private SecretKey getSigningKey() {
-        byte[] keyBytes = jwtProperties.getSecretKey().getBytes(StandardCharsets.UTF_8);
+        byte[] keyBytes = jwtProperties.secretKey().getBytes(StandardCharsets.UTF_8);
         return Keys.hmacShaKeyFor(keyBytes);
     }
 

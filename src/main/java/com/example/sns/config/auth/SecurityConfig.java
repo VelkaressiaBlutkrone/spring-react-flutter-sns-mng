@@ -121,8 +121,8 @@ public class SecurityConfig {
             response.setStatus(HttpServletResponse.SC_FORBIDDEN);
             response.setContentType("application/json;charset=UTF-8");
             ErrorResponse errorResponse = ErrorResponse.of(ErrorCode.FORBIDDEN);
-            String json = String.format("{\"code\":\"%s\",\"message\":\"%s\"}",
-                    errorResponse.getCode(), errorResponse.getMessage());
+            String json = "{\"code\":\"%s\",\"message\":\"%s\"}".formatted(
+                    errorResponse.code(), errorResponse.message());
             response.getWriter().write(json);
         };
     }
