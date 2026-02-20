@@ -8,7 +8,7 @@ import javax.crypto.SecretKey;
 
 import org.springframework.stereotype.Service;
 
-import com.example.sns.config.JwtProperties;
+import com.example.sns.config.auth.JwtProperties;
 import com.example.sns.domain.User;
 
 import io.jsonwebtoken.Claims;

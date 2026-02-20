@@ -1,4 +1,4 @@
-package com.example.sns.config;
+package com.example.sns.config.health;
 
 import javax.sql.DataSource;
 

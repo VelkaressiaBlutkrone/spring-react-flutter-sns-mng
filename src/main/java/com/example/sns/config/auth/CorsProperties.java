@@ -1,4 +1,4 @@
-package com.example.sns.config;
+package com.example.sns.config.auth;
 
 import java.util.Arrays;
 import java.util.List;

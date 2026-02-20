@@ -6,22 +6,21 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import jakarta.servlet.FilterChain;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import com.example.sns.config.RateLimitProperties;
+import com.example.sns.config.ratelimit.RateLimitProperties;
 import com.example.sns.exception.ErrorCode;
 
 import io.github.bucket4j.Bandwidth;
 import io.github.bucket4j.Bucket;
 import io.github.bucket4j.ConsumptionProbe;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -40,8 +39,7 @@ public class RateLimitFilter extends OncePerRequestFilter {
     private static final List<String> AUTH_RATE_LIMIT_PATHS = List.of(
             "POST:/api/auth/login",
             "POST:/api/members",
-            "POST:/api/auth/refresh"
-    );
+            "POST:/api/auth/refresh");
 
     private final RateLimitProperties props;
     private final Map<String, Bucket> buckets = new ConcurrentHashMap<>();
@@ -75,7 +73,7 @@ public class RateLimitFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
-                                    FilterChain filterChain) throws ServletException, IOException {
+            FilterChain filterChain) throws ServletException, IOException {
         String path = request.getRequestURI();
         String method = request.getMethod();
         String clientKey = resolveClientKey(request);
@@ -128,9 +126,11 @@ public class RateLimitFilter extends OncePerRequestFilter {
         } else if ("/api/members".equals(path) && "POST".equals(method)) {
             bandwidth = Bandwidth.simple(props.getSignupCapacity(), Duration.ofMinutes(props.getSignupPeriodMinutes()));
         } else if ("/api/auth/refresh".equals(path) && "POST".equals(method)) {
-            bandwidth = Bandwidth.simple(props.getRefreshCapacity(), Duration.ofMinutes(props.getRefreshPeriodMinutes()));
+            bandwidth = Bandwidth.simple(props.getRefreshCapacity(),
+                    Duration.ofMinutes(props.getRefreshPeriodMinutes()));
         } else {
-            bandwidth = Bandwidth.simple(props.getPublicApiCapacity(), Duration.ofMinutes(props.getPublicApiPeriodMinutes()));
+            bandwidth = Bandwidth.simple(props.getPublicApiCapacity(),
+                    Duration.ofMinutes(props.getPublicApiPeriodMinutes()));
         }
         return Bucket.builder().addLimit(bandwidth).build();
     }

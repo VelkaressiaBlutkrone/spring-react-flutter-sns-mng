@@ -6,7 +6,7 @@ import java.util.concurrent.TimeUnit;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
 
-import com.example.sns.config.MapProperties;
+import com.example.sns.config.map.MapProperties;
 import com.example.sns.exception.BusinessException;
 import com.example.sns.exception.ErrorCode;
 import com.google.maps.GeoApiContext;

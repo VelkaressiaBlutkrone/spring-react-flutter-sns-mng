@@ -1,4 +1,4 @@
-package com.example.sns.config;
+package com.example.sns.config.redis;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;

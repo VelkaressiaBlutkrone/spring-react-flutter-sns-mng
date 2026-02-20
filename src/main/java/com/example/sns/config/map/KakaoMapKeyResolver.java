@@ -1,4 +1,4 @@
-package com.example.sns.config;
+package com.example.sns.config.map;
 
 import org.springframework.stereotype.Component;
 

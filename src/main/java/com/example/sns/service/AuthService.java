@@ -7,7 +7,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.example.sns.config.JwtProperties;
+import com.example.sns.config.auth.JwtProperties;
 import com.example.sns.domain.User;
 import com.example.sns.dto.request.LoginRequest;
 import com.example.sns.dto.response.LoginResponse;

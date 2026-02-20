@@ -84,7 +84,7 @@ public class ImagePostService {
      */
     @Transactional
     public ImagePostResponse create(String title, String content, MultipartFile image,
-                                    Double latitude, Double longitude, Long pinId, User author) {
+            Double latitude, Double longitude, Long pinId, User author) {
         String storedPath = fileStorageService.storeImage(image, STORAGE_SUB_DIR);
         var pin = pinId != null ? pinRepository.findById(pinId).orElse(null) : null;
 
@@ -107,8 +107,8 @@ public class ImagePostService {
      */
     @Transactional
     public ImagePostResponse update(Long id, String title, String content,
-                                    MultipartFile image, Double latitude, Double longitude, Long pinId,
-                                    User currentUser) {
+            MultipartFile image, Double latitude, Double longitude, Long pinId,
+            User currentUser) {
         ImagePost post = findById(id);
         if (!post.isAuthor(currentUser)) {
             log.warn("이미지 게시글 수정 IDOR 시도: imagePostId={}, userId={}", id, currentUser.getId());

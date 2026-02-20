@@ -1,4 +1,4 @@
-package com.example.sns.config;
+package com.example.sns.config.upload;
 
 import java.util.Set;
 
@@ -25,6 +25,5 @@ public record UploadProperties(
         /**
          * 최대 파일 크기 (바이트).
          */
-        long maxFileSizeBytes
-) {
+        long maxFileSizeBytes) {
 }

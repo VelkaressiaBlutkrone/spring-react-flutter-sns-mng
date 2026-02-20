@@ -1,4 +1,4 @@
-package com.example.sns.config;
+package com.example.sns.config.ratelimit;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 

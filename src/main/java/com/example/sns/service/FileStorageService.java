@@ -9,7 +9,7 @@ import java.util.UUID;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.example.sns.config.UploadProperties;
+import com.example.sns.config.upload.UploadProperties;
 import com.example.sns.exception.BusinessException;
 import com.example.sns.exception.ErrorCode;
 
