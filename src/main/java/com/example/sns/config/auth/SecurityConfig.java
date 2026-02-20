@@ -97,6 +97,8 @@ public class SecurityConfig {
                         .permitAll()
                         .requestMatchers("/api/pins", "/api/pins/**").authenticated()
                         .requestMatchers("/error", "/favicon.ico").permitAll()
+                        // CORS preflight (OPTIONS) 는 모든 경로에서 허용 — Spring Security 체인 도달 전 차단 방지
+                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .anyRequest().denyAll())
                 .exceptionHandling(ex -> ex
                         .authenticationEntryPoint((HttpServletRequest request, HttpServletResponse response,

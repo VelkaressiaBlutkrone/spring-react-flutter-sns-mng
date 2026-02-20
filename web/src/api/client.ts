@@ -32,8 +32,9 @@ apiClient.interceptors.response.use(
   (res) => res,
   async (err) => {
     const originalRequest = err.config;
+    const status = err.response?.status;
 
-    if (err.response?.status === 401 && !originalRequest._retry) {
+    if (status === 401 && !originalRequest._retry) {
       const url = typeof originalRequest.url === 'string' ? originalRequest.url : '';
       const isRefresh = url.includes('/api/auth/refresh');
       const isLogin = url.includes('/api/auth/login');
@@ -43,7 +44,7 @@ apiClient.interceptors.response.use(
           useAuthStore.getState().clearAuth();
           redirectToLogin();
         }
-        return Promise.reject(err);
+        throw err;
       }
 
       originalRequest._retry = true;
@@ -60,15 +61,24 @@ apiClient.interceptors.response.use(
       } catch {
         useAuthStore.getState().clearAuth();
         redirectToLogin();
-        return Promise.reject(err);
+        throw err;
       }
     }
-    return Promise.reject(err);
+
+    // 403: 권한 부족 — 인증은 유효하나 해당 리소스에 접근 불가 (RULE 1.2)
+    if (status === 403) {
+      useAuthStore.getState().clearAuth();
+      if (globalThis.window !== undefined && globalThis.window.location.pathname !== '/') {
+        globalThis.window.location.href = '/';
+      }
+    }
+
+    throw err;
   }
 );
 
 function redirectToLogin() {
-  if (typeof window !== 'undefined' && window.location.pathname !== '/login') {
-    window.location.href = '/login';
+  if (globalThis.window !== undefined && globalThis.window.location.pathname !== '/login') {
+    globalThis.window.location.href = '/login';
   }
 }

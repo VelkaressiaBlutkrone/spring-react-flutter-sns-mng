@@ -9,16 +9,16 @@ import { Map, useKakaoLoader } from 'react-kakao-maps-sdk';
 const KAKAO_APP_KEY = import.meta.env.VITE_MAP_KAKAO_JS_APP_KEY ?? '';
 
 export interface MapViewProps {
-  center: { lat: number; lng: number };
-  level?: number;
-  style?: React.CSSProperties;
-  children?: React.ReactNode;
+  readonly center: { lat: number; lng: number };
+  readonly level?: number;
+  readonly style?: React.CSSProperties;
+  readonly children?: React.ReactNode;
   /** 지도 클릭 시 (lat, lng) 콜백. Step 5 LocationPicker용. */
-  onMapClick?: (lat: number, lng: number) => void;
+  readonly onMapClick?: (lat: number, lng: number) => void;
   /** 지도 드래그 가능 여부. false면 클릭 시 핀 추가만. */
-  draggable?: boolean;
+  readonly draggable?: boolean;
   /** 지도 중심 변경 시 (드래그 후) 콜백 */
-  onCenterChanged?: (lat: number, lng: number) => void;
+  readonly onCenterChanged?: (lat: number, lng: number) => void;
 }
 
 export function MapView({ center, level = 5, style, children, onMapClick, draggable = true, onCenterChanged }: MapViewProps) {
@@ -77,7 +77,7 @@ export function MapView({ center, level = 5, style, children, onMapClick, dragga
 
   const mapStyle: React.CSSProperties = {
     ...(style ?? { width: '100%', height: '400px' }),
-    cursor: draggable && isDragging ? 'grabbing' : 'default',
+    cursor: isDragging ? 'grabbing' : 'default',
   };
 
   return (
