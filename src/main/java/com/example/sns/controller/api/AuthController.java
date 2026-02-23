@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -38,14 +39,19 @@ public class AuthController {
     @Value("${app.cookie.secure:false}")
     private boolean cookieSecure;
 
-    @Operation(summary = "로그인", description = "이메일·비밀번호로 로그인. 성공 시 Access Token(15분)+Refresh Token(Set-Cookie) 반환")
+    @Operation(summary = "로그인", description = "이메일·비밀번호로 로그인. 성공 시 Access Token(15분)+Refresh Token(Set-Cookie 또는 X-Client:mobile 시 본문)")
     @PostMapping("/login")
     @ValidCheck
     public ResponseEntity<LoginResponse> login(@Valid @RequestBody LoginRequest request,
-            HttpServletResponse response) {
+            HttpServletResponse response,
+            @RequestHeader(value = "X-Client", required = false) String clientHeader) {
         var result = authService.login(request);
         CookieUtil.setRefreshTokenCookie(response, result.refreshToken(), result.refreshTtlSeconds(), cookieSecure);
-        return ResponseEntity.ok(result.loginResponse());
+        LoginResponse body = "mobile".equalsIgnoreCase(clientHeader)
+                ? LoginResponse.of(result.loginResponse().accessToken(), result.loginResponse().expiresIn(),
+                        result.refreshToken())
+                : result.loginResponse();
+        return ResponseEntity.ok(body);
     }
 
     @Operation(summary = "토큰 갱신", description = "Cookie refreshToken으로 새 Access Token 발급")

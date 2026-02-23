@@ -1,8 +1,19 @@
 # 지도 기반 SNS 모바일 앱 — MobileTask (Flutter 단계별 작업)
 
 - **기준 문서**: `doc/PRD.md`, `doc/RULE.md`, `doc/API_SPEC.md`, `doc/AUTH_DESIGN.md`
+- **Flutter 플랫폼 가이드**: `doc/rules/07-platform-flutter.md` — **Task 작업 시 반드시 확인**
 - **총 기간**: 50일 내외
 - **총 Step**: 10단계
+
+---
+
+## Task 작업 시 확인 절차
+
+매 Step 작업 전·후 아래를 확인한다.
+
+1. **07-platform-flutter.md** — 해당 Step 관련 섹션 확인 및 준수
+2. **RULE Reference** — 각 Step의 RULE Reference 섹션 참조
+3. **검증** — Step별 검증 체크리스트(아래)로 Done When 충족 여부 확인
 
 ---
 
@@ -18,35 +29,31 @@
 
 > 신규 Step 작성·추가 시 **RULE 4.3.2(Task 문서 작성 구조)** 를 반드시 준수한다.
 
-
-| 필드                 | 설명                       |
-| ------------------ | ------------------------ |
-| **Step Name**      | 단계 이름                    |
-| **Step Goal**      | 단계 완료 시 달성할 목표(한 문장)     |
+| 필드               | 설명                                     |
+| ------------------ | ---------------------------------------- |
+| **Step Name**      | 단계 이름                                |
+| **Step Goal**      | 단계 완료 시 달성할 목표(한 문장)        |
 | **Input**          | 이 단계에 필요한 입력(문서·코드·환경 등) |
-| **Scope**          | 포함/제외 범위로 단계 경계 명확화      |
-| **Instructions**   | 수행할 작업 목록                |
-| **Output Format**  | 산출물 형태·위치·형식             |
-| **Constraints**    | 반드시 지켜야 할 제약(RULE·기술 등)  |
-| **Done When**      | 아래 조건 충족 시 단계 완료로 간주     |
-| **Duration**       | 예상 소요 일수                 |
-| **RULE Reference** | 참조할 RULE.md 섹션           |
-
+| **Scope**          | 포함/제외 범위로 단계 경계 명확화        |
+| **Instructions**   | 수행할 작업 목록                         |
+| **Output Format**  | 산출물 형태·위치·형식                    |
+| **Constraints**    | 반드시 지켜야 할 제약(RULE·기술 등)      |
+| **Done When**      | 아래 조건 충족 시 단계 완료로 간주       |
+| **Duration**       | 예상 소요 일수                           |
+| **RULE Reference** | 참조할 RULE.md 섹션                      |
 
 ---
 
 ## 일정 요약
 
-
-| Phase  | Step 범위    | 기간(일)  | 비고                         |
-| ------ | ---------- | ------ | -------------------------- |
-| 기반·인증  | Step 1 ~ 3 | 12     | 프로젝트 셋업, API 클라이언트, 회원·로그인 |
-| 게시판    | Step 4 ~ 5 | 8      | 네비게이션, 게시글 목록·상세           |
-| 지도·Pin | Step 6 ~ 7 | 12     | 지도 SDK, 위치, Pin·반경 조회      |
-| 작성·마이  | Step 8 ~ 9 | 12     | 게시글/이미지 작성·수정, 마이페이지       |
-| 마무리    | Step 10    | 6      | About, 테스트, 배포 준비          |
-| **합계** | **10**     | **50** |                            |
-
+| Phase     | Step 범위  | 기간(일) | 비고                                       |
+| --------- | ---------- | -------- | ------------------------------------------ |
+| 기반·인증 | Step 1 ~ 3 | 12       | 프로젝트 셋업, API 클라이언트, 회원·로그인 |
+| 게시판    | Step 4 ~ 5 | 8        | 네비게이션, 게시글 목록·상세               |
+| 지도·Pin  | Step 6 ~ 7 | 12       | 지도 SDK, 위치, Pin·반경 조회              |
+| 작성·마이 | Step 8 ~ 9 | 12       | 게시글/이미지 작성·수정, 마이페이지        |
+| 마무리    | Step 10    | 6        | About, 테스트, 배포 준비                   |
+| **합계**  | **10**     | **50**   |                                            |
 
 ---
 
@@ -59,7 +66,7 @@
 **Input:**
 
 - PRD 2.3(Mobile: Flutter, REST API, 지도 SDK)
-- doc/ARCHITECTURE.md, doc/API_SPEC.md
+- doc/ARCHITECTURE.md, doc/API_SPEC.md, **doc/rules/07-platform-flutter.md**
 - 기존 `mobile/` Flutter 프로젝트
 
 **Scope:**
@@ -92,7 +99,16 @@
 
 **Duration:** 4일
 
-**RULE Reference:** 1.1, 3.1, 4.3.2
+**RULE Reference:** 1.1, 3.1, 4.3.2, **7.3** (doc/rules/07-platform-flutter.md)
+
+**07-platform-flutter 검증 (Step 1):**
+
+| 7.3 섹션 | 검증 항목 | 확인 |
+|----------|-----------|------|
+| 7.3.1 | SharedPreferences 대신 flutter_secure_storage 의존성 포함 | ☑ |
+| 7.3.4 | lib/core/, data/, domain/, presentation/ 구조 (또는 core/domain/data/presentation) | ☑ |
+| 7.3.8 | DTO 불변 객체 (const 생성자, fromJson) | ☑ |
+| 7.3.11 | API_BASE_URL 등 dart-define 또는 dart-define-from-file | ☑ |
 
 ---
 
@@ -105,7 +121,7 @@
 **Input:**
 
 - Step 1 완료(패키지 구조·설정)
-- doc/API_SPEC.md, doc/AUTH_DESIGN.md
+- doc/API_SPEC.md, doc/AUTH_DESIGN.md, **doc/rules/07-platform-flutter.md**
 - Backend `/api/auth/login`, `/api/auth/refresh`, `/api/auth/logout` API
 
 **Scope:**
@@ -139,7 +155,16 @@
 
 **Duration:** 5일
 
-**RULE Reference:** 1.1, 6.1, 6.5
+**RULE Reference:** 1.1, 6.1, 6.5, **7.3** (doc/rules/07-platform-flutter.md)
+
+**07-platform-flutter 검증 (Step 2):**
+
+| 7.3 섹션 | 검증 항목 | 확인 |
+|----------|-----------|------|
+| 7.3.1 | 토큰 저장 시 flutter_secure_storage 사용 (SharedPreferences 금지) | ☑ |
+| 7.3.2 | DioException → AppException 계층 매핑, ErrorResponse 파싱 | ☑ |
+| 7.3.3 | 공통 Dio 인스턴스, 인터셉터로 Bearer·401 Refresh 처리 | ☑ |
+| 7.3.3 | 토큰 갱신 실패 시 UnauthorizedException → 로그인 화면 이동 준비 | ☑ |
 
 ---
 
@@ -184,7 +209,7 @@
 
 **Duration:** 4일
 
-**RULE Reference:** 1.2, 1.3
+**RULE Reference:** 1.2, 1.3, **7.3** (07-platform-flutter: 7.3.5 Riverpod 등)
 
 ---
 
@@ -228,7 +253,7 @@
 
 **Duration:** 4일
 
-**RULE Reference:** 1.2
+**RULE Reference:** 1.2, **7.3** (07-platform-flutter: 7.3.6 위젯, 7.3.12 라우팅)
 
 ---
 
@@ -270,7 +295,7 @@
 
 **Duration:** 4일
 
-**RULE Reference:** 1.2
+**RULE Reference:** 1.2, **7.3** (07-platform-flutter: 7.3.8 직렬화)
 
 ---
 
@@ -315,7 +340,7 @@
 
 **Duration:** 6일
 
-**RULE Reference:** 1.1, 1.4.1
+**RULE Reference:** 1.1, 1.4.1, **7.3** (07-platform-flutter: 7.3.7 Android/iOS, 7.3.11 환경)
 
 ---
 
@@ -358,7 +383,7 @@
 
 **Duration:** 6일
 
-**RULE Reference:** 1.2
+**RULE Reference:** 1.2, **7.3** (07-platform-flutter: 7.3.9 이미지)
 
 ---
 
@@ -402,7 +427,7 @@
 
 **Duration:** 6일
 
-**RULE Reference:** 1.2, 1.3
+**RULE Reference:** 1.2, 1.3, **7.3** (07-platform-flutter: 7.3.2 에러, 7.3.9 이미지)
 
 ---
 
@@ -443,7 +468,7 @@
 
 **Duration:** 4일
 
-**RULE Reference:** 1.2
+**RULE Reference:** 1.2, **7.3** (07-platform-flutter: 7.3.6 위젯)
 
 ---
 
@@ -489,10 +514,9 @@
 
 **Duration:** 6일
 
-**RULE Reference:** 1.1, 4.2, 4.3.2
+**RULE Reference:** 1.1, 4.2, 4.3.2, **7.3** (07-platform-flutter: 7.3.11 환경, 7.3.13 테스트)
 
 ---
 
 > **문서 버전**: 1.0.0
 > **최종 업데이트**: 2026-02-09
-
