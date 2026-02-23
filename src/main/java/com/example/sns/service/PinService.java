@@ -28,6 +28,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class PinService {
 
     private static final String MSG_PIN_NOT_FOUND = "Pin을 찾을 수 없습니다.";

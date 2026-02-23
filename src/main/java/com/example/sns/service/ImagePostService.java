@@ -35,6 +35,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class ImagePostService {
 
     private static final String MSG_IMAGE_POST_NOT_FOUND = "이미지 게시글을 찾을 수 없습니다.";

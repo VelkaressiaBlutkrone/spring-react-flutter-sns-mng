@@ -21,6 +21,8 @@ import com.example.sns.exception.ErrorCode;
 import com.example.sns.exception.ErrorResponse;
 import com.example.sns.security.JwtAuthenticationFilter;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -41,6 +43,7 @@ public class SecurityConfig {
 
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final CorsProperties corsProperties;
+    private final ObjectMapper objectMapper;
 
     /** H2 콘솔 전용: 인라인 스크립트 허용(CSP 완화). No Javascript 메시지 방지. */
     @Bean
@@ -105,7 +108,8 @@ public class SecurityConfig {
                                 org.springframework.security.core.AuthenticationException authException) -> {
                             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                             response.setContentType("application/json;charset=UTF-8");
-                            response.getWriter().write("{\"code\":\"E002\",\"message\":\"인증이 필요합니다.\"}");
+                            ErrorResponse err = ErrorResponse.of(ErrorCode.UNAUTHORIZED, request);
+                            response.getWriter().write(objectMapper.writeValueAsString(err));
                         })
                         .accessDeniedHandler(accessDeniedHandler()));
 
@@ -122,10 +126,8 @@ public class SecurityConfig {
                     accessDeniedException.getMessage());
             response.setStatus(HttpServletResponse.SC_FORBIDDEN);
             response.setContentType("application/json;charset=UTF-8");
-            ErrorResponse errorResponse = ErrorResponse.of(ErrorCode.FORBIDDEN);
-            String json = "{\"code\":\"%s\",\"message\":\"%s\"}".formatted(
-                    errorResponse.code(), errorResponse.message());
-            response.getWriter().write(json);
+            ErrorResponse errorResponse = ErrorResponse.of(ErrorCode.FORBIDDEN, request);
+            response.getWriter().write(objectMapper.writeValueAsString(errorResponse));
         };
     }
 
@@ -137,12 +139,14 @@ public class SecurityConfig {
             config.setAllowedOrigins(origins);
         }
         config.setAllowedMethods(List.of(HttpMethod.GET.name(), HttpMethod.POST.name(),
-                HttpMethod.PUT.name(), HttpMethod.DELETE.name(), HttpMethod.OPTIONS.name()));
+                HttpMethod.PUT.name(), HttpMethod.PATCH.name(), HttpMethod.DELETE.name(), HttpMethod.OPTIONS.name()));
         config.setAllowedHeaders(List.of("*"));
+        config.setExposedHeaders(List.of("Authorization", "X-Refresh-Token", "X-Trace-Id"));
         config.setAllowCredentials(true);
+        config.setMaxAge(3600L);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", config);
+        source.registerCorsConfiguration("/api/**", config);
         return source;
     }
 }
