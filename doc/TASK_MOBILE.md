@@ -57,6 +57,23 @@
 
 ---
 
+## 진행 완료 체크리스트
+
+| Step    | 내용                                | 완료 |
+| ------- | ----------------------------------- | ---- |
+| Step 1  | 프로젝트 셋업·아키텍처·패키지 구조  | ☑    |
+| Step 2  | API 클라이언트·인증·토큰 관리       | ☑    |
+| Step 3  | 회원·인증 화면 (회원가입·로그인)    | ☑    |
+| Step 4  | 공통 UI·네비게이션·라우팅           | ☑    |
+| Step 5  | 게시글 목록·상세 화면               | ☐    |
+| Step 6  | 지도·위치·지도 SDK 연동             | ☐    |
+| Step 7  | Pin·반경 조회 화면                  | ☐    |
+| Step 8  | 게시글·이미지 게시글 작성·수정·삭제 | ☐    |
+| Step 9  | 마이페이지·개인정보                 | ☐    |
+| Step 10 | About·테스트·배포 준비              | ☐    |
+
+---
+
 ## Step 1 — 프로젝트 셋업·아키텍처·패키지 구조
 
 **Step Name:** 프로젝트 셋업·아키텍처·패키지 구조
@@ -103,12 +120,12 @@
 
 **07-platform-flutter 검증 (Step 1):**
 
-| 7.3 섹션 | 검증 항목 | 확인 |
-|----------|-----------|------|
-| 7.3.1 | SharedPreferences 대신 flutter_secure_storage 의존성 포함 | ☑ |
-| 7.3.4 | lib/core/, data/, domain/, presentation/ 구조 (또는 core/domain/data/presentation) | ☑ |
-| 7.3.8 | DTO 불변 객체 (const 생성자, fromJson) | ☑ |
-| 7.3.11 | API_BASE_URL 등 dart-define 또는 dart-define-from-file | ☑ |
+| 7.3 섹션 | 검증 항목                                                                          | 확인 |
+| -------- | ---------------------------------------------------------------------------------- | ---- |
+| 7.3.1    | SharedPreferences 대신 flutter_secure_storage 의존성 포함                          | ☑    |
+| 7.3.4    | lib/core/, data/, domain/, presentation/ 구조 (또는 core/domain/data/presentation) | ☑    |
+| 7.3.8    | DTO 불변 객체 (const 생성자, fromJson)                                             | ☑    |
+| 7.3.11   | API_BASE_URL 등 dart-define 또는 dart-define-from-file                             | ☑    |
 
 ---
 
@@ -159,12 +176,12 @@
 
 **07-platform-flutter 검증 (Step 2):**
 
-| 7.3 섹션 | 검증 항목 | 확인 |
-|----------|-----------|------|
-| 7.3.1 | 토큰 저장 시 flutter_secure_storage 사용 (SharedPreferences 금지) | ☑ |
-| 7.3.2 | DioException → AppException 계층 매핑, ErrorResponse 파싱 | ☑ |
-| 7.3.3 | 공통 Dio 인스턴스, 인터셉터로 Bearer·401 Refresh 처리 | ☑ |
-| 7.3.3 | 토큰 갱신 실패 시 UnauthorizedException → 로그인 화면 이동 준비 | ☑ |
+| 7.3 섹션 | 검증 항목                                                         | 확인 |
+| -------- | ----------------------------------------------------------------- | ---- |
+| 7.3.1    | 토큰 저장 시 flutter_secure_storage 사용 (SharedPreferences 금지) | ☑    |
+| 7.3.2    | DioException → AppException 계층 매핑, ErrorResponse 파싱         | ☑    |
+| 7.3.3    | 공통 Dio 인스턴스, 인터셉터로 Bearer·401 Refresh 처리             | ☑    |
+| 7.3.3    | 토큰 갱신 실패 시 UnauthorizedException → 로그인 화면 이동 준비   | ☑    |
 
 ---
 
@@ -211,6 +228,14 @@
 
 **RULE Reference:** 1.2, 1.3, **7.3** (07-platform-flutter: 7.3.5 Riverpod 등)
 
+**07-platform-flutter 검증 (Step 3):**
+
+| 7.3 섹션 | 검증 항목                                       | 확인 |
+| -------- | ----------------------------------------------- | ---- |
+| 7.3.2    | AppException으로 에러 매핑, fieldErrors 폼 표시 | ☑    |
+| 7.3.5    | Riverpod으로 인증 상태 관리, 화면 분기          | ☑    |
+| 7.3.6    | 위젯 단일 책임 (JoinScreen, LoginScreen 분리)   | ☑    |
+
 ---
 
 ## Step 4 — 공통 UI·네비게이션·라우팅
@@ -254,6 +279,13 @@
 **Duration:** 4일
 
 **RULE Reference:** 1.2, **7.3** (07-platform-flutter: 7.3.6 위젯, 7.3.12 라우팅)
+
+**07-platform-flutter 검증 (Step 4):**
+
+| 7.3 섹션 | 검증 항목                                                      | 확인 |
+| -------- | -------------------------------------------------------------- | ---- |
+| 7.3.6    | 공통 위젯 단일 책임 (LoadingWidget, AppErrorView, EmptyWidget) | ☑    |
+| 7.3.12   | GoRouter 기반 라우팅, 인증 가드 redirect                       | ☑    |
 
 ---
 
@@ -518,5 +550,5 @@
 
 ---
 
-> **문서 버전**: 1.0.0
-> **최종 업데이트**: 2026-02-09
+> **문서 버전**: 1.0.1
+> **최종 업데이트**: 2026-02-19

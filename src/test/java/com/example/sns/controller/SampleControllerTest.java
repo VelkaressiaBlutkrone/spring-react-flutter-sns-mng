@@ -7,21 +7,19 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
+
+import com.example.sns.BaseIntegrationTest;
 
 /**
  * SampleController 통합 테스트.
  *
  * @Valid 검증 및 GlobalExceptionHandler 동작 검증.
  */
-@SpringBootTest
 @AutoConfigureMockMvc
-@ActiveProfiles("test")
-class SampleControllerTest {
+class SampleControllerTest extends BaseIntegrationTest {
 
     @Autowired
     private MockMvc mockMvc;

@@ -10,11 +10,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
+
+import com.example.sns.BaseIntegrationTest;
 
 /**
  * AuthController 통합 테스트.
@@ -22,11 +22,9 @@ import org.springframework.test.web.servlet.MockMvc;
  * RULE 4.2.2: Given-When-Then.
  * RULE 1.2.4: 인증·인가 테스트 (401).
  */
-@SpringBootTest
 @AutoConfigureMockMvc
-@ActiveProfiles("test")
 @DisplayName("AuthController 통합 테스트")
-class AuthControllerTest {
+class AuthControllerTest extends BaseIntegrationTest {
 
     @Autowired
     private MockMvc mockMvc;

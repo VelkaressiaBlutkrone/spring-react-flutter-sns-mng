@@ -38,6 +38,12 @@ dependencies:
   flutter_secure_storage: ^9.2.4
   geolocator: ^13.0.2
 
+  # TASK_MOBILE Step 3: 상태 관리 (07-platform-flutter 7.3.5)
+  flutter_riverpod: ^2.6.1
+
+  # TASK_MOBILE Step 4: 라우팅 (07-platform-flutter 7.3.12)
+  go_router: ^14.6.2
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

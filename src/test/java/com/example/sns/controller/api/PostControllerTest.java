@@ -13,15 +13,14 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.example.sns.BaseIntegrationTest;
 import com.example.sns.domain.Post;
 import com.example.sns.domain.User;
 import com.example.sns.domain.UserRole;
@@ -34,12 +33,10 @@ import com.example.sns.repository.UserRepository;
  * RULE 1.2.4: 인증·인가 테스트 (401, 403).
  * Step 8: 비로그인 조회, 로그인 작성·수정·삭제, 타인 글 403.
  */
-@SpringBootTest
 @AutoConfigureMockMvc
-@ActiveProfiles("test")
 @Transactional
 @DisplayName("PostController 통합 테스트")
-class PostControllerTest {
+class PostControllerTest extends BaseIntegrationTest {
 
     @Autowired
     private MockMvc mockMvc;

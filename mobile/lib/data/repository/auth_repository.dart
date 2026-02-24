@@ -89,13 +89,18 @@ class AuthRepository {
   }
 
   /// 현재 사용자: GET /api/auth/me
+  /// 401·500·네트워크 오류 시 null (비로그인으로 처리)
   Future<MemberResponse?> getCurrentUser() async {
     try {
       final res = await _api.get(ApiConstants.authMe);
       return MemberResponse.fromJson(res.data as Map<String, dynamic>);
     } on DioException catch (e) {
-      if (e.response?.statusCode == 401) return null;
+      final status = e.response?.statusCode ?? 0;
+      if (status == 401) return null;
+      if (status >= 500) return null; // 서버 오류 시 비로그인 처리
       rethrow;
+    } catch (_) {
+      return null;
     }
   }
 

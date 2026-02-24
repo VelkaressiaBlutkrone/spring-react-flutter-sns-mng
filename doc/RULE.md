@@ -42,6 +42,7 @@
 | [09-observability.md](rules/09-observability.md)         | Observability: 구조화 로깅·traceId/spanId·OpenTelemetry [MUST/SHOULD]        |
 | [10-container-k8s.md](rules/10-container-k8s.md)         | Container & Kubernetes 보안 (해당 환경 사용 시만 적용)                       |
 | [11-data-sovereignty.md](rules/11-data-sovereignty.md)   | 데이터 주권·개인정보: 최소화·파기·탈퇴·감사·마스킹 [MUST]                    |
+| [12-working-log.md](rules/12-working-log.md)              | Working Log: AI 작업 결과물의 9개 섹션 구조·작성 규칙·템플릿 [MUST]          |
 | [appendix-a-asvs.md](rules/appendix-a-asvs.md)           | 부록 A: ASVS 5.0 챕터별 대응 (문제→대책)                                     |
 | [appendix-b-owasp.md](rules/appendix-b-owasp.md)         | 부록 B: OWASP Top 10 2025 매핑표                                             |
 | [appendix-c-checklist.md](rules/appendix-c-checklist.md) | 부록 C: 규칙 준수 체크리스트 (일상 참조용)                                   |
@@ -95,7 +96,11 @@
 
 - 물리 삭제 원칙, 탈퇴 즉시 익명화·삭제, 로그·캐시·백업 연관 데이터 삭제. DB 직접 접근 통제·접근 로그 2년 보존. PII 마스킹·검색 가능 암호화.
 
+### Working Log [MUST]
+
+- 모든 AI 작업 결과물에 Working Log 수반. 9개 섹션(Task Metadata, Original Instruction, AI Interpretation, Execution, Output Summary, Validation, Issues, Next Action, Trace) 순서 준수. 원문 보존·가정 명시·한계 공개·연속성 유지·실행 가능한 Next Instruction 필수.
+
 ---
 
-> **마지막 업데이트**: 2026-02-12
-> **버전**: 1.0.10 (인코딩 UTF-8 규칙 추가)
+> **마지막 업데이트**: 2026-02-19
+> **버전**: 1.0.11 (Working Log Rule 추가)

@@ -10,12 +10,12 @@ import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
+
+import com.example.sns.BaseIntegrationTest;
 
 /**
  * 관리자 API 인가 테스트.
@@ -23,11 +23,9 @@ import org.springframework.test.web.servlet.MockMvc;
  * RULE 1.2.4: 인가 테스트 (403).
  * Step 7: /api/admin/** ROLE_ADMIN 전용, 일반 사용자 403.
  */
-@SpringBootTest
 @AutoConfigureMockMvc
-@ActiveProfiles("test")
 @DisplayName("관리자 API 인가 테스트")
-class AdminSecurityTest {
+class AdminSecurityTest extends BaseIntegrationTest {
 
     @Autowired
     private MockMvc mockMvc;

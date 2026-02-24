@@ -2,16 +2,12 @@ package com.example.sns.service.auth;
 
 import java.util.Optional;
 
-import org.springframework.context.annotation.Profile;
-import org.springframework.stereotype.Component;
-
 /**
  * 테스트 환경용 TokenStore (Redis 미사용).
  *
  * Redis 제외 시 TokenStore 빈을 제공.
+ * TestConfig에서 @Bean으로 등록.
  */
-@Component
-@Profile("test")
 public class NoOpTokenStore implements TokenStore {
 
     @Override
