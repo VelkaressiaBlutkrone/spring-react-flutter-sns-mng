@@ -60,6 +60,36 @@ Spring Boot는 Gson Bean을 자동 생성하므로 `@RequiredArgsConstructor`로
 
 ---
 
+## 문제: SecurityConfig에서 ObjectMapper 빈을 찾을 수 없음
+
+**에러 메시지:**
+
+```text
+Parameter 2 of constructor in SecurityConfig required a bean of type
+'com.fasterxml.jackson.databind.ObjectMapper' that could not be found.
+```
+
+**원인:**
+
+- 프로젝트가 Gson 기반이라 Jackson `ObjectMapper`가 Spring 빈으로 등록되지 않음
+- SecurityConfig는 401/403 시 `ErrorResponse` JSON 직렬화에 ObjectMapper 사용
+
+**해결 방법:**
+
+`JacksonConfig` 추가하여 ObjectMapper 빈 등록 (JavaTimeModule으로 Instant 직렬화 지원):
+
+```java
+@Configuration
+public class JacksonConfig {
+    @Bean
+    public ObjectMapper objectMapper() {
+        return new ObjectMapper().registerModule(new JavaTimeModule());
+    }
+}
+```
+
+---
+
 ## 문제: WebRequest.getParameterNames() 타입 불일치
 
 **에러 메시지:**

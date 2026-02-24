@@ -1,8 +1,10 @@
 // Dio 기반 HTTP 클라이언트. RULE 7.3.3: Bearer·401 Refresh.
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 
 import '../../core/config/app_config.dart';
 import '../../core/constants/api_constants.dart';
+import '../../core/logger/app_logger.dart';
 import '../auth/token_storage.dart';
 
 /// API 클라이언트 (Dio 싱글톤)
@@ -18,10 +20,21 @@ class ApiClient {
             'Accept': 'application/json',
           },
         )) {
-    _dio.interceptors.addAll([
+    final interceptors = <Interceptor>[
       _AuthInterceptor(_storage),
       _RefreshInterceptor(_dio, _storage),
-    ]);
+    ];
+    if (kDebugMode) {
+      interceptors.insert(
+        0,
+        LogInterceptor(
+          requestBody: true,
+          responseBody: true,
+          logPrint: (obj) => logDebug('Dio', obj.toString()),
+        ),
+      );
+    }
+    _dio.interceptors.addAll(interceptors);
   }
 
   final TokenStorage _storage;
@@ -134,7 +147,9 @@ class _RefreshInterceptor extends QueuedInterceptor {
         );
         return true;
       }
-    } catch (_) {}
+    } catch (e, st) {
+      logDebug('ApiClient', 'Refresh token 실패', e, st);
+    }
     return false;
   }
 }

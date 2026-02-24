@@ -59,7 +59,8 @@ app:
   cookie:
     secure: false
   cors:
-    allowed-origins: ${CORS_ALLOWED_ORIGINS:http://localhost:8080,http://localhost:5173,http://127.0.0.1:8080,http://127.0.0.1:5173}
+    # Flutter web 랜덤 포트 대응: localhost:* 패턴 사용. 프로덕션에서는 allowed-origins로 명시.
+    allowed-origin-patterns: ${CORS_ALLOWED_ORIGIN_PATTERNS:http://localhost:*,http://127.0.0.1:*}
   jwt:
     access-ttl-minutes: ${JWT_ACCESS_TTL_MINUTES:15}
     refresh-ttl-days: ${JWT_REFRESH_TTL_DAYS:7}

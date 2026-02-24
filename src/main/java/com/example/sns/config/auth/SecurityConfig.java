@@ -134,9 +134,14 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
-        List<String> origins = corsProperties.getAllowedOrigins();
-        if (origins != null && !origins.isEmpty()) {
-            config.setAllowedOrigins(origins);
+        List<String> patterns = corsProperties.getAllowedOriginPatterns();
+        if (patterns != null && !patterns.isEmpty()) {
+            config.setAllowedOriginPatterns(patterns);
+        } else {
+            List<String> origins = corsProperties.getAllowedOrigins();
+            if (origins != null && !origins.isEmpty()) {
+                config.setAllowedOrigins(origins);
+            }
         }
         config.setAllowedMethods(List.of(HttpMethod.GET.name(), HttpMethod.POST.name(),
                 HttpMethod.PUT.name(), HttpMethod.PATCH.name(), HttpMethod.DELETE.name(), HttpMethod.OPTIONS.name()));

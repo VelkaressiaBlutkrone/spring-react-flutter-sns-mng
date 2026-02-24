@@ -54,3 +54,48 @@ VITE_API_BASE_URL=http://localhost:8080
 ```
 
 프록시 사용 시 상대 경로 `/api` 사용.
+
+---
+
+## 문제: Flutter Web 로그인 시 connection error (Postman은 정상)
+
+**에러 메시지:**
+
+```text
+DioException [connection error]: The XMLHttpRequest onError callback was called.
+This typically indicates an error on the network layer.
+```
+
+**증상:**
+
+- Postman으로 `POST /api/auth/login` 호출 시 200 OK 정상
+- Flutter Web에서 동일 API 호출 시 connection error
+
+**원인:**
+
+- **CORS**: 브라우저는 다른 origin 간 요청을 차단. Postman은 CORS 미적용.
+- Flutter Web: `http://localhost:8081` (또는 랜덤 포트) → API: `http://localhost:8080` → 서로 다른 origin
+
+**해결 방법:**
+
+### 1. application-dev.yml CORS 패턴 추가
+
+Flutter Web 랜덤 포트 대응을 위해 `allowed-origin-patterns` 사용:
+
+```yaml
+app:
+  cors:
+    allowed-origin-patterns: http://localhost:*,http://127.0.0.1:*
+```
+
+### 2. Backend 재시작
+
+`gradle bootRun` 재실행 후 Flutter Web에서 재시도.
+
+### 3. Flutter Web 고정 포트 사용 (선택)
+
+```bash
+flutter run -d chrome --web-port=8081
+```
+
+`http://localhost:8081`이 CORS 허용 목록에 포함되어야 함.

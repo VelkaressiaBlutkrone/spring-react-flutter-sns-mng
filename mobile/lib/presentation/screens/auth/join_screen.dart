@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../core/di/app_providers.dart';
 import '../../../core/error/app_exception.dart';
+import '../../../core/logger/app_logger.dart';
 import '../../../domain/models/models.dart';
 import '../../../shared/utils/validation.dart';
 
@@ -64,6 +65,7 @@ class _JoinScreenState extends State<JoinScreen> {
       context.pop();
     } on AppException catch (e) {
       if (!mounted) return;
+      logDebug('JoinScreen', '회원가입 실패: ${e.message}', e);
       setState(() {
         _isLoading = false;
         _generalError = e.message;
@@ -75,11 +77,14 @@ class _JoinScreenState extends State<JoinScreen> {
           }
         }
       });
-    } catch (e) {
+    } catch (e, st) {
       if (!mounted) return;
+      logDebug('JoinScreen', '회원가입 예외', e, st);
       setState(() {
         _isLoading = false;
-        _generalError = '오류가 발생했습니다.';
+        _generalError = e is NetworkException
+            ? '서버에 연결할 수 없습니다. Backend 실행 여부와 CORS를 확인하세요.'
+            : '오류가 발생했습니다: ${e.toString()}';
       });
     }
   }

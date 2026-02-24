@@ -16,6 +16,7 @@
 | [06-database.md](./trouble/06-database.md)                 | 데이터베이스 연결, 포트 충돌                   |
 | [07-config-guide.md](./trouble/07-config-guide.md)         | 설정 가이드 (Path Alias 등)                    |
 | [08-application-profile-kakao-map.md](./trouble/08-application-profile-kakao-map.md) | Application 프로파일, 카카오맵 키·CSP 인라인 스크립트 |
+| [09-flutter-mobile.md](./trouble/09-flutter-mobile.md)                               | Flutter Mobile (디버깅, 로그 등)                     |
 
 ## 빠른 검색
 
@@ -27,6 +28,8 @@
 | `erasableSyntaxOnly`            | [02-typescript-react.md](./trouble/02-typescript-react.md) |
 | `verbatimModuleSyntax`          | [02-typescript-react.md](./trouble/02-typescript-react.md) |
 | `CORS policy`                   | [03-cors.md](./trouble/03-cors.md)                         |
+| `XMLHttpRequest onError` / Flutter Web connection error | [03-cors.md](./trouble/03-cors.md) |
+| `ObjectMapper` bean not found  | [04-spring-boot.md](./trouble/04-spring-boot.md)           |
 | `spring-boot-starter-aop`       | [04-spring-boot.md](./trouble/04-spring-boot.md)           |
 | `NoSuchBeanDefinitionException` | [04-spring-boot.md](./trouble/04-spring-boot.md)           |
 | `compileJava` 실패              | [05-build.md](./trouble/05-build.md)                       |
@@ -44,6 +47,11 @@
 - Vite 빌드 실패 → [05-build.md](./trouble/05-build.md)
 - Tailwind CSS 미적용 → [05-build.md](./trouble/05-build.md)
 - Path Alias 설정 → [07-config-guide.md](./trouble/07-config-guide.md)
+
+#### Flutter Mobile
+
+- Flutter Web CORS (Postman 정상, Flutter 실패) → [03-cors.md](./trouble/03-cors.md)
+- 오류 시 로그·메시지 미출력 → [09-flutter-mobile.md](./trouble/09-flutter-mobile.md)
 
 #### 백엔드
 

@@ -6,11 +6,22 @@
 
 ### 기본 실행 (로컬 Backend)
 
+1. **Backend 먼저 실행**: `gradle bootRun` (프로젝트 루트)
+2. **Flutter 실행**:
+
 ```bash
 cd mobile
 flutter pub get
 flutter run
 ```
+
+### Flutter Web + CORS
+
+웹에서 실행 시 Backend CORS에 Flutter origin이 포함되어야 함.
+
+- **고정 포트 사용** (권장): `flutter run -d chrome --web-port=8081`
+- Backend `application-dev.yml`에 `http://localhost:8081` 포함됨
+- 연결 오류 시: Backend 실행 여부 확인, CORS에 origin 추가 또는 `CORS_ALLOWED_ORIGINS` 환경 변수 지정
 
 ### 환경 변수(dart-define)로 API Base URL 지정
 
