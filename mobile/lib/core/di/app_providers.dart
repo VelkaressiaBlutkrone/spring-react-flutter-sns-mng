@@ -4,6 +4,7 @@ import '../../data/auth/token_storage.dart';
 import '../../data/repository/auth_repository.dart';
 import '../../data/repository/image_post_repository.dart';
 import '../../data/repository/member_repository.dart';
+import '../../data/repository/pin_repository.dart';
 import '../../data/repository/post_repository.dart';
 
 late final TokenStorage tokenStorage;
@@ -12,6 +13,7 @@ late final AuthRepository authRepository;
 late final MemberRepository memberRepository;
 late final PostRepository postRepository;
 late final ImagePostRepository imagePostRepository;
+late final PinRepository pinRepository;
 
 /// DI 초기화 (main에서 호출)
 void initAppProviders() {
@@ -24,4 +26,5 @@ void initAppProviders() {
   memberRepository = MemberRepository(apiClient: apiClient);
   postRepository = PostRepository(apiClient: apiClient);
   imagePostRepository = ImagePostRepository(apiClient: apiClient);
+  pinRepository = PinRepository(apiClient: apiClient);
 }

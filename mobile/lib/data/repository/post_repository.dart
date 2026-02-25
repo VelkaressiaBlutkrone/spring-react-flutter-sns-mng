@@ -44,10 +44,63 @@ class PostRepository {
   Future<PostResponse> getById(int id) async {
     try {
       final res = await _api.get(
-      '${ApiConstants.posts}/$id',
-      options: Options(extra: {'skipAuth': true}),
-    );
+        '${ApiConstants.posts}/$id',
+        options: Options(extra: {'skipAuth': true}),
+      );
       return PostResponse.fromJson(res.data as Map<String, dynamic>);
+    } on DioException catch (e) {
+      throw mapDioException(e);
+    }
+  }
+
+  /// 반경 내 게시글 목록: GET /api/posts/nearby
+  Future<PageResponse<PostResponse>> getNearby({
+    required double lat,
+    required double lng,
+    required double radiusKm,
+    int page = 0,
+    int size = 20,
+  }) async {
+    try {
+      final res = await _api.get(
+        ApiConstants.postsNearby,
+        queryParameters: {
+          'lat': lat,
+          'lng': lng,
+          'radiusKm': radiusKm,
+          'page': page,
+          'size': size,
+        },
+        options: Options(extra: {'skipAuth': true}),
+      );
+      return PageResponse.fromJson(
+        res.data as Map<String, dynamic>,
+        (json) => PostResponse.fromJson(Map<String, dynamic>.from(json)),
+      );
+    } on DioException catch (e) {
+      throw mapDioException(e);
+    }
+  }
+
+  /// Pin별 게시글 목록: GET /api/pins/{id}/posts
+  Future<PageResponse<PostResponse>> getByPinId(
+    int pinId, {
+    int page = 0,
+    int size = 20,
+  }) async {
+    try {
+      final res = await _api.get(
+        '${ApiConstants.pins}/$pinId/posts',
+        queryParameters: {
+          'page': page,
+          'size': size,
+        },
+        options: Options(extra: {'skipAuth': true}),
+      );
+      return PageResponse.fromJson(
+        res.data as Map<String, dynamic>,
+        (json) => PostResponse.fromJson(Map<String, dynamic>.from(json)),
+      );
     } on DioException catch (e) {
       throw mapDioException(e);
     }

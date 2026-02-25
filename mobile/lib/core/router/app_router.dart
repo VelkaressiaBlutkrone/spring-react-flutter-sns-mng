@@ -51,11 +51,6 @@ GoRouter appRouter(Ref ref) {
         return AppRoutes.home;
       }
 
-      // 비로그인 시 홈·지도 접근 → 로그인. 게시글은 RULE 1.2에 따라 비로그인 허용
-      if (!isLoggedIn && (path == AppRoutes.home || path == AppRoutes.map)) {
-        return AppRoutes.login;
-      }
-
       return null;
     },
     routes: [

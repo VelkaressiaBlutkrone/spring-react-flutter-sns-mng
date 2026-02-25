@@ -45,10 +45,63 @@ class ImagePostRepository {
   Future<ImagePostResponse> getById(int id) async {
     try {
       final res = await _api.get(
-      '${ApiConstants.imagePosts}/$id',
-      options: Options(extra: {'skipAuth': true}),
-    );
+        '${ApiConstants.imagePosts}/$id',
+        options: Options(extra: {'skipAuth': true}),
+      );
       return ImagePostResponse.fromJson(res.data as Map<String, dynamic>);
+    } on DioException catch (e) {
+      throw mapDioException(e);
+    }
+  }
+
+  /// 반경 내 이미지 게시글 목록: GET /api/image-posts/nearby
+  Future<PageResponse<ImagePostResponse>> getNearby({
+    required double lat,
+    required double lng,
+    required double radiusKm,
+    int page = 0,
+    int size = 20,
+  }) async {
+    try {
+      final res = await _api.get(
+        ApiConstants.imagePostsNearby,
+        queryParameters: {
+          'lat': lat,
+          'lng': lng,
+          'radiusKm': radiusKm,
+          'page': page,
+          'size': size,
+        },
+        options: Options(extra: {'skipAuth': true}),
+      );
+      return PageResponse.fromJson(
+        res.data as Map<String, dynamic>,
+        (json) => ImagePostResponse.fromJson(Map<String, dynamic>.from(json)),
+      );
+    } on DioException catch (e) {
+      throw mapDioException(e);
+    }
+  }
+
+  /// Pin별 이미지 게시글 목록: GET /api/pins/{id}/image-posts
+  Future<PageResponse<ImagePostResponse>> getByPinId(
+    int pinId, {
+    int page = 0,
+    int size = 20,
+  }) async {
+    try {
+      final res = await _api.get(
+        '${ApiConstants.pins}/$pinId/image-posts',
+        queryParameters: {
+          'page': page,
+          'size': size,
+        },
+        options: Options(extra: {'skipAuth': true}),
+      );
+      return PageResponse.fromJson(
+        res.data as Map<String, dynamic>,
+        (json) => ImagePostResponse.fromJson(Map<String, dynamic>.from(json)),
+      );
     } on DioException catch (e) {
       throw mapDioException(e);
     }

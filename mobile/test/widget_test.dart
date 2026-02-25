@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -10,7 +11,7 @@ class _TestAuthNotifier extends AuthNotifier {
 }
 
 void main() {
-  testWidgets('비로그인 상태에서는 로그인 화면이 보인다', (WidgetTester tester) async {
+  testWidgets('비로그인 상태에서는 지도 로딩 화면이 보인다', (WidgetTester tester) async {
     await tester.pumpWidget(
       ProviderScope(
         overrides: [
@@ -19,10 +20,9 @@ void main() {
         child: const MyApp(),
       ),
     );
-    await tester.pumpAndSettle();
+    await tester.pump();
 
-    expect(find.text('로그인'), findsWidgets);
-    expect(find.text('회원가입'), findsOneWidget);
-    expect(find.text('이메일'), findsOneWidget);
+    expect(find.widgetWithText(AppBar, '지도'), findsOneWidget);
+    expect(find.text('현재 위치를 확인하고 있습니다.'), findsOneWidget);
   });
 }
