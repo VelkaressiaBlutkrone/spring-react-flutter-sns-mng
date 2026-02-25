@@ -6,7 +6,7 @@
 
 | RULE                           | Step 1~15 준수 | 비고                                                                  |
 | ------------------------------ | -------------- | --------------------------------------------------------------------- |
-| 1.1 비밀정보 관리              | ⚠️ 주의        | dev JWT secret 기본값 존재 (prod는 env 주입)                         |
+| 1.1 비밀정보 관리              | ⚠️ 주의        | dev JWT secret 기본값 존재 (prod는 env 주입)                          |
 | 1.2 인증·인가                  | ✅             | deny-by-default, 401/403, CORS allow-list, IDOR 검증                  |
 | 1.2.4 인증·인가 테스트         | ✅             | AuthController, AdminSecurity, PostController 401/403 테스트          |
 | 1.3 입력 검증                  | ✅             | @Valid, @ValidCheck, Controller 단 검증                               |
@@ -24,7 +24,7 @@
 | 3.6 외부 라이브러리 관리       | ⏳             | Version Catalog 미적용 (권장)                                         |
 | 4.2.2 테스트 규칙              | ⚠️ 부분        | Given-When-Then·AssertJ: 일부 테스트 주석 미비                        |
 | 4.3 API 문서화                 | ✅             | Swagger/OpenAPI 설정                                                  |
-| 5.1 설정 분리                  | ✅             | application-dev/prod 분리                                              |
+| 5.1 설정 분리                  | ✅             | application-dev/prod 분리                                             |
 | 5.2 Fallback                   | ✅             | Redis 실패 시 FallbackTokenStore                                      |
 | 6.1~6.5 JWT                    | ✅             | iss/aud/jti, 15분 Access, Redis Refresh, 블랙리스트                   |
 
@@ -37,7 +37,7 @@
 | RULE  | 항목               | 결과                                          |
 | ----- | ------------------ | --------------------------------------------- |
 | 1.1   | 비밀정보 환경 변수 | ✅ application-\*.yml에 플레이스홀더/환경변수 |
-| 5.1   | 환경별 설정 분리   | ✅ dev/prod 골격                               |
+| 5.1   | 환경별 설정 분리   | ✅ dev/prod 골격                              |
 | 1.4.3 | 로깅 골격          | ✅ logging.level, file, logback.rollingpolicy |
 | 3.1   | 계층 분리          | ✅ doc/ARCHITECTURE, ERD                      |
 
@@ -216,10 +216,10 @@
 
 ### 6.1 주의 (Attention)
 
-| 항목                       | 내용                                                                                                                                     | 권장                                       |
-| -------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------ |
-| 1.1 dev JWT secret         | application-dev.yml에 기본 secret-key                                                                                                    | prod는 env 필수. dev도 가능하면 env 권장   |
-| 4.2.2 Given-When-Then 주석 | Step 19에서 AuthControllerTest, AdminSecurityTest, PostControllerTest, SampleControllerTest에 `// given`, `// when`, `// then` 적용 완료 | ✅                                         |
+| 항목                       | 내용                                                                                                                                     | 권장                                     |
+| -------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------- |
+| 1.1 dev JWT secret         | application-dev.yml에 기본 secret-key                                                                                                    | prod는 env 필수. dev도 가능하면 env 권장 |
+| 4.2.2 Given-When-Then 주석 | Step 19에서 AuthControllerTest, AdminSecurityTest, PostControllerTest, SampleControllerTest에 `// given`, `// when`, `// then` 적용 완료 | ✅                                       |
 
 ### 6.2 Step 18 완료 항목 (웹 보안·CORS·Rate Limiting)
 
@@ -264,6 +264,25 @@
 
 ---
 
+<br>
+
+## 8. Mobile (Flutter) RULE 점검 (2026-02-24)
+
+> Flutter Mobile App (`mobile/`) 코드 기준 `doc/rules/07-platform-flutter.md` 준수 현황 점검.
+
+### 8.1. 점검 요약 및 조치 계획
+
+| RULE                                    | 항목                                                                | 결과    | 조치 계획                                                                                                            |
+| --------------------------------------- | ------------------------------------------------------------------- | ------- | -------------------------------------------------------------------------------------------------------------------- |
+| **7.3.4 폴더 구조**                     | `features/` 기반 구조가 아닌 `lib/` 최상위 계층형 구조 사용         | ❌ 위반 | `lib/features/` 디렉토리 생성 후 기능별(auth, posts, map 등)로 코드 재배치. (가장 시급하고 큰 작업)                  |
+| **7.3.2 에러 처리**                     | `LocationService`에서 `Future.error('문자열')` 반환                 | ❌ 위반 | `core/error/app_exception.dart` 생성, `LocationService`가 `AppException` 계층의 예외를 throw 하도록 수정.            |
+| **7.3.5 상태 관리 (Riverpod)**          | `@riverpod` 어노테이션 대신 legacy `Provider`/`FutureProvider` 사용 | ⚠️ 개선 | `riverpod_generator` 의존성 추가 후, Provider들을 `@riverpod` 어노테이션 기반으로 리팩토링.                          |
+| **7.3.11 환경별 설정**                  | API 키를 네이티브 코드에서 플레이스홀더로 처리 (부분 준수)          | ⚠️ 개선 | `String.fromEnvironment`를 사용하는 `AppConfig`를 만들고, 네이티브 코드가 이를 참조하도록 하여 관리 포인트를 일원화. |
+| **7.3.1 보안 저장소**                   | `flutter_secure_storage` 의존성 확인 (Step 2에서 사용 예정)         | ✅ 준수 | -                                                                                                                    |
+| **7.3.3 HTTP 클라이언트**               | `dio` 의존성 확인 (Step 2에서 사용 예정)                            | ✅ 준수 | -                                                                                                                    |
+| **7.3.8 직렬화 (json_serializable 등)** | DTO/모델에 코드 생성 미적용 (추정)                                  | ⏳ 점검 | DTO 파일 분석 후, `freezed` 또는 `json_serializable` 적용 필요 여부 판단.                                            |
+| **7.3.12 라우팅 (GoRouter)**            | `go_router` 사용                                                    | ✅ 준수 | -                                                                                                                    |
+
 ---
 
 ## 7. 전체 RULE 재확인 (2026-02-19)
@@ -272,42 +291,42 @@
 
 ### 7.1 준수 항목 (✅)
 
-| RULE | 항목 | 검증 내용 |
-|------|------|-----------|
-| 1.1 | 비밀정보 | application-prod.yml: DB·JWT·Redis 모두 환경변수 주입. application-dev.yml: JWT secret 기본값(개발용)만 존재 |
-| 1.2 | 인증·인가 | deny-by-default, 401/403 명확, CORS allow-list, IDOR 검증(isAuthor, isOwner) |
-| 1.3 | 입력 검증 | @Valid, @ValidCheck, Controller 검증 + Service 비즈니스 검증 |
-| 1.4.3 | 로깅 | SLF4J, `{}` 파라미터화, System.out/err 미사용, 민감정보 미출력 |
-| 1.5.6 | BCrypt | PasswordEncoder 사용 |
-| 1.6 | 보안 설정 | HSTS, X-Content-Type-Options, CSP, Actuator 제한 |
-| 2.1 | API 설계 | HTTP Method 준수, 계층형 URI, Admin API 분리 |
-| 2.2 | 예외 처리 | BusinessException + ErrorCode, GlobalExceptionHandler, 스택트레이스 미반환 |
-| 2.3 | 트랜잭션 | Service 계층만, readOnly 조회 |
-| 3.1 | 계층 분리 | Controller→Service→Repository 단방향 |
-| 3.3 | 엔티티 반환 | DTO(PostResponse 등) 사용, 엔티티 직접 반환 없음 |
-| 3.5 | AOP | 횡단 관심사 전용, @Order, doc/AOP.md, 예외 재throw |
-| 3.5.7 | @Transactional | Service 계층에만, Controller·Repository 없음 |
-| 4.3 | API 문서화 | Swagger/OpenAPI |
-| 5.1 | 설정 분리 | application-dev/prod |
-| 6.1~6.5 | JWT | iss/aud/jti, 15분 Access, Redis Refresh, 블랙리스트 |
+| RULE    | 항목           | 검증 내용                                                                                                    |
+| ------- | -------------- | ------------------------------------------------------------------------------------------------------------ |
+| 1.1     | 비밀정보       | application-prod.yml: DB·JWT·Redis 모두 환경변수 주입. application-dev.yml: JWT secret 기본값(개발용)만 존재 |
+| 1.2     | 인증·인가      | deny-by-default, 401/403 명확, CORS allow-list, IDOR 검증(isAuthor, isOwner)                                 |
+| 1.3     | 입력 검증      | @Valid, @ValidCheck, Controller 검증 + Service 비즈니스 검증                                                 |
+| 1.4.3   | 로깅           | SLF4J, `{}` 파라미터화, System.out/err 미사용, 민감정보 미출력                                               |
+| 1.5.6   | BCrypt         | PasswordEncoder 사용                                                                                         |
+| 1.6     | 보안 설정      | HSTS, X-Content-Type-Options, CSP, Actuator 제한                                                             |
+| 2.1     | API 설계       | HTTP Method 준수, 계층형 URI, Admin API 분리                                                                 |
+| 2.2     | 예외 처리      | BusinessException + ErrorCode, GlobalExceptionHandler, 스택트레이스 미반환                                   |
+| 2.3     | 트랜잭션       | Service 계층만, readOnly 조회                                                                                |
+| 3.1     | 계층 분리      | Controller→Service→Repository 단방향                                                                         |
+| 3.3     | 엔티티 반환    | DTO(PostResponse 등) 사용, 엔티티 직접 반환 없음                                                             |
+| 3.5     | AOP            | 횡단 관심사 전용, @Order, doc/AOP.md, 예외 재throw                                                           |
+| 3.5.7   | @Transactional | Service 계층에만, Controller·Repository 없음                                                                 |
+| 4.3     | API 문서화     | Swagger/OpenAPI                                                                                              |
+| 5.1     | 설정 분리      | application-dev/prod                                                                                         |
+| 6.1~6.5 | JWT            | iss/aud/jti, 15분 Access, Redis Refresh, 블랙리스트                                                          |
 
 ### 7.2 위반·개선 필요 (❌ / ⚠️) — 2026-02-19 수정 완료
 
-| RULE | 항목 | 수정 내용 |
-|------|------|-----------|
-| **2.2.4** | Controller/Service에서 IllegalArgumentException 등 직접 사용 금지 | ✅ `GoogleMapServiceImpl`: `BusinessException` + `ErrorCode.BAD_REQUEST`로 교체 |
-| **3.4** | 외부 호출 Timeout 필수 | ✅ `MapConfig`: RestTemplate Bean 등록 (connectTimeout·readTimeout), `KakaoMobilityDirectionsService` 주입 |
-| **1.9** | 모든 공개 API Rate Limiting | ✅ `RateLimitFilter`: 비인증 API(GET /api/posts, /api/image-posts, /api/pins/nearby 등) 100 req/분 IP 제한 추가 |
-| **9.1** | traceId/spanId MDC [MUST] | ✅ `TraceIdFilter` 추가, 로그 패턴에 `%X{traceId}`, `%X{spanId}` 포함 |
-| **3.6** | Version Catalog | ⏳ libs.versions.toml 도입 권장 (SHOULD) |
+| RULE      | 항목                                                              | 수정 내용                                                                                                       |
+| --------- | ----------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------- |
+| **2.2.4** | Controller/Service에서 IllegalArgumentException 등 직접 사용 금지 | ✅ `GoogleMapServiceImpl`: `BusinessException` + `ErrorCode.BAD_REQUEST`로 교체                                 |
+| **3.4**   | 외부 호출 Timeout 필수                                            | ✅ `MapConfig`: RestTemplate Bean 등록 (connectTimeout·readTimeout), `KakaoMobilityDirectionsService` 주입      |
+| **1.9**   | 모든 공개 API Rate Limiting                                       | ✅ `RateLimitFilter`: 비인증 API(GET /api/posts, /api/image-posts, /api/pins/nearby 등) 100 req/분 IP 제한 추가 |
+| **9.1**   | traceId/spanId MDC [MUST]                                         | ✅ `TraceIdFilter` 추가, 로그 패턴에 `%X{traceId}`, `%X{spanId}` 포함                                           |
+| **3.6**   | Version Catalog                                                   | ⏳ libs.versions.toml 도입 권장 (SHOULD)                                                                        |
 
 ### 7.3 주의·권장 (⚠️)
 
-| RULE | 항목 | 내용 |
-|------|------|------|
-| 1.1 | dev JWT secret | application-dev.yml `local-secret-key-min-256-bits...` 기본값 — 로컬 개발용. prod는 env 필수 |
-| 4.2.2 | 테스트 Given-When-Then | 일부 테스트에 `// given`, `// when`, `// then` 주석 미비 |
-| KakaoMobilityDirectionsService | KA·Origin 헤더 | ✅ `MAP_KAKAO_ORIGIN` 환경변수로 분리 (미설정 시 http://localhost:5173) |
+| RULE                           | 항목                   | 내용                                                                                         |
+| ------------------------------ | ---------------------- | -------------------------------------------------------------------------------------------- |
+| 1.1                            | dev JWT secret         | application-dev.yml `local-secret-key-min-256-bits...` 기본값 — 로컬 개발용. prod는 env 필수 |
+| 4.2.2                          | 테스트 Given-When-Then | 일부 테스트에 `// given`, `// when`, `// then` 주석 미비                                     |
+| KakaoMobilityDirectionsService | KA·Origin 헤더         | ✅ `MAP_KAKAO_ORIGIN` 환경변수로 분리 (미설정 시 <http://localhost:5173>)                    |
 
 ---
 
