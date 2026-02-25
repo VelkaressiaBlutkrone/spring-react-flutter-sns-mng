@@ -65,8 +65,8 @@
 | Step 2  | API 클라이언트·인증·토큰 관리       | ☑    |
 | Step 3  | 회원·인증 화면 (회원가입·로그인)    | ☑    |
 | Step 4  | 공통 UI·네비게이션·라우팅           | ☑    |
-| Step 5  | 게시글 목록·상세 화면               | ☐    |
-| Step 6  | 지도·위치·지도 SDK 연동             | ☐    |
+| Step 5  | 게시글 목록·상세 화면               | ☑    |
+| Step 6  | 지도·위치·지도 SDK 연동             | ☑    |
 | Step 7  | Pin·반경 조회 화면                  | ☐    |
 | Step 8  | 게시글·이미지 게시글 작성·수정·삭제 | ☐    |
 | Step 9  | 마이페이지·개인정보                 | ☐    |
@@ -328,6 +328,13 @@
 **Duration:** 4일
 
 **RULE Reference:** 1.2, **7.3** (07-platform-flutter: 7.3.8 직렬화)
+
+**07-platform-flutter 검증 (Step 5):**
+
+| 7.3 섹션 | 검증 항목                                      | 확인 |
+| -------- | ---------------------------------------------- | ---- |
+| 7.3.8    | PostResponse·ImagePostResponse fromJson 직렬화 | ☑    |
+| 7.3.9    | CachedNetworkImage 이미지 캐싱                 | ☑    |
 
 ---
 

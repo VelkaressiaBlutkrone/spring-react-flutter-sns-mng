@@ -23,3 +23,21 @@
 **네트워크 오류 시 사용자 메시지:**
 
 - "서버에 연결할 수 없습니다. Backend 실행 여부와 CORS를 확인하세요."
+
+---
+
+## 문제: 로그인 실패 후 로그인 버튼이 활성화되지 않음
+
+**증상:**
+
+- 잘못된 이메일/비밀번호로 로그인 시도 후 로그인 버튼이 계속 로딩 스피너 상태로 유지됨
+
+**원인:**
+
+- `AuthNotifier.login()` 실패 시 예외만 전파하고 `state`를 `AuthUnauthenticated`로 되돌리지 않음
+- `state`가 `AuthLoading`으로 남아 일부 화면에서 비정상 동작 가능
+
+**해결 방법 (적용됨):**
+
+1. **AuthNotifier**: `login()`에 try-catch 추가, 실패 시 `state = AuthUnauthenticated()` 후 rethrow
+2. **LoginScreen**: `_submit()`에 `finally` 블록 추가, `_isLoading = false`로 버튼 항상 복구

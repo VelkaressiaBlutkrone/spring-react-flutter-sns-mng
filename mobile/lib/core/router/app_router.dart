@@ -1,14 +1,19 @@
 // 앱 라우팅. TASK_MOBILE Step 4, 07-platform-flutter 7.3.12
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../presentation/providers/auth_provider.dart';
 import '../../presentation/screens/auth/join_screen.dart';
 import '../../presentation/screens/auth/login_screen.dart';
 import '../../presentation/screens/main_tab_screen.dart';
-import '../../presentation/screens/map/map_screen.dart';
+import '../../features/map/presentation/screens/map_screen.dart';
 import '../../presentation/screens/me/me_screen.dart';
+import '../../presentation/screens/image_posts/image_post_detail_screen.dart';
+import '../../presentation/screens/posts/post_detail_screen.dart';
 import '../../presentation/screens/posts/posts_list_screen.dart';
+
+part 'app_router.g.dart';
 
 /// 라우트 경로 상수
 abstract class AppRoutes {
@@ -18,11 +23,15 @@ abstract class AppRoutes {
   static const String map = '/map';
   static const String posts = '/posts';
   static const String postDetail = '/posts/:id';
+  static const String imagePosts = '/image-posts';
+  static const String imagePostDetail = '/image-posts/:id';
   static const String me = '/me';
 }
 
 /// GoRouter Provider (인증 상태에 따른 redirect)
-final appRouterProvider = Provider<GoRouter>((ref) {
+// RULE 7.3.5: @riverpod 어노테이션으로 Provider 정의
+@Riverpod(keepAlive: true)
+GoRouter appRouter(Ref ref) {
   final authState = ref.watch(authNotifierProvider);
 
   return GoRouter(
@@ -42,8 +51,8 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         return AppRoutes.home;
       }
 
-      // 비로그인 시 홈 접근 → 로그인으로 (메인 탭은 로그인 후)
-      if (!isLoggedIn && (path == AppRoutes.home || path == AppRoutes.map || path == AppRoutes.posts)) {
+      // 비로그인 시 홈·지도 접근 → 로그인. 게시글은 RULE 1.2에 따라 비로그인 허용
+      if (!isLoggedIn && (path == AppRoutes.home || path == AppRoutes.map)) {
         return AppRoutes.login;
       }
 
@@ -57,6 +66,20 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: AppRoutes.join,
         builder: (context, state) => const JoinScreen(),
+      ),
+      GoRoute(
+        path: '/posts/:id',
+        builder: (context, state) {
+          final id = int.parse(state.pathParameters['id']!);
+          return PostDetailScreen(postId: id);
+        },
+      ),
+      GoRoute(
+        path: '/image-posts/:id',
+        builder: (context, state) {
+          final id = int.parse(state.pathParameters['id']!);
+          return ImagePostDetailScreen(postId: id);
+        },
       ),
       StatefulShellRoute.indexedStack(
         builder: (context, state, shell) =>
@@ -90,4 +113,4 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       ),
     ],
   );
-});
+}

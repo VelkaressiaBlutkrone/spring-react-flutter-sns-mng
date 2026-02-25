@@ -53,7 +53,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
             _passwordController.text,
           );
       if (!mounted) return;
-      // AuthNotifier 상태 변경으로 AuthGate가 HomeScreen으로 전환됨
+      // AuthNotifier 상태 변경으로 홈으로 전환됨
     } on AppException catch (e) {
       if (!mounted) return;
       logDebug('LoginScreen', '로그인 실패: ${e.message}', e);
@@ -76,6 +76,10 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
             ? '서버에 연결할 수 없습니다. Backend 실행 여부와 CORS를 확인하세요.'
             : '오류가 발생했습니다: ${e.toString()}';
       });
+    } finally {
+      if (mounted) {
+        setState(() => _isLoading = false);
+      }
     }
   }
 
@@ -143,6 +147,11 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 TextButton(
                   onPressed: () => context.push(AppRoutes.join).then((_) => _clearFieldErrors()),
                   child: const Text('회원가입'),
+                ),
+                const SizedBox(height: 8),
+                TextButton(
+                  onPressed: () => context.go(AppRoutes.posts),
+                  child: const Text('게시글 둘러보기 (비로그인)'),
                 ),
               ],
             ),
