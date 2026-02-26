@@ -10,6 +10,7 @@ import '../../../domain/models/models.dart';
 import '../../../shared/widgets/common/app_error_view.dart';
 import '../../../shared/widgets/common/empty_widget.dart';
 import '../../../shared/widgets/common/loading_widget.dart';
+import '../../providers/auth_provider.dart';
 import '../../providers/image_post_provider.dart';
 import '../../providers/post_provider.dart';
 
@@ -29,6 +30,11 @@ class _PostsListScreenState extends ConsumerState<PostsListScreen>
   void initState() {
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
+    _tabController.addListener(() {
+      if (mounted) {
+        setState(() {});
+      }
+    });
   }
 
   @override
@@ -39,6 +45,10 @@ class _PostsListScreenState extends ConsumerState<PostsListScreen>
 
   @override
   Widget build(BuildContext context) {
+    final authState = ref.watch(authNotifierProvider);
+    final isLoggedIn = authState is AuthAuthenticated;
+    final isPostTab = _tabController.index == 0;
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('게시글'),
@@ -56,6 +66,19 @@ class _PostsListScreenState extends ConsumerState<PostsListScreen>
           _PostListTab(),
           _ImagePostListTab(),
         ],
+      ),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () {
+          if (!isLoggedIn) {
+            context.go(AppRoutes.login);
+            return;
+          }
+          context.push(
+            isPostTab ? AppRoutes.postCreate : AppRoutes.imagePostCreate,
+          );
+        },
+        icon: const Icon(Icons.add),
+        label: Text(isPostTab ? '게시글 작성' : '이미지 게시글 작성'),
       ),
     );
   }
@@ -79,7 +102,7 @@ class _PostListTab extends ConsumerWidget {
                   final post = page.content[i];
                   return _PostCard(
                     post: post,
-                    onTap: () => context.push('${AppRoutes.posts}/${post.id}'),
+                    onTap: () => context.push(AppRoutes.postDetailPath(post.id)),
                   );
                 },
               ),
@@ -133,8 +156,9 @@ class _ImagePostListTab extends ConsumerWidget {
                   final post = page.content[i];
                   return _ImagePostCard(
                     post: post,
-                    onTap: () =>
-                        context.push('${AppRoutes.imagePosts}/${post.id}'),
+                    onTap: () => context.push(
+                      AppRoutes.imagePostDetailPath(post.id),
+                    ),
                   );
                 },
               ),

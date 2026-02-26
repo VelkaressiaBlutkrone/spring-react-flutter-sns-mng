@@ -8,8 +8,10 @@ import '../../presentation/screens/auth/join_screen.dart';
 import '../../presentation/screens/auth/login_screen.dart';
 import '../../presentation/screens/main_tab_screen.dart';
 import '../../features/map/presentation/screens/map_screen.dart';
+import '../../presentation/screens/image_posts/image_post_form_screen.dart';
 import '../../presentation/screens/me/me_screen.dart';
 import '../../presentation/screens/image_posts/image_post_detail_screen.dart';
+import '../../presentation/screens/posts/post_form_screen.dart';
 import '../../presentation/screens/posts/post_detail_screen.dart';
 import '../../presentation/screens/posts/posts_list_screen.dart';
 
@@ -22,10 +24,19 @@ abstract class AppRoutes {
   static const String home = '/';
   static const String map = '/map';
   static const String posts = '/posts';
+  static const String postCreate = '/posts/create';
+  static const String postEdit = '/posts/:id/edit';
   static const String postDetail = '/posts/:id';
   static const String imagePosts = '/image-posts';
+  static const String imagePostCreate = '/image-posts/create';
+  static const String imagePostEdit = '/image-posts/:id/edit';
   static const String imagePostDetail = '/image-posts/:id';
   static const String me = '/me';
+
+  static String postDetailPath(int id) => '/posts/$id';
+  static String postEditPath(int id) => '/posts/$id/edit';
+  static String imagePostDetailPath(int id) => '/image-posts/$id';
+  static String imagePostEditPath(int id) => '/image-posts/$id/edit';
 }
 
 /// GoRouter Provider (인증 상태에 따른 redirect)
@@ -40,9 +51,13 @@ GoRouter appRouter(Ref ref) {
       final isLoggedIn = authState is AuthAuthenticated;
       final path = state.matchedLocation;
       final isAuthRoute = path == AppRoutes.login || path == AppRoutes.join;
+      final isWriteRoute = path == AppRoutes.postCreate ||
+          path == AppRoutes.imagePostCreate ||
+          path.endsWith('/edit');
 
       // 비로그인 시 인증 필요 화면 접근 → 로그인으로
-      if (!isLoggedIn && (path == AppRoutes.me || path.startsWith('/me'))) {
+      if (!isLoggedIn &&
+          (path == AppRoutes.me || path.startsWith('/me') || isWriteRoute)) {
         return AppRoutes.login;
       }
 
@@ -63,10 +78,32 @@ GoRouter appRouter(Ref ref) {
         builder: (context, state) => const JoinScreen(),
       ),
       GoRoute(
+        path: AppRoutes.postCreate,
+        builder: (context, state) => const PostFormScreen(),
+      ),
+      GoRoute(
+        path: '/posts/:id/edit',
+        builder: (context, state) {
+          final id = int.parse(state.pathParameters['id']!);
+          return PostFormScreen(postId: id);
+        },
+      ),
+      GoRoute(
         path: '/posts/:id',
         builder: (context, state) {
           final id = int.parse(state.pathParameters['id']!);
           return PostDetailScreen(postId: id);
+        },
+      ),
+      GoRoute(
+        path: AppRoutes.imagePostCreate,
+        builder: (context, state) => const ImagePostFormScreen(),
+      ),
+      GoRoute(
+        path: '/image-posts/:id/edit',
+        builder: (context, state) {
+          final id = int.parse(state.pathParameters['id']!);
+          return ImagePostFormScreen(postId: id);
         },
       ),
       GoRoute(

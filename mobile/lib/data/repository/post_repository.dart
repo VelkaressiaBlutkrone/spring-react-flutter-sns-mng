@@ -53,6 +53,41 @@ class PostRepository {
     }
   }
 
+  /// 게시글 작성: POST /api/posts
+  Future<PostResponse> create(PostCreateRequest request) async {
+    try {
+      final res = await _api.post(
+        ApiConstants.posts,
+        data: request.toJson(),
+      );
+      return PostResponse.fromJson(res.data as Map<String, dynamic>);
+    } on DioException catch (e) {
+      throw mapDioException(e);
+    }
+  }
+
+  /// 게시글 수정: PUT /api/posts/{id}
+  Future<PostResponse> update(int id, PostUpdateRequest request) async {
+    try {
+      final res = await _api.put(
+        '${ApiConstants.posts}/$id',
+        data: request.toJson(),
+      );
+      return PostResponse.fromJson(res.data as Map<String, dynamic>);
+    } on DioException catch (e) {
+      throw mapDioException(e);
+    }
+  }
+
+  /// 게시글 삭제: DELETE /api/posts/{id}
+  Future<void> delete(int id) async {
+    try {
+      await _api.delete('${ApiConstants.posts}/$id');
+    } on DioException catch (e) {
+      throw mapDioException(e);
+    }
+  }
+
   /// 반경 내 게시글 목록: GET /api/posts/nearby
   Future<PageResponse<PostResponse>> getNearby({
     required double lat,

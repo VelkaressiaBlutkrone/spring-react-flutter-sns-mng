@@ -54,6 +54,83 @@ class ImagePostRepository {
     }
   }
 
+  /// 이미지 게시글 작성: POST /api/image-posts (multipart/form-data)
+  Future<ImagePostResponse> create({
+    required String title,
+    required String content,
+    required String imagePath,
+    double? latitude,
+    double? longitude,
+    int? pinId,
+  }) async {
+    try {
+      final formData = FormData.fromMap({
+        'title': title,
+        'content': content,
+        'image': await MultipartFile.fromFile(
+          imagePath,
+          filename: _extractFileName(imagePath),
+        ),
+        if (latitude != null) 'latitude': latitude,
+        if (longitude != null) 'longitude': longitude,
+        if (pinId != null) 'pinId': pinId,
+      });
+
+      final res = await _api.post(
+        ApiConstants.imagePosts,
+        data: formData,
+        options: Options(contentType: 'multipart/form-data'),
+      );
+      return ImagePostResponse.fromJson(res.data as Map<String, dynamic>);
+    } on DioException catch (e) {
+      throw mapDioException(e);
+    }
+  }
+
+  /// 이미지 게시글 수정: PUT /api/image-posts/{id} (multipart/form-data)
+  Future<ImagePostResponse> update(
+    int id, {
+    required String title,
+    required String content,
+    String? imagePath,
+    double? latitude,
+    double? longitude,
+    int? pinId,
+  }) async {
+    try {
+      final formData = FormData.fromMap({
+        'title': title,
+        'content': content,
+        if (imagePath != null && imagePath.isNotEmpty)
+          'image': await MultipartFile.fromFile(
+            imagePath,
+            filename: _extractFileName(imagePath),
+          ),
+        if (latitude != null) 'latitude': latitude,
+        if (longitude != null) 'longitude': longitude,
+        if (pinId != null) 'pinId': pinId,
+      });
+
+      final res = await _api.put(
+        '${ApiConstants.imagePosts}/$id',
+        data: formData,
+        options: Options(contentType: 'multipart/form-data'),
+      );
+      return ImagePostResponse.fromJson(res.data as Map<String, dynamic>);
+    } on DioException catch (e) {
+      throw mapDioException(e);
+    }
+  }
+
+  /// 이미지 게시글 삭제: DELETE /api/image-posts/{id}
+  Future<void> delete(int id) async {
+    try {
+      await _api.delete('${ApiConstants.imagePosts}/$id');
+    } on DioException catch (e) {
+      throw mapDioException(e);
+    }
+  }
+
   /// 반경 내 이미지 게시글 목록: GET /api/image-posts/nearby
   Future<PageResponse<ImagePostResponse>> getNearby({
     required double lat,
@@ -105,5 +182,11 @@ class ImagePostRepository {
     } on DioException catch (e) {
       throw mapDioException(e);
     }
+  }
+
+  String _extractFileName(String path) {
+    final normalized = path.replaceAll('\\', '/');
+    final idx = normalized.lastIndexOf('/');
+    return idx >= 0 ? normalized.substring(idx + 1) : normalized;
   }
 }
