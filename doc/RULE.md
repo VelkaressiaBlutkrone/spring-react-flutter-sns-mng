@@ -44,6 +44,7 @@
 | [11-data-sovereignty.md](rules/11-data-sovereignty.md)   | 데이터 주권·개인정보: 최소화·파기·탈퇴·감사·마스킹 [MUST]                    |
 | [12-working-log.md](rules/12-working-log.md)              | Working Log: AI 작업 결과물의 9개 섹션 구조·작성 규칙·템플릿 [MUST]          |
 | [13-python-llm.md](rules/13-python-llm.md)                | Python LLM: FastAPI·엔드포인트·전처리·에러·설정·로깅·테스트·배포 [SHOULD]    |
+| [14-task-structure.md](rules/14-task-structure.md)       | Task 문서 작성: Step Goal·Scope·기능 개발 Workflow [MUST]                    |
 | [appendix-a-asvs.md](rules/appendix-a-asvs.md)           | 부록 A: ASVS 5.0 챕터별 대응 (문제→대책)                                     |
 | [appendix-b-owasp.md](rules/appendix-b-owasp.md)         | 부록 B: OWASP Top 10 2025 매핑표                                             |
 | [appendix-c-checklist.md](rules/appendix-c-checklist.md) | 부록 C: 규칙 준수 체크리스트 (일상 참조용)                                   |
@@ -80,6 +81,13 @@
 - 핵심 로직 테스트 필수. Given-When-Then, AssertJ, BDDMockito. 메서드명 영문 + @DisplayName 한글 허용.
 - public API Javadoc 필수에 가깝게, 한글 주석 기본.
 
+### Task 문서 [MUST]
+
+- **Step Goal**: 구체적 행위+결과 문장, **Done When** Step Goal 바로 다음 고정 배치(강제), Duration rough→final 2단계 산정
+- **Scope**: In Scope / Out of Scope 고정 구조, PR 확장 방지
+- **Security**: 1차·2차 체크 결과를 Constraints에 반영
+- **Workflow**: 요구사항 → Security 1차 → ERD → Security 2차 → DTO/Entity(API First) → Repository → Service+Test → Controller+Test → View (Smoke 1건 이상)
+
 ### 인증/토큰 [MUST]
 
 - JWT: 모든 서비스에서 서명·클레임 검증. alg allow-list, iss/aud 검증. Access 15분 이하, jti·Revocation. 웹은 HttpOnly 쿠키, localStorage 금지.
@@ -107,5 +115,5 @@
 
 ---
 
-> **마지막 업데이트**: 2026-02-25
-> **버전**: 1.0.12 (Python LLM 규칙 추가)
+> **마지막 업데이트**: 2026-03-05
+> **버전**: 1.0.13 (Task 문서 작성 구조·Workflow 규칙 추가)

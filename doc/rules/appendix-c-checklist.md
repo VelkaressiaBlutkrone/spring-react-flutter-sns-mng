@@ -35,6 +35,12 @@
 | 품질 (테스트)        | 테스트 메서드 이름 BDD 스타일 (메서드명\_상황\_should결과)                       | ✅   |
 | 품질                 | API 문서화 (Swagger)                                                             | ✅   |
 | 품질 (주석)          | public API Javadoc 필수, 한글 주석 기본 (RULE 4.4)                               | ✅   |
+| Task 문서 (14.x)     | Step Goal 구체적 행위+결과 문장 (`[주체]가 [행위]할 수 있다.`)                    | ✅   |
+| Task 문서 (14.x)     | Scope In Scope / Out of Scope 고정 구조, Out of Scope 4~5개·향후 고려 포함      | ✅   |
+| Task 문서 (14.x)     | Duration rough(TASK 시작) → final(ERD 후) 2단계 산정                           | ✅   |
+| Task 문서 (14.x)     | Done When Step Goal 바로 다음 고정 배치 (강제)                                 | ✅   |
+| Task 문서 (14.x)     | Security 1차·2차 체크 결과를 Constraints에 반영                                 | ✅   |
+| Task 문서 (14.x)     | View Smoke test 1건 이상 필수, Service/Controller 구현 후 즉시 테스트         | ✅   |
 | 운영                 | 환경별 설정 분리                                                                 | ✅   |
 | 운영                 | Fallback 전략 정의                                                               | ✅   |
 | Spring Boot          | DB 등 민감정보 환경변수 주입                                                     | ✅   |
