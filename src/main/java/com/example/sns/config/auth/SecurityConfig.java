@@ -99,6 +99,23 @@ public class SecurityConfig {
                                 "/api/pins/*/image-posts")
                         .permitAll()
                         .requestMatchers("/api/pins", "/api/pins/**").authenticated()
+                        // Like
+                        .requestMatchers(HttpMethod.POST, "/api/posts/*/like").authenticated()
+                        .requestMatchers(HttpMethod.DELETE, "/api/posts/*/like").authenticated()
+                        .requestMatchers(HttpMethod.GET, "/api/profile/liked-post-ids").authenticated()
+                        // Follow
+                        .requestMatchers(HttpMethod.POST, "/api/users/*/follow").authenticated()
+                        .requestMatchers(HttpMethod.DELETE, "/api/users/*/follow").authenticated()
+                        .requestMatchers(HttpMethod.GET, "/api/profile/following-ids").authenticated()
+                        // Users (public)
+                        .requestMatchers(HttpMethod.GET, "/api/users/search").authenticated()
+                        .requestMatchers(HttpMethod.GET, "/api/users/*").permitAll()
+                        // Notifications
+                        .requestMatchers("/api/notifications", "/api/notifications/**").authenticated()
+                        // Saved Routes
+                        .requestMatchers("/api/saved-routes", "/api/saved-routes/**").authenticated()
+                        // Route proxy
+                        .requestMatchers(HttpMethod.GET, "/api/route").permitAll()
                         .requestMatchers("/error", "/favicon.ico").permitAll()
                         // CORS preflight (OPTIONS) 는 모든 경로에서 허용 — Spring Security 체인 도달 전 차단 방지
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()

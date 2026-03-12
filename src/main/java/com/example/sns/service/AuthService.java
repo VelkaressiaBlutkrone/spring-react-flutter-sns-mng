@@ -137,6 +137,14 @@ public class AuthService {
     }
 
     /**
+     * 이메일로 사용자 엔티티 조회. 컨트롤러에서 @AuthenticationPrincipal 사용 시.
+     */
+    public User getCurrentUser(String email) {
+        return userRepository.findByEmail(email)
+                .orElseThrow(() -> new BusinessException(ErrorCode.NOT_FOUND, "회원을 찾을 수 없습니다."));
+    }
+
+    /**
      * 현재 인증된 사용자 조회.
      */
     public Optional<MemberResponse> getCurrentUser() {

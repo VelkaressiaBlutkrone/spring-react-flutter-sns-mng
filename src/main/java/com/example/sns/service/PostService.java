@@ -88,6 +88,8 @@ public class PostService {
                 .latitude(request.latitude())
                 .longitude(request.longitude())
                 .pin(pin)
+                .imageUrl(request.imageUrl())
+                .category(request.category())
                 .build();
         Post saved = postRepository.save(post);
         log.info("게시글 작성: postId={}, authorId={}", saved.getId(), author.getId());
@@ -110,7 +112,7 @@ public class PostService {
         var pin = request.pinId() != null
                 ? pinRepository.findById(request.pinId()).orElse(null)
                 : (lat == null && lng == null ? null : post.getPin());
-        post.update(request.title(), request.content(), lat, lng, pin);
+        post.update(request.title(), request.content(), lat, lng, pin, request.imageUrl(), request.category());
         return PostResponse.from(post);
     }
 
@@ -176,7 +178,7 @@ public class PostService {
         var pin = request.pinId() != null
                 ? pinRepository.findById(request.pinId()).orElse(null)
                 : (lat == null && lng == null ? null : post.getPin());
-        post.update(request.title(), request.content(), lat, lng, pin);
+        post.update(request.title(), request.content(), lat, lng, pin, request.imageUrl(), request.category());
         log.info("관리자 게시글 수정: postId={}", id);
         return PostResponse.from(post);
     }

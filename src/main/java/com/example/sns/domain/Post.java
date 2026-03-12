@@ -50,26 +50,38 @@ public class Post extends BaseEntity {
     @JoinColumn(name = "pin_id")
     private Pin pin;
 
+    @Column(length = 500)
+    private String imageUrl;
+
+    @Column(length = 50)
+    private String category;
+
     @Column(nullable = false)
     private boolean notice = false;
 
     @Builder
-    public Post(User author, String title, String content, Double latitude, Double longitude, Pin pin) {
+    public Post(User author, String title, String content, Double latitude, Double longitude, Pin pin,
+                String imageUrl, String category) {
         this.author = author;
         this.title = title;
         this.content = content;
         this.latitude = latitude;
         this.longitude = longitude;
         this.pin = pin;
+        this.imageUrl = imageUrl;
+        this.category = category != null ? category : "default";
         onCreate();
     }
 
-    public void update(String title, String content, Double latitude, Double longitude, Pin pin) {
+    public void update(String title, String content, Double latitude, Double longitude, Pin pin,
+                       String imageUrl, String category) {
         this.title = title;
         this.content = content;
         this.latitude = latitude;
         this.longitude = longitude;
         this.pin = pin;
+        this.imageUrl = imageUrl;
+        this.category = category;
         onUpdate();
     }
 

@@ -13,6 +13,7 @@ import com.example.sns.dto.request.AdminMemberUpdateRequest;
 import com.example.sns.dto.request.MemberJoinRequest;
 import com.example.sns.dto.request.MemberUpdateRequest;
 import com.example.sns.dto.response.MemberResponse;
+import com.example.sns.dto.response.UserProfileResponse;
 import com.example.sns.exception.BusinessException;
 import com.example.sns.exception.ErrorCode;
 import com.example.sns.repository.UserRepository;
@@ -74,7 +75,7 @@ public class MemberService {
     public MemberResponse updateMe(User currentUser, MemberUpdateRequest request) {
         User user = userRepository.findById(currentUser.getId())
                 .orElseThrow(() -> new BusinessException(ErrorCode.NOT_FOUND, "회원을 찾을 수 없습니다."));
-        user.updateNickname(request.nickname());
+        user.updateProfile(request.nickname(), request.bio(), request.profilePic());
         log.info("개인정보 수정: userId={}, nickname={}", user.getId(), request.nickname());
         return MemberResponse.from(user);
     }
@@ -100,6 +101,20 @@ public class MemberService {
     public Page<MemberResponse> getListForAdmin(String keyword, Pageable pageable) {
         return userRepository.findAllByKeyword(keyword, pageable)
                 .map(MemberResponse::from);
+    }
+
+    /**
+     * 사용자 검색 (닉네임/이메일). 프론트엔드 사용자 검색용.
+     */
+    @Transactional(readOnly = true)
+    public java.util.List<UserProfileResponse> searchUsers(String keyword) {
+        if (keyword == null || keyword.isBlank()) {
+            return java.util.List.of();
+        }
+        return userRepository.findByEmailContainingOrNicknameContaining(keyword, keyword,
+                org.springframework.data.domain.PageRequest.of(0, 20))
+                .map(UserProfileResponse::from)
+                .getContent();
     }
 
     /**

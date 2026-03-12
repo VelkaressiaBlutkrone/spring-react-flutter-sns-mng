@@ -5,9 +5,7 @@ import jakarta.validation.constraints.Size;
 
 /**
  * 게시글 수정 요청.
- *
- * API 명세 4.4 PostUpdateRequest.
- * latitude, longitude, pinId: 위치 수정(선택). null이면 기존 유지, 명시 시 업데이트.
+ * 프론트엔드 호환: imageUrl, category 필드 추가.
  */
 public record PostUpdateRequest(
         @NotBlank(message = "제목은 필수입니다.")
@@ -19,6 +17,8 @@ public record PostUpdateRequest(
 
         Double latitude,
         Double longitude,
-        Long pinId
+        Long pinId,
+        String imageUrl,
+        String category
 ) {
 }

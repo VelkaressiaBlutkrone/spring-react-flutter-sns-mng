@@ -35,22 +35,34 @@ public class Pin extends BaseEntity {
     @JoinColumn(name = "user_id", nullable = false)
     private User owner;
 
+    @Column(length = 200)
+    private String title;
+
     @Column(length = 500)
     private String description;
+
+    @Column(length = 50)
+    private String category;
 
     @Embedded
     private Location location;
 
     @Builder
-    public Pin(User owner, String description, Double latitude, Double longitude) {
+    public Pin(User owner, String title, String description, String category,
+               Double latitude, Double longitude) {
         this.owner = owner;
+        this.title = title;
         this.description = description;
+        this.category = category != null ? category : "default";
         this.location = new Location(latitude, longitude);
         onCreate();
     }
 
-    public void update(String description, Double latitude, Double longitude) {
+    public void update(String title, String description, String category,
+                       Double latitude, Double longitude) {
+        this.title = title;
         this.description = description;
+        this.category = category;
         if (latitude != null && longitude != null) {
             this.location = new Location(latitude, longitude);
         }
