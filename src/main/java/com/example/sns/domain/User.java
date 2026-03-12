@@ -41,6 +41,12 @@ public class User extends BaseEntity {
     @Column(nullable = false, length = 20)
     private UserRole role;
 
+    @Column(length = 500)
+    private String bio;
+
+    @Column(length = 500, name = "profile_pic")
+    private String profilePic;
+
     @Builder
     public User(String email, String passwordHash, String nickname, UserRole role) {
         this.email = email;
@@ -57,6 +63,15 @@ public class User extends BaseEntity {
 
     public void updateNickname(String nickname) {
         this.nickname = nickname;
+        onUpdate();
+    }
+
+    public void updateProfile(String nickname, String bio, String profilePic) {
+        if (nickname != null && !nickname.isBlank()) {
+            this.nickname = nickname;
+        }
+        this.bio = bio;
+        this.profilePic = profilePic;
         onUpdate();
     }
 

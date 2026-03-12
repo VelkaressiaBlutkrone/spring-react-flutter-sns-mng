@@ -5,8 +5,7 @@ import jakarta.validation.constraints.Size;
 
 /**
  * 게시글 작성 요청.
- *
- * API 명세 4.3 PostCreateRequest.
+ * 프론트엔드 호환: imageUrl, category 필드 추가.
  */
 public record PostCreateRequest(
         @NotBlank(message = "제목은 필수입니다.")
@@ -18,6 +17,8 @@ public record PostCreateRequest(
 
         Double latitude,
         Double longitude,
-        Long pinId
+        Long pinId,
+        String imageUrl,
+        String category
 ) {
 }

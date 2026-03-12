@@ -11,8 +11,8 @@ import '../../features/map/presentation/screens/map_screen.dart';
 import '../../presentation/screens/image_posts/image_post_form_screen.dart';
 import '../../presentation/screens/me/me_screen.dart';
 import '../../presentation/screens/image_posts/image_post_detail_screen.dart';
-import '../../presentation/screens/posts/post_form_screen.dart';
 import '../../presentation/screens/posts/post_detail_screen.dart';
+import '../../presentation/screens/posts/post_form_screen.dart';
 import '../../presentation/screens/posts/posts_list_screen.dart';
 
 part 'app_router.g.dart';
@@ -51,7 +51,8 @@ GoRouter appRouter(Ref ref) {
       final isLoggedIn = authState is AuthAuthenticated;
       final path = state.matchedLocation;
       final isAuthRoute = path == AppRoutes.login || path == AppRoutes.join;
-      final isWriteRoute = path == AppRoutes.postCreate ||
+      final isWriteRoute =
+          path == AppRoutes.postCreate ||
           path == AppRoutes.imagePostCreate ||
           path.endsWith('/edit');
 

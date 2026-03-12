@@ -202,6 +202,55 @@ Test를 단일 마지막 단계로 두지 않고, **구현 직후 테스트**를
 | 9    | **Controller + Test** | `POST/DELETE /api/posts/{id}/like` 구현 → 슬라이스 테스트 (401/403)                                                                                                                                        |
 | 10   | **View + Test**       | 좋아요 버튼·아이콘·카운트 표시 / Smoke test 1건 이상                                                                                                                                                       |
 
+### 2.6 Step별 상세 Instructions (게시글 좋아요 예시)
+
+> Task 내 각 Step의 **Instructions** 필드에 아래와 같은 상세 항목을 작성할 수 있다. 기능별로 조정하여 사용한다.
+
+#### 1. 요구사항 분석
+
+- API 스펙 정의
+- 예외 케이스 정의
+- 비즈니스 규칙 정리
+
+#### 2. Security 1차 검토
+
+- 인증 필요 여부 확인
+- 권한 정책 정의
+- OWASP 체크
+
+#### 3. ERD 반영
+
+- `post_like` 테이블 설계
+- unique(post_id, member_id)
+- 인덱스 설계
+
+#### 4. DTO 설계
+
+- PostLikeRequest
+- PostLikeResponse
+
+#### 5. Domain Layer 구현
+
+- Entity 작성
+- Repository 작성
+
+#### 6. Service 구현
+
+- toggle() 로직 작성
+- 트랜잭션 처리
+- 중복 체크
+
+#### 7. Controller 구현
+
+- POST /api/posts/{id}/like
+- DELETE /api/posts/{id}/like
+
+#### 8. Test 작성
+
+- Service 단위 테스트
+- Controller 슬라이스 테스트
+- 401/403 테스트 포함
+
 ---
 
 ## 3. 참조

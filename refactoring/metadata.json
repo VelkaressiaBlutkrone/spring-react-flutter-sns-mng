@@ -1,0 +1,5 @@
+{
+  "name": "MapSNS Platform",
+  "description": "A location-based social network platform where users can share posts and pins on an interactive map.",
+  "requestFramePermissions": ["geolocation", "microphone"]
+}

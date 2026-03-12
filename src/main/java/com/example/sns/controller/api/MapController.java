@@ -28,7 +28,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Tag(name = "Map", description = "지도 경로·거리 조회")
 @RestController
-@RequestMapping("/api/map")
+@RequestMapping("/api")
 @RequiredArgsConstructor
 public class MapController {
 
@@ -36,7 +36,7 @@ public class MapController {
 
     @Operation(summary = "경로·거리 조회",
             description = "출발지→목적지 경로·거리. transportMode: WALK|BIKE|CAR, routeType: RECOMMEND|MAIN_ROAD|NO_STAIRS")
-    @GetMapping("/directions")
+    @GetMapping("/map/directions")
     public ResponseEntity<DirectionsResponse> getDirections(
             @Parameter(description = "출발지 위도") @RequestParam double originLat,
             @Parameter(description = "출발지 경도") @RequestParam double originLng,
@@ -73,5 +73,43 @@ public class MapController {
     }
 
     public record DirectionsResponse(List<Coord> path, int distanceMeters, boolean isRoadRoute) {
+    }
+
+    /**
+     * 프론트엔드 호환 경로 프록시.
+     * /api/route?origin=lng,lat&destination=lng,lat&mode=car&priority=RECOMMEND
+     */
+    @GetMapping("/route")
+    public ResponseEntity<?> routeProxy(
+            @RequestParam String origin,
+            @RequestParam String destination,
+            @RequestParam(defaultValue = "car") String mode,
+            @RequestParam(defaultValue = "RECOMMEND") String priority,
+            @RequestParam(required = false) String waypoints) {
+
+        String[] orig = origin.split(",");
+        String[] dest = destination.split(",");
+        double originLng = Double.parseDouble(orig[0].trim());
+        double originLat = Double.parseDouble(orig[1].trim());
+        double destLng = Double.parseDouble(dest[0].trim());
+        double destLat = Double.parseDouble(dest[1].trim());
+
+        String transportMode = mode.toUpperCase();
+        DirectionsResult result = directionsService.getDirections(
+                originLat, originLng, destLat, destLng, transportMode, priority);
+
+        if (result != null) {
+            var path = result.path().stream()
+                    .map(p -> new Coord(p[0], p[1]))
+                    .toList();
+            var summary = java.util.Map.of("distance", result.distanceMeters(), "duration", 0);
+            var route = java.util.Map.of("sections", java.util.List.of(), "summary", summary);
+            return ResponseEntity.ok(java.util.Map.of("routes", java.util.List.of(route)));
+        }
+
+        double distanceMeters = HaversineUtil.distanceMeters(originLat, originLng, destLat, destLng);
+        var summary = java.util.Map.of("distance", (int) Math.round(distanceMeters), "duration", 0);
+        var route = java.util.Map.of("sections", java.util.List.of(), "summary", summary);
+        return ResponseEntity.ok(java.util.Map.of("routes", java.util.List.of(route)));
     }
 }

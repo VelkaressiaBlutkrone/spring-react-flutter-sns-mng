@@ -64,7 +64,9 @@ public class PinService {
     public PinResponse create(PinCreateRequest request, User owner) {
         Pin pin = Pin.builder()
                 .owner(owner)
+                .title(request.title())
                 .description(request.description())
+                .category(request.category())
                 .latitude(request.latitude())
                 .longitude(request.longitude())
                 .build();
@@ -84,7 +86,9 @@ public class PinService {
             throw new BusinessException(ErrorCode.FORBIDDEN, "본인의 Pin만 수정할 수 있습니다.");
         }
         pin.update(
+                request.title(),
                 request.description(),
+                request.category(),
                 request.latitude(),
                 request.longitude()
         );
